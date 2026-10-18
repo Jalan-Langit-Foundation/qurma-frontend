@@ -3,7 +3,6 @@ import { Poppins, Lato, Caveat } from "next/font/google";
 import {
   Navbar,
   Footer,
-  FloatingCtaBar,
   FloatingWhatsappButton,
   ScrollToTopOnRefresh,
 } from "@/components/layout";
@@ -78,7 +77,6 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
-        <FloatingCtaBar />
         <FloatingWhatsappButton />
       </body>
     </html>

@@ -1,7 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { floatingCtaStore } from "@/lib/stores/floating-cta-store";
 import { cn } from "@/lib/utils";
 
 const WA_URL = "https://wa.me/6285173473189";
@@ -10,21 +8,8 @@ const CHAT_URL = `${WA_URL}?text=${encodeURIComponent(
 )}`;
 
 export function FloatingWhatsappButton() {
-  const isCtaVisible = React.useSyncExternalStore(
-    floatingCtaStore.subscribe,
-    floatingCtaStore.getSnapshot,
-    floatingCtaStore.getServerSnapshot
-  );
-
   return (
-    <div
-      className={cn(
-        "fixed right-4 sm:right-6 lg:right-8 z-50 transition-all duration-300 ease-out",
-        isCtaVisible
-          ? "bottom-4 sm:bottom-6 md:bottom-[88px] lg:bottom-[96px]"
-          : "bottom-4 sm:bottom-6 lg:bottom-8"
-      )}
-    >
+    <div className="fixed right-4 sm:right-6 lg:right-8 bottom-4 sm:bottom-6 lg:bottom-8 z-50 transition-all duration-300 ease-out">
       <a
         href={CHAT_URL}
         target="_blank"
