@@ -52,11 +52,11 @@ export function Footer() {
               href="/"
               onClick={handleLogoClick}
               className="inline-flex items-center transition-transform duration-200 hover:opacity-90 w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6EB6D6] rounded-md"
-              aria-label="Beranda Yayasan Jalan Langit"
+              aria-label="Beranda Qurma"
             >
               <Image
-                src="/images/brand/logo-footer.png"
-                alt="Logo Jalan Langit Foundation"
+                src="/images/brand/logo-putih.png"
+                alt="Logo Qurma"
                 width={200}
                 height={54}
                 className="h-12 sm:h-14 w-auto object-contain"

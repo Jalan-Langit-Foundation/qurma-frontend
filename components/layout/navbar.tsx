@@ -218,15 +218,15 @@ export function Navbar() {
               }
             }}
             className="group flex items-center transition-transform duration-200 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3C95C8] rounded-lg"
-            aria-label="Beranda Yayasan Jalan Langit"
+            aria-label="Beranda Qurma"
           >
             <Image
-              src="/images/brand/logo-navbar.png"
-              alt="Logo Yayasan Jalan Langit"
-              width={160}
-              height={38}
+              src="/images/brand/logo-biru.png"
+              alt="Logo Qurma"
+              width={180}
+              height={48}
               priority
-              className="h-7 sm:h-7.5 md:h-8.5 lg:h-9 w-auto object-contain transition-all"
+              className="h-8 sm:h-9 md:h-10 lg:h-11 w-auto object-contain transition-all"
             />
           </Link>
 
