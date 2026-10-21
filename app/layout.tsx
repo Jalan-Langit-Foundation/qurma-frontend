@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Poppins, Lato, Caveat } from "next/font/google";
 import {
@@ -74,9 +75,13 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col font-['Lato',sans-serif] bg-[#FAFCFE] text-[#555555]" suppressHydrationWarning>
         <PageLoader />
         <ScrollToTopOnRefresh />
-        <Navbar />
+        <Suspense fallback={<div className="h-20" />}>
+          <Navbar />
+        </Suspense>
         <main className="flex-1">{children}</main>
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
         <FloatingWhatsappButton />
       </body>
     </html>
