@@ -1,10 +1,10 @@
 import { NavLink } from "@/types";
 
 export const NAVBAR_LINKS: NavLink[] = [
-  { label: "Cara Kerja", href: "#" },
-  { label: "Paket Qurban", href: "#" },
-  { label: "Simulasi", href: "#" },
-  { label: "FAQ", href: "#" },
+  { label: "Cara Kerja", href: "/#cara-kerja" },
+  { label: "Paket Qurban", href: "/#paket" },
+  { label: "Simulasi", href: "/#simulasi" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export const FOOTER_PROGRAM_LINKS: NavLink[] = [

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Container, Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Badge } from "@/components/ui";
+import { Container, Card, Button, Badge } from "@/components/ui";
 import { ArrowLeft, Sparkles, CheckCircle2 } from "lucide-react";
 
 export const metadata: Metadata = {

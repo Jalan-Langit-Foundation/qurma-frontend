@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Container, Card, Badge, Button } from "@/components/ui";
-import { ShieldAlert, Users, ArrowRight } from "lucide-react";
+import { ShieldAlert, Users } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard — Manajemen Mudhohi & Qurban",

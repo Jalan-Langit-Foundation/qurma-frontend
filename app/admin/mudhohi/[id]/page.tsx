@@ -94,7 +94,7 @@ export default async function AdminMudhohiDetailPage({ params }: PageProps) {
                 Detail & Fulfillment Mudhohi (Fase 6)
               </h2>
               <p className="text-sm text-[#777777]">
-                Halaman ini akan memuat: Profil identitas lengkap, tabel riwayat setoran beserta statusnya, alokasi vendor mitra, nomor tag domba, verifikasi syar'i, dan manajemen upload foto report.
+                Halaman ini akan memuat: Profil identitas lengkap, tabel riwayat setoran beserta statusnya, alokasi vendor mitra, nomor tag domba, verifikasi syar&apos;i, dan manajemen upload foto report.
               </p>
               <Button variant="outline" size="sm" href="/admin">
                 Kembali ke Daftar Admin
