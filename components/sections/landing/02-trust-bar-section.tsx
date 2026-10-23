@@ -1,56 +1,147 @@
 "use client";
 
 import * as React from "react";
-import { Container } from "@/components/ui";
-import { TRUST_BAR_ITEMS, TrustBarItem } from "@/lib/data/landing";
-import { Sparkles, Target, TrendingUp, FileCheck2, Building2 } from "lucide-react";
+import {
+  ShieldCheck,
+  Target,
+  TrendingUp,
+  FileCheck2,
+  Building2,
+  Scale,
+  HeartHandshake,
+  Sparkles,
+} from "lucide-react";
 
-function getTrustIcon(iconName: TrustBarItem["iconName"]) {
-  switch (iconName) {
-    case "sheep":
-      return <Sparkles className="w-5 h-5" />;
-    case "target":
-      return <Target className="w-5 h-5" />;
-    case "progress":
-      return <TrendingUp className="w-5 h-5" />;
-    case "report":
-      return <FileCheck2 className="w-5 h-5" />;
-    case "foundation":
-      return <Building2 className="w-5 h-5" />;
-    default:
-      return <Sparkles className="w-5 h-5" />;
-  }
+interface TrustTickerItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
+const TRUST_TICKER_ITEMS: TrustTickerItem[] = [
+  {
+    id: "syariat",
+    label: "Sesuai Syariat",
+    icon: ShieldCheck,
+  },
+  {
+    id: "terencana",
+    label: "Target Terencana",
+    icon: Target,
+  },
+  {
+    id: "transparan",
+    label: "Progress Transparan",
+    icon: TrendingUp,
+  },
+  {
+    id: "laporan",
+    label: "Laporan Shohibul",
+    icon: FileCheck2,
+  },
+  {
+    id: "amanah",
+    label: "Amanah Yayasan",
+    icon: Building2,
+  },
+  {
+    id: "tanpa-bunga",
+    label: "Tanpa Bunga & Denda",
+    icon: Scale,
+  },
+  {
+    id: "pendampingan",
+    label: "Pendampingan Rutin",
+    icon: HeartHandshake,
+  },
+  {
+    id: "bobot",
+    label: "Bobot Terjamin",
+    icon: Sparkles,
+  },
+];
+
 export function TrustBarSection() {
+  // Setiap track berisi 2x set item agar cukup panjang di semua resolusi layar
+  const trackItems = React.useMemo(
+    () => [...TRUST_TICKER_ITEMS, ...TRUST_TICKER_ITEMS],
+    []
+  );
+
   return (
     <section
       aria-label="Keunggulan Utama QURMA"
-      className="w-full bg-white border-b border-slate-200/80 py-6 sm:py-8"
+      className="relative w-full overflow-hidden bg-white border-y border-slate-100 py-4 sm:py-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
     >
-      <Container size="xl">
-        {/* Desktop: 1 Baris Grid (5 kolom). Mobile: Scroll Horizontal */}
-        <div className="flex md:grid md:grid-cols-5 items-stretch gap-3 sm:gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0">
-          {TRUST_BAR_ITEMS.map((item) => (
-            <div
-              key={item.id}
-              className="flex-shrink-0 w-60 md:w-auto flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-[#FAFCFE] border border-slate-100 hover:border-[#6EB6D6]/50 hover:bg-[#EAF5FB]/30 transition-all duration-200"
-            >
-              <div className="w-11 h-11 rounded-xl bg-[#EAF5FB] text-[#3C95C8] flex items-center justify-center shrink-0">
-                {getTrustIcon(item.iconName)}
+      <style>{`
+        @keyframes marqueeScrollLeft {
+          0% {
+            transform: translate3d(0, 0, 0);
+          }
+          100% {
+            transform: translate3d(-100%, 0, 0);
+          }
+        }
+        .trust-marquee-track {
+          display: flex;
+          flex-shrink: 0;
+          align-items: center;
+          animation: marqueeScrollLeft 35s linear infinite;
+          will-change: transform;
+        }
+        .trust-marquee-container:hover .trust-marquee-track {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      {/* Gradient Fade Edges (kiri dan kanan) agar masuk dan keluar secara halus */}
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-white via-white/80 to-transparent z-10" />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-white via-white/80 to-transparent z-10" />
+
+      {/* Infinite Seamless Looping Marquee (Geser dari kanan ke kiri terus) */}
+      <div className="trust-marquee-container flex w-full overflow-hidden select-none">
+        {/* Track 1 */}
+        <div className="trust-marquee-track">
+          {trackItems.map((item, idx) => {
+            const IconComponent = item.icon;
+            return (
+              <div
+                key={`track1-${item.id}-${idx}`}
+                className="inline-flex items-center gap-2.5 sm:gap-3 px-8 sm:px-10 shrink-0 cursor-default"
+              >
+                {/* Icon murni tanpa background, konsisten warna brand JLF (#3C95C8) */}
+                <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-[#3C95C8] shrink-0" />
+
+                {/* Padanan Kata */}
+                <span className="text-sm sm:text-base font-bold font-['Poppins',sans-serif] text-[#2C2C2C] tracking-tight whitespace-nowrap">
+                  {item.label}
+                </span>
               </div>
-              <div className="min-w-0">
-                <h4 className="text-sm font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-tight truncate">
-                  {item.title}
-                </h4>
-                <p className="text-xs text-[#777777] font-['Lato',sans-serif] mt-0.5 leading-snug line-clamp-1">
-                  {item.description}
-                </p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-      </Container>
+
+        {/* Track 2 (Duplikasi seamless track agar looping mulus tanpa jeda) */}
+        <div className="trust-marquee-track" aria-hidden="true">
+          {trackItems.map((item, idx) => {
+            const IconComponent = item.icon;
+            return (
+              <div
+                key={`track2-${item.id}-${idx}`}
+                className="inline-flex items-center gap-2.5 sm:gap-3 px-8 sm:px-10 shrink-0 cursor-default"
+              >
+                {/* Icon murni tanpa background, konsisten warna brand JLF (#3C95C8) */}
+                <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-[#3C95C8] shrink-0" />
+
+                {/* Padanan Kata */}
+                <span className="text-sm sm:text-base font-bold font-['Poppins',sans-serif] text-[#2C2C2C] tracking-tight whitespace-nowrap">
+                  {item.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </section>
   );
 }
