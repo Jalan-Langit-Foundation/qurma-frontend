@@ -50,10 +50,9 @@ export function CalculatorSection({
     >
       <Container size="xl">
         <SectionHeader
-          eyebrow="Simulasi Interaktif"
           headline={{
-            prefix: "Hitung Rencana Tabungan",
-            highlight: "Qurban Anda",
+            line1: "Hitung Rencana Tabungan",
+            line2: "Qurban Terbaik Anda",
           }}
           description="Sesuaikan pilihan paket dan bulan mulai menabung untuk melihat estimasi setoran bulanan yang paling nyaman bagi Anda."
           align="center"

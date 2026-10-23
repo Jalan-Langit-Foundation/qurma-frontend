@@ -13,10 +13,9 @@ export function ValuePropSection() {
     >
       <Container size="xl">
         <SectionHeader
-          eyebrow="Mengapa QURMA"
           headline={{
-            prefix: "Kemudahan dan Kepastian",
-            highlight: "Ibadah Qurban Anda",
+            line1: "Kemudahan dan Kepastian",
+            line2: "Ibadah Qurban Anda",
           }}
           description="Enam pilar utama yang dirancang untuk memastikan ibadah qurban Anda berjalan tenang, transparan, dan sesuai syariat."
           align="center"

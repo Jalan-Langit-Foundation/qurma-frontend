@@ -14,10 +14,9 @@ export function HowItWorksSection() {
     >
       <Container size="xl">
         <SectionHeader
-          eyebrow="Alur Sederhana"
           headline={{
-            prefix: "6 Langkah Mudah Menuju",
-            highlight: "Ibadah Qurban Sempurna",
+            line1: "6 Langkah Mudah Menuju",
+            line2: "Ibadah Qurban Sempurna",
           }}
           description="Alur terstruktur dari awal pendaftaran hingga laporan penyembelihan yang transparan dan dapat dipantau setiap saat."
           align="center"

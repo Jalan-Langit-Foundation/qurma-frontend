@@ -13,10 +13,9 @@ export function FaqSection() {
     >
       <Container size="xl">
         <SectionHeader
-          eyebrow="Tanya Jawab"
           headline={{
-            prefix: "Pertanyaan yang",
-            highlight: "Sering Diajukan",
+            line1: "Pertanyaan yang Sering",
+            line2: "Diajukan Seputar QURMA",
           }}
           description="Temukan jawaban lengkap seputar skema tabungan, mekanisme pemilihan hewan, hingga pelaporan pelaksanaan qurban bersama Yayasan Jalan Langit."
           align="center"

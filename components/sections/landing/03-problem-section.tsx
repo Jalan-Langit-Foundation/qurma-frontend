@@ -15,10 +15,9 @@ export function ProblemSection() {
       <Container size="xl">
         {/* Section Header */}
         <SectionHeader
-          eyebrow="Tantangan & Solusi"
           headline={{
-            prefix: "Kenapa Banyak Orang Baru Memikirkan Qurban",
-            highlight: "Menjelang Idul Adha?",
+            line1: "Kenapa Harus Menunggu",
+            line2: "Menjelang Idul Adha?",
           }}
           description="Mempersiapkan qurban secara mendadak sering kali membebani arus kas keluarga dan membatasi pilihan domba terbaik. Lihat bagaimana perencanaannya mengubah segalanya:"
           align="center"

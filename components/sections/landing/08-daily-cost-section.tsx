@@ -26,11 +26,9 @@ export function DailyCostSection({
     >
       <Container size="xl">
         <SectionHeader
-          eyebrow="Terjangkau Setiap Hari"
           headline={{
-            prefix: "Sehari Cuma",
-            highlight: `±${formatRupiah(dailySavings)}`,
-            suffix: "untuk Qurban Terbaik",
+            line1: `Sehari Cuma ±${formatRupiah(dailySavings)}`,
+            line2: "Untuk Qurban Terbaik Anda",
           }}
           description={`Untuk ${selectedPackage.name} (${formatRupiah(selectedPackage.target)}), Anda hanya perlu menyisihkan sedikit demi sedikit setiap harinya—setara dengan harga secangkir teh hangat.`}
           align="center"

@@ -25,10 +25,9 @@ export function TestimonialSection({
     >
       <Container size="xl">
         <SectionHeader
-          eyebrow="Cerita Mudhohi"
           headline={{
-            prefix: "Pengalaman Mudhohi",
-            highlight: "QURMA Periode Sebelumnya",
+            line1: "Pengalaman Nyata Mudhohi",
+            line2: "QURMA Periode Sebelumnya",
           }}
           description="Inilah pengalaman nyata dari para mudhohi yang telah merasakan kemudahan dan ketenangan mempersiapkan ibadah qurban bersama kami."
           align="center"

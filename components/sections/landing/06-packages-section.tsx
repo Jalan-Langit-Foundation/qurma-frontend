@@ -23,10 +23,9 @@ export function PackagesSection({
     >
       <Container size="xl">
         <SectionHeader
-          eyebrow="Target Qurban"
           headline={{
-            prefix: "Pilih Paket Qurban Sesuai",
-            highlight: "Kemampuan Anda",
+            line1: "Pilih Paket Qurban Sesuai",
+            line2: "Kemampuan Finansial Anda",
           }}
           description="Seluruh paket domba dipelihara sehat dan sesuai kriteria syar'i. Pilih paket untuk melihat simulasi tabungan per bulannya."
           align="center"
