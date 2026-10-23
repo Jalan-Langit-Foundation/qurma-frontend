@@ -21,9 +21,13 @@ export function TestimonialSection({
     <section
       id="testimoni"
       aria-label="Pengalaman Mudhohi QURMA 2026"
-      className="w-full bg-[#FAFCFE] py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 relative"
+      className="w-full bg-[linear-gradient(180deg,#F4F9FD_0%,#FFFFFF_50%,#EDF7FD_100%)] py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 relative overflow-hidden"
     >
-      <Container size="xl">
+      {/* Subtle Background Lighting Accent */}
+      <div className="absolute top-1/4 -left-36 w-96 h-96 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute bottom-1/4 -right-36 w-96 h-96 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
+
+      <Container size="xl" className="relative z-10">
         <SectionHeader
           headline={{
             line1: "Pengalaman Nyata Mudhohi",
@@ -34,7 +38,7 @@ export function TestimonialSection({
           className="mb-12 sm:mb-16"
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch w-full">
           {testimonials.map((testi) => (
             <Card
               key={testi.id}

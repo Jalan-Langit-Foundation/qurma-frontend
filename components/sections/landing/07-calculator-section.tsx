@@ -46,9 +46,13 @@ export function CalculatorSection({
     <section
       id="simulasi"
       aria-label="Kalkulator Simulasi Tabungan Qurban"
-      className="w-full bg-[#FAFCFE] py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 scroll-mt-16 relative"
+      className="w-full bg-[linear-gradient(180deg,#F4F9FD_0%,#FFFFFF_50%,#EDF7FD_100%)] py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
     >
-      <Container size="xl">
+      {/* Subtle Background Lighting Accent */}
+      <div className="absolute top-1/4 -left-36 w-96 h-96 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute bottom-1/4 -right-36 w-96 h-96 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
+
+      <Container size="xl" className="relative z-10">
         <SectionHeader
           headline={{
             line1: "Hitung Rencana Tabungan",
@@ -59,7 +63,7 @@ export function CalculatorSection({
           className="mb-12 sm:mb-16"
         />
 
-        <div className="max-w-4xl mx-auto rounded-3xl border-2 border-slate-200/90 bg-white shadow-xl overflow-hidden">
+        <div className="w-full rounded-3xl border-2 border-slate-200/90 bg-white shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
             {/* Kolom Kiri: Input Parameter (7 Kolom) */}
             <div className="lg:col-span-7 p-6 sm:p-8 space-y-6">

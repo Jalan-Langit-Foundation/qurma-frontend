@@ -71,7 +71,7 @@ export function TrustBarSection() {
   return (
     <section
       aria-label="Keunggulan Utama QURMA"
-      className="relative w-full overflow-hidden bg-white border-y border-slate-100 py-4 sm:py-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+      className="relative w-full overflow-hidden bg-white border-b border-slate-200/80 py-4 sm:py-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
     >
       <style>{`
         @keyframes marqueeScrollLeft {

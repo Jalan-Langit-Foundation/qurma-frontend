@@ -23,7 +23,7 @@ export function FaqSection() {
         />
 
         {/* 8 FaqAccordion Items */}
-        <div className="max-w-3xl mx-auto">
+        <div className="w-full">
           <FaqAccordion />
         </div>
       </Container>

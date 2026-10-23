@@ -36,7 +36,7 @@ export function DailyCostSection({
         />
 
         {/* 3 Metric Highlight Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full">
           {/* 1. Per Hari */}
           <Card
             variant="default"
