@@ -19,9 +19,13 @@ export function PackagesSection({
     <section
       id="paket"
       aria-label="Pilihan Target Paket Qurban 2027"
-      className="w-full bg-white py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 scroll-mt-16 relative"
+      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
     >
-      <Container size="xl">
+      {/* Decorative Background Accents matching Visi Misi & Problem Section */}
+      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+
+      <Container size="xl" className="relative z-10">
         <SectionHeader
           headline={{
             line1: "Pilih Paket Qurban Sesuai",
@@ -29,11 +33,11 @@ export function PackagesSection({
           }}
           description="Seluruh paket domba dipelihara sehat dan sesuai kriteria syar'i. Pilih paket untuk melihat simulasi tabungan per bulannya."
           align="center"
-          className="mb-12 sm:mb-16"
+          className="mb-8 sm:mb-12"
         />
 
         {/* Grid 4 PackageCard (1 col mobile, 2 col tablet, 4 col desktop) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch max-w-7xl mx-auto">
           {PACKAGES.map((pkg) => (
             <PackageCard
               key={pkg.id}

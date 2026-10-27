@@ -10,6 +10,8 @@ export interface Package {
   note: string;
   recommended: boolean;
   loyaltyOnly: boolean;
+  description?: string;
+  features?: string[];
 }
 
 export type DepositStatus =

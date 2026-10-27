@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Container, SectionHeader, Card } from "@/components/ui";
 import { formatRupiah } from "@/lib/format";
-import { Coffee, Coins, PiggyBank, Sparkles } from "lucide-react";
+import { Coffee, Coins, PiggyBank } from "lucide-react";
 import type { Package } from "@/types/qurma";
 
 export interface DailyCostSectionProps {

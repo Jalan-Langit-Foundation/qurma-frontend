@@ -75,3 +75,16 @@ export function formatRupiahShort(amount: number, prefix: string = "±"): string
   const ribuan = Math.floor(amount / 1000);
   return `${prefix}Rp${ribuan} ribu`;
 }
+
+/**
+ * Format Rupiah ringkas dalam satuan Juta (Opsi 1)
+ * Contoh: formatRupiahJuta(1900000) -> "Rp 1,9 Jt"
+ * Contoh: formatRupiahJuta(2990000) -> "Rp 2,99 Jt"
+ * Contoh: formatRupiahJuta(1500000) -> "Rp 1,5 Jt"
+ */
+export function formatRupiahJuta(amount: number): string {
+  if (isNaN(amount) || amount === 0) return "Rp 0";
+  const juta = amount / 1000000;
+  const formatted = Number(juta.toFixed(2)).toString().replace(".", ",");
+  return `Rp ${formatted} Jt`;
+}

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Container, Button } from "@/components/ui";
-import { ArrowRight, MessageCircle, Sparkles, HeartHandshake } from "lucide-react";
+import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 
 export function FinalCtaSection() {
   const scrollTo = (id: string) => {

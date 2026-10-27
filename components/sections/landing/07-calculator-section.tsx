@@ -1,12 +1,11 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { Container, SectionHeader, Button, Badge } from "@/components/ui";
 import { PACKAGES } from "@/lib/data/packages";
 import { AVAILABLE_START_MONTHS, hitungSetoran, HasilHitungSetoran } from "@/lib/data/savings-config";
 import { formatRupiah } from "@/lib/format";
-import { Calculator, ArrowRight, Calendar, Sparkles, Info } from "lucide-react";
+import { Calculator, ArrowRight, Calendar } from "lucide-react";
 import type { Package } from "@/types/qurma";
 
 export interface CalculatorSectionProps {
