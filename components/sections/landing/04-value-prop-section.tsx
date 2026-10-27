@@ -1,17 +1,42 @@
 "use client";
 
 import * as React from "react";
-import { Container, SectionHeader, Card } from "@/components/ui";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { Container, SectionHeader, Button } from "@/components/ui";
 import { VALUE_PROPOSITIONS } from "@/lib/data/landing";
 
 export function ValuePropSection() {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isCollapsing, setIsCollapsing] = React.useState(false);
+
+  const handleExpand = () => {
+    setIsExpanded(true);
+  };
+
+  const handleCollapse = () => {
+    setIsCollapsing(true);
+    // Smooth scroll back to top of section after collapse
+    const sectionElement = document.getElementById("nilai-tambah");
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setTimeout(() => {
+      setIsExpanded(false);
+      setIsCollapsing(false);
+    }, 300);
+  };
+
   return (
     <section
       id="nilai-tambah"
       aria-label="Keunggulan Program QURMA"
-      className="w-full bg-white py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 relative"
+      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-16 border-b border-slate-200/80"
     >
-      <Container size="xl">
+      {/* Decorative Background Accents matching Visi Misi & Problem Section */}
+      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+
+      <Container size="xl" className="relative z-10">
         <SectionHeader
           headline={{
             line1: "Kemudahan dan Kepastian",
@@ -19,42 +44,80 @@ export function ValuePropSection() {
           }}
           description="Enam pilar utama yang dirancang untuk memastikan ibadah qurban Anda berjalan tenang, transparan, dan sesuai syariat."
           align="center"
-          className="mb-12 sm:mb-16"
+          className="mb-8 sm:mb-12"
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {VALUE_PROPOSITIONS.map((item) => (
-            <Card
-              key={item.number}
-              variant="interactive"
-              className="p-6 sm:p-7 flex flex-col justify-between group rounded-3xl border-slate-200/90 hover:border-[#6EB6D6] hover:shadow-lg transition-all duration-300"
-            >
-              <div>
-                {/* Number Badge */}
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-2xl sm:text-3xl font-extrabold font-['Poppins',sans-serif] text-[#3C95C8] group-hover:scale-110 transition-transform duration-200">
-                    {item.number}
-                  </span>
-                  <div className="w-8 h-8 rounded-full bg-[#EAF5FB] group-hover:bg-[#3C95C8] transition-colors duration-200 flex items-center justify-center">
-                    <span className="w-2 h-2 rounded-full bg-[#3C95C8] group-hover:bg-white transition-colors" />
+        {/* Responsive Grid Cards (Gaya Card Problem Section & Visi Misi) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-6xl mx-auto">
+          {VALUE_PROPOSITIONS.map((item, index) => {
+            // Logika penentuan kartu awal:
+            // Mobile & Tablet (<1024px): 2 kartu awal (index 0 & 1) tampil secara default
+            // Desktop (≥1024px): Semua kartu (0-5) selalu tampil
+            const isInitial = index < 2;
+
+            let visibilityClass = "";
+            if (isExpanded) {
+              visibilityClass = isCollapsing
+                ? "flex lg:flex animate-slide-up lg:animate-none"
+                : "flex lg:flex animate-slide-down lg:animate-none";
+            } else {
+              visibilityClass = isInitial ? "flex lg:flex" : "hidden lg:flex";
+            }
+
+            return (
+              <div
+                key={item.number}
+                className={`${visibilityClass} flex-col h-full bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:border-slate-300 transition-colors`}
+              >
+                <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4 bg-white">
+                  <div className="space-y-3">
+                    {/* Angka Sesuai Desain Awal */}
+                    <span className="text-2xl font-extrabold font-['Poppins',sans-serif] text-[#3C95C8] leading-none block">
+                      {item.number}
+                    </span>
+
+                    <h3 className="text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-xs sm:text-sm text-[#555555] font-['Lato',sans-serif] leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  {/* Hashtag Tag di Bawah (Persis Gaya Problem Section) */}
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-[#3C95C8] font-semibold font-['Poppins',sans-serif]">
+                    <span>{item.hashtag}</span>
                   </div>
                 </div>
-
-                <h3 className="text-lg sm:text-xl font-bold text-[#2C2C2C] font-['Poppins',sans-serif] group-hover:text-[#3C95C8] transition-colors leading-snug">
-                  {item.title}
-                </h3>
-
-                <p className="text-sm text-[#555555] font-['Lato',sans-serif] mt-2.5 leading-relaxed">
-                  {item.description}
-                </p>
               </div>
+            );
+          })}
+        </div>
 
-              <div className="pt-6 mt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-[#777777] group-hover:text-[#3C95C8] transition-colors">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6EB6D6]" />
-                <span>Terjamin & Amanah</span>
-              </div>
-            </Card>
-          ))}
+        {/* Tombol Aksi: Hanya tampil di Mobile & Tablet (<1024px), Desktop selalu tampil penuh */}
+        <div className="pt-8 sm:pt-10 flex lg:hidden flex-wrap items-center justify-center gap-3">
+          {isExpanded ? (
+            <Button
+              variant="outline"
+              size="md"
+              onClick={handleCollapse}
+              rightIcon={<ChevronUp className="w-4 h-4" />}
+              className="font-bold border-[#3C95C8] text-[#3C95C8] hover:bg-[#EAF5FB] px-6"
+            >
+              Lihat Lebih Sedikit
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="md"
+              onClick={handleExpand}
+              rightIcon={<ChevronDown className="w-4 h-4" />}
+              className="font-bold border-[#3C95C8] text-[#3C95C8] hover:bg-[#EAF5FB] px-6"
+            >
+              Lihat Lebih Banyak
+            </Button>
+          )}
         </div>
       </Container>
     </section>

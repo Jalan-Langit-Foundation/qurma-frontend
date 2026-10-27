@@ -95,6 +95,7 @@ export interface ValuePropItem {
   number: string;
   title: string;
   description: string;
+  hashtag: string;
 }
 
 export const VALUE_PROPOSITIONS: ValuePropItem[] = [
@@ -102,31 +103,37 @@ export const VALUE_PROPOSITIONS: ValuePropItem[] = [
     number: "01",
     title: "Target Qurban Jelas",
     description: "Tentukan pilihan target paket domba sesuai preferensi kemampuan tanpa beban berlebih sejak awal.",
+    hashtag: "#TargetQurbanJelas",
   },
   {
     number: "02",
     title: "Menabung Bertahap",
     description: "Alokasi setoran bulanan yang teratur dan fleksibel, menghindarkan pengeluaran mendadak dalam jumlah besar.",
+    hashtag: "#CicilanRingan",
   },
   {
     number: "03",
     title: "Progress Terpantau Nyata",
     description: "Pantau setiap rupiah yang Anda setorkan dan perkembangan persiapan hewan secara transparan via dashboard.",
+    hashtag: "#DashboardTransparan",
   },
   {
     number: "04",
     title: "Bisa Upgrade Kapan Saja",
     description: "Rezeki bertambah? Anda dapat dengan mudah meningkatkan kelas paket domba ke bobot yang lebih besar.",
+    hashtag: "#FleksibelUpgrade",
   },
   {
     number: "05",
     title: "Domba Disiapkan & Terawat",
     description: "Hewan diseleksi teliti sesuai syariat Islam, dipelihara sehat oleh peternak binaan hingga hari penyembelihan.",
+    hashtag: "#StandarSyariat",
   },
   {
     number: "06",
     title: "Shohibul Report Lengkap",
     description: "Dokumentasi foto hewan, proses pemotongan, hingga bukti distribusi daging kepada dhuafa diterima langsung.",
+    hashtag: "#ShohibulReport",
   },
 ];
 
