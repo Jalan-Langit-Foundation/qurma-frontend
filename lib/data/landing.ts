@@ -102,37 +102,37 @@ export const VALUE_PROPOSITIONS: ValuePropItem[] = [
   {
     number: "01",
     title: "Target Qurban Jelas",
-    description: "Tentukan pilihan target paket domba sesuai preferensi kemampuan tanpa beban berlebih sejak awal.",
+    description: "Tentukan pilihan target paket domba sesuai preferensi kemampuan finansial Anda sejak awal, memberikan arah dan kepastian ibadah tanpa rasa terbebani.",
     hashtag: "#TargetQurbanJelas",
   },
   {
     number: "02",
     title: "Menabung Bertahap",
-    description: "Alokasi setoran bulanan yang teratur dan fleksibel, menghindarkan pengeluaran mendadak dalam jumlah besar.",
+    description: "Alokasi setoran bulanan yang teratur, terjangkau, dan fleksibel, efektif membebaskan arus kas keluarga dari pengeluaran mendadak jutaan rupiah menjelang hari raya.",
     hashtag: "#CicilanRingan",
   },
   {
     number: "03",
     title: "Progress Terpantau Nyata",
-    description: "Pantau setiap rupiah yang Anda setorkan dan perkembangan persiapan hewan secara transparan via dashboard.",
+    description: "Pantau akumulasi saldo tabungan dan perkembangan kesiapan hewan qurban Anda secara transparan dan akurat kapan pun melalui dashboard akun pribadi.",
     hashtag: "#DashboardTransparan",
   },
   {
     number: "04",
     title: "Bisa Upgrade Kapan Saja",
-    description: "Rezeki bertambah? Anda dapat dengan mudah meningkatkan kelas paket domba ke bobot yang lebih besar.",
+    description: "Ketika rezeki Anda bertambah, Anda dapat dengan leluasa meningkatkan kelas paket domba ke bobot yang lebih besar kapan saja tanpa prosedur yang rumit.",
     hashtag: "#FleksibelUpgrade",
   },
   {
     number: "05",
     title: "Domba Disiapkan & Terawat",
-    description: "Hewan diseleksi teliti sesuai syariat Islam, dipelihara sehat oleh peternak binaan hingga hari penyembelihan.",
+    description: "Hewan qurban diseleksi secara ketat sesuai syariat Islam dan dirawat dengan nutrisi terbaik oleh peternak binaan amanah hingga tiba waktu penyembelihan.",
     hashtag: "#StandarSyariat",
   },
   {
     number: "06",
     title: "Shohibul Report Lengkap",
-    description: "Dokumentasi foto hewan, proses pemotongan, hingga bukti distribusi daging kepada dhuafa diterima langsung.",
+    description: "Laporan dokumentasi terverifikasi berupa foto hewan, proses penyembelihan atas nama Anda, hingga bukti penyaluran daging kepada dhuafa diterima langsung.",
     hashtag: "#ShohibulReport",
   },
 ];
@@ -141,6 +141,7 @@ export interface StepItem {
   step: number;
   title: string;
   description: string;
+  hashtag: string;
 }
 
 export const HOW_IT_WORKS_STEPS: StepItem[] = [
@@ -148,31 +149,37 @@ export const HOW_IT_WORKS_STEPS: StepItem[] = [
     step: 1,
     title: "Pilih Target Qurban",
     description: "Pilih paket domba yang sesuai (Loyalty, Start, Plus, atau Premium).",
+    hashtag: "#PilihPaket",
   },
   {
     step: 2,
     title: "Simulasi & Rencana",
     description: "Lihat rincian setoran bulanan yang terjangkau sesuai batas waktu pelunasan.",
+    hashtag: "#SimulasiTerjangkau",
   },
   {
     step: 3,
     title: "Pendaftaran Cepat",
     description: "Isi data diri shohibul qurban dan konfirmasi komitmen awal secara aman.",
+    hashtag: "#PendaftaranMudah",
   },
   {
     step: 4,
     title: "Setor Bertahap",
     description: "Kumpulkan tabungan tiap bulan dengan reminder ramah via WhatsApp.",
+    hashtag: "#SetoranFleksibel",
   },
   {
     step: 5,
     title: "Domba Dipersiapkan",
     description: "Setelah target 100%, tim JLF memverifikasi bobot dan kesehatan hewan qurban.",
+    hashtag: "#VerifikasiKesehatan",
   },
   {
     step: 6,
     title: "Pelaksanaan & Laporan",
     description: "Penyembelihan syar'i dilaksanakan dan laporan dokumentasi dikirimkan ke Anda.",
+    hashtag: "#LaporanDokumentasi",
   },
 ];
 

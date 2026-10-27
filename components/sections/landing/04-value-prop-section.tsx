@@ -70,12 +70,7 @@ export function ValuePropSection() {
                 className={`${visibilityClass} flex-col h-full bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:border-slate-300 transition-colors`}
               >
                 <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4 bg-white">
-                  <div className="space-y-3">
-                    {/* Angka Sesuai Desain Awal */}
-                    <span className="text-2xl font-extrabold font-['Poppins',sans-serif] text-[#3C95C8] leading-none block">
-                      {item.number}
-                    </span>
-
+                  <div className="space-y-2.5">
                     <h3 className="text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
                       {item.title}
                     </h3>

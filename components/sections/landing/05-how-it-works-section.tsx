@@ -1,20 +1,40 @@
 "use client";
 
 import * as React from "react";
-import { Container, SectionHeader } from "@/components/ui";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { Container, SectionHeader, Button } from "@/components/ui";
 import { HOW_IT_WORKS_STEPS } from "@/lib/data/landing";
-import { Check, ArrowRight } from "lucide-react";
 
 export function HowItWorksSection() {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isCollapsing, setIsCollapsing] = React.useState(false);
+
+  const handleExpand = () => {
+    setIsExpanded(true);
+  };
+
+  const handleCollapse = () => {
+    setIsCollapsing(true);
+    // Smooth scroll back to top of section after collapse
+    const sectionElement = document.getElementById("cara-kerja");
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setTimeout(() => {
+      setIsExpanded(false);
+      setIsCollapsing(false);
+    }, 300);
+  };
+
   return (
     <section
       id="cara-kerja"
       aria-label="Cara Kerja Program Tabungan QURMA"
-      className="w-full bg-[linear-gradient(180deg,#F4F9FD_0%,#FFFFFF_50%,#EDF7FD_100%)] py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
+      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-16 border-b border-slate-200/80"
     >
-      {/* Subtle Background Lighting Accent */}
-      <div className="absolute top-1/4 -left-36 w-96 h-96 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-1/4 -right-36 w-96 h-96 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
+      {/* Decorative Background Accents matching Visi Misi & Problem Section */}
+      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
 
       <Container size="xl" className="relative z-10">
         <SectionHeader
@@ -24,64 +44,80 @@ export function HowItWorksSection() {
           }}
           description="Alur terstruktur dari awal pendaftaran hingga laporan penyembelihan yang transparan dan dapat dipantau setiap saat."
           align="center"
-          className="mb-12 sm:mb-16"
+          className="mb-8 sm:mb-12"
         />
 
-        {/* =========================================================
-            DESKTOP VIEW (>= lg): Horizontal 6-Step Timeline / Cards
-            ========================================================= */}
-        <div className="hidden lg:grid grid-cols-6 gap-4 relative">
-          {/* Connecting Line Across the Steps */}
-          <div className="absolute top-7 left-8 right-8 h-0.5 bg-gradient-to-r from-[#3C95C8] via-[#6EB6D6] to-[#3C95C8] -z-0" />
+        {/* Responsive Grid Cards (Persis Gaya Value Prop & Problem Section) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-6xl mx-auto">
+          {HOW_IT_WORKS_STEPS.map((step, index) => {
+            // Logika penentuan kartu awal:
+            // Mobile & Tablet (<1024px): 2 kartu awal (index 0 & 1) tampil secara default
+            // Desktop (≥1024px): Semua kartu (0-5) selalu tampil (3 kolom x 2 baris)
+            const isInitial = index < 2;
 
-          {HOW_IT_WORKS_STEPS.map((step) => (
-            <div
-              key={step.step}
-              className="relative z-10 flex flex-col items-center text-center group"
-            >
-              {/* Step Circle */}
-              <div className="w-14 h-14 rounded-full bg-white border-4 border-[#3C95C8] text-[#3C95C8] group-hover:bg-[#3C95C8] group-hover:text-white transition-all duration-200 flex items-center justify-center font-bold text-base font-['Poppins',sans-serif] shadow-md mb-4">
-                0{step.step}
-              </div>
+            let visibilityClass = "";
+            if (isExpanded) {
+              visibilityClass = isCollapsing
+                ? "flex lg:flex animate-slide-up lg:animate-none"
+                : "flex lg:flex animate-slide-down lg:animate-none";
+            } else {
+              visibilityClass = isInitial ? "flex lg:flex" : "hidden lg:flex";
+            }
 
-              {/* Step Card Content */}
-              <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs group-hover:border-[#3C95C8] group-hover:shadow-md transition-all duration-200 w-full min-h-[160px] flex flex-col justify-start">
-                <h4 className="text-sm font-bold text-[#2C2C2C] font-['Poppins',sans-serif] mb-2 leading-snug">
-                  {step.title}
-                </h4>
-                <p className="text-xs text-[#555555] font-['Lato',sans-serif] leading-relaxed">
-                  {step.description}
-                </p>
+            return (
+              <div
+                key={step.step}
+                className={`${visibilityClass} flex-col h-full bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:border-slate-300 transition-colors`}
+              >
+                <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4 bg-white">
+                  <div className="space-y-3">
+                    {/* Angka Langkah / Step Number */}
+                    <span className="text-2xl font-extrabold font-['Poppins',sans-serif] text-[#3C95C8] leading-none block">
+                      0{step.step}
+                    </span>
+
+                    <h3 className="text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                      {step.title}
+                    </h3>
+
+                    <p className="text-xs sm:text-sm text-[#555555] font-['Lato',sans-serif] leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
+
+                  {/* Hashtag Tag di Bawah (Persis Gaya Problem & Value Prop Section) */}
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-[#3C95C8] font-semibold font-['Poppins',sans-serif]">
+                    <span>{step.hashtag}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* =========================================================
-            MOBILE & TABLET VIEW (< lg): Vertical Connected Timeline
-            ========================================================= */}
-        <div className="lg:hidden relative pl-6 sm:pl-8 space-y-6 max-w-xl mx-auto">
-          {/* Vertical Connecting Line */}
-          <div className="absolute left-[19px] sm:left-[27px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-[#3C95C8] via-[#6EB6D6] to-[#3C95C8]" />
-
-          {HOW_IT_WORKS_STEPS.map((step) => (
-            <div key={step.step} className="relative flex items-start gap-4">
-              {/* Step Number Dot */}
-              <div className="w-10 h-10 rounded-full bg-white border-2 border-[#3C95C8] text-[#3C95C8] font-bold text-xs font-['Poppins',sans-serif] flex items-center justify-center shrink-0 shadow-sm z-10">
-                0{step.step}
-              </div>
-
-              {/* Step Content Box */}
-              <div className="flex-1 bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs">
-                <h4 className="text-sm sm:text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] mb-1">
-                  {step.title}
-                </h4>
-                <p className="text-xs sm:text-sm text-[#555555] font-['Lato',sans-serif] leading-relaxed">
-                  {step.description}
-                </p>
-              </div>
-            </div>
-          ))}
+        {/* Tombol Aksi: Hanya tampil di Mobile & Tablet (<1024px), Desktop selalu tampil penuh */}
+        <div className="pt-8 sm:pt-10 flex lg:hidden flex-wrap items-center justify-center gap-3">
+          {isExpanded ? (
+            <Button
+              variant="outline"
+              size="md"
+              onClick={handleCollapse}
+              rightIcon={<ChevronUp className="w-4 h-4" />}
+              className="font-bold border-[#3C95C8] text-[#3C95C8] hover:bg-[#EAF5FB] px-6"
+            >
+              Lihat Lebih Sedikit
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="md"
+              onClick={handleExpand}
+              rightIcon={<ChevronDown className="w-4 h-4" />}
+              className="font-bold border-[#3C95C8] text-[#3C95C8] hover:bg-[#EAF5FB] px-6"
+            >
+              Lihat Lebih Banyak
+            </Button>
+          )}
         </div>
       </Container>
     </section>
