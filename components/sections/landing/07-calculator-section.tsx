@@ -3,9 +3,9 @@
 import * as React from "react";
 import { Container, SectionHeader, Button, Select, CardTitle, AmbientGlow } from "@/components/ui";
 import { PACKAGES } from "@/lib/data/packages";
-import { AVAILABLE_START_MONTHS, hitungSetoran, HasilHitungSetoran } from "@/lib/data/savings-config";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { useSavingCalculator } from "@/hooks";
 import type { Package } from "@/types/qurma";
 
 export interface CalculatorSectionProps {
@@ -21,48 +21,17 @@ export function CalculatorSection({
   startMonth,
   onStartMonthChange,
 }: CalculatorSectionProps) {
-  // Hitung simulasi secara reaktif
-  const hasil: HasilHitungSetoran = React.useMemo(() => {
-    try {
-      return hitungSetoran({
-        target: selectedPackage.target,
-        bulanMulai: startMonth,
-      });
-    } catch {
-      return {
-        periode: 7,
-        setoranPerBulan: 271500,
-        setoranTerakhir: 271000,
-        sisaTarget: selectedPackage.target,
-      };
-    }
-  }, [selectedPackage.target, startMonth]);
-
-  // Options bulan mulai untuk komponen Select kustom
-  const monthOptions = React.useMemo(
-    () =>
-      AVAILABLE_START_MONTHS.map((m) => ({
-        value: m.value,
-        label: `${m.label} (${m.remainingMonths} bulan s/d April 2027)`,
-      })),
-    []
-  );
-
-  // Handler untuk smooth scroll ke Section Paket
-  const handleScrollToPaket = () => {
-    const el = document.getElementById("paket");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
-  // Handler untuk smooth scroll ke Section FAQ
-  const handleScrollToFaq = () => {
-    const el = document.getElementById("faq");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
+  // Seluruh logika kalkulasi & interaksi diisolasi dalam custom hook (SRP)
+  const {
+    hasil,
+    monthOptions,
+    scrollToSection,
+  } = useSavingCalculator({
+    selectedPackage,
+    startMonth,
+    onSelectPackage,
+    onStartMonthChange,
+  });
 
   return (
     <section
@@ -90,10 +59,7 @@ export function CalculatorSection({
             <div className="lg:col-span-7 p-5 sm:p-6 lg:p-8 space-y-5 bg-white rounded-t-2xl lg:rounded-tr-none lg:rounded-l-2xl relative z-20">
               {/* Input 1: Pilihan Paket */}
               <div className="space-y-2.5">
-                <label
-                  htmlFor="package-select"
-                  className="block text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug"
-                >
+                <label className="block text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
                   Target Paket Qurban
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -137,7 +103,7 @@ export function CalculatorSection({
               <div className="space-y-2.5">
                 <label
                   htmlFor="start-month-select"
-                  className="block text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug"
+                  className="block text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug cursor-pointer"
                 >
                   Mulai Menabung
                 </label>
@@ -174,9 +140,9 @@ export function CalculatorSection({
               <div className="space-y-4">
                 <div className="rounded-2xl bg-white p-5 sm:p-6 border border-slate-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] space-y-4">
                   <div>
-                    <h3 className="text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                    <CardTitle as="h3" size="base">
                       Estimasi Setoran per Bulan
-                    </h3>
+                    </CardTitle>
                     <div className="flex items-baseline gap-1.5 flex-wrap mt-2">
                       <span className="text-2xl sm:text-3xl font-extrabold font-['Poppins',sans-serif] text-[#2C2C2C] tracking-tight">
                         {formatRupiah(hasil.setoranPerBulan)}
@@ -217,7 +183,7 @@ export function CalculatorSection({
                 <Button
                   variant="primary"
                   size="md"
-                  onClick={handleScrollToPaket}
+                  onClick={() => scrollToSection("paket")}
                   className="font-bold px-6 shadow-sm hover:shadow-md hover:bg-[#337fac] active:bg-[#2c6f96] transition-all duration-200"
                 >
                   Mulai Menabung
@@ -225,7 +191,7 @@ export function CalculatorSection({
                 <Button
                   variant="outline"
                   size="md"
-                  onClick={handleScrollToFaq}
+                  onClick={() => scrollToSection("faq")}
                   className="font-bold border-[#3C95C8] text-[#3C95C8] hover:bg-[#EAF5FB] px-6 transition-all duration-200"
                 >
                   Pelajari FAQ

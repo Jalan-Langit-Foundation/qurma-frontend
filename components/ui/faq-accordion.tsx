@@ -3,6 +3,8 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
+import { useFaqAccordion } from "@/hooks";
+import { CardTitle } from "./card";
 
 export interface FaqItem {
   id: string;
@@ -82,34 +84,17 @@ export function FaqAccordion({
   defaultOpenIndexes = [],
   className,
 }: FaqAccordionProps) {
-  // State menyimpan set id item yang terbuka
-  const [openIds, setOpenIds] = React.useState<Set<string>>(() => {
-    const initial = new Set<string>();
-    defaultOpenIndexes.forEach((idx) => {
-      if (items[idx]) initial.add(items[idx].id);
-    });
-    return initial;
+  const itemIds = React.useMemo(() => items.map((i) => i.id), [items]);
+  const { isOpen: checkIsOpen, toggleItem } = useFaqAccordion({
+    allowMultiple,
+    defaultOpenIndexes,
+    itemIds,
   });
-
-  const toggleItem = (id: string) => {
-    setOpenIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        if (!allowMultiple) {
-          next.clear();
-        }
-        next.add(id);
-      }
-      return next;
-    });
-  };
 
   return (
     <div className={cn("w-full space-y-3.5", className)}>
       {items.map((item) => {
-        const isOpen = openIds.has(item.id);
+        const isOpen = checkIsOpen(item.id);
         const triggerId = `faq-trigger-${item.id}`;
         const contentId = `faq-content-${item.id}`;
 
@@ -123,21 +108,20 @@ export function FaqAccordion({
                 : "border-slate-200/80 shadow-none hover:border-slate-300/90"
             )}
           >
-            <h3>
+            <CardTitle as="h3" size="base">
               <button
                 type="button"
                 id={triggerId}
                 aria-expanded={isOpen}
                 aria-controls={contentId}
                 onClick={() => toggleItem(item.id)}
-                className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none group/btn select-none font-['Poppins',sans-serif] font-bold"
+                className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none group/btn select-none"
               >
                 <span
                   className={cn(
-                    "text-base font-bold font-['Poppins',sans-serif] leading-snug transition-colors",
+                    "transition-colors",
                     isOpen ? "text-[#3C95C8]" : "text-[#2C2C2C]"
                   )}
-                  style={{ fontWeight: 700 }}
                 >
                   {item.question}
                 </span>
@@ -152,7 +136,7 @@ export function FaqAccordion({
                   aria-hidden="true"
                 />
               </button>
-            </h3>
+            </CardTitle>
 
             {/* Konten Terbuka dengan Animasi Expand Halus dari Atas ke Bawah */}
             <div
