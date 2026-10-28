@@ -65,7 +65,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 sm:py-16 bg-[#FAFCFE] relative overflow-hidden">
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:py-16 bg-[#FAFCFE] relative overflow-hidden">
       {/* Decorative Soft Ambient Background */}
       <div className="absolute top-1/4 -left-32 w-80 h-80 bg-[#EAF5FB]/80 rounded-full blur-3xl pointer-events-none -z-0" />
       <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-[#EAF5FB]/80 rounded-full blur-3xl pointer-events-none -z-0" />
@@ -181,12 +181,12 @@ export default function LoginPage() {
           {/* Footer Card: Registrasi Link */}
           <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             <p className="text-xs sm:text-sm text-[#555555]">
-              Belum punya rencana qurban?{" "}
+              Belum memiliki akun?{" "}
               <Link
-                href="/registrasi"
+                href="/register"
                 className="font-semibold text-[#3C95C8] hover:underline"
               >
-                Mulai Tabungan Sekarang
+                Daftar di sini
               </Link>
             </p>
           </div>
