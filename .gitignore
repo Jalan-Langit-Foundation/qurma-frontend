@@ -43,3 +43,4 @@ next-env.d.ts
 # internal docs
 /REQUIREMENTS.md
 /TASK.md
+/API.md
