@@ -80,7 +80,7 @@ export function PackageCard({
         <div>
           {/* 1. Header: Plan Name */}
           <div className="mb-3">
-            <h3 className="text-base sm:text-lg font-bold font-['Poppins',sans-serif] text-[#2C2C2C] leading-snug">
+            <h3 className="text-base font-bold font-['Poppins',sans-serif] text-[#2C2C2C] leading-snug">
               Paket {pkg.name}
             </h3>
           </div>

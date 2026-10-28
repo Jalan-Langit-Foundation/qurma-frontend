@@ -76,7 +76,7 @@ export function HowItWorksSection() {
                       0{step.step}
                     </span>
 
-                    <h3 className="text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                    <h3 className="text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
                       {step.title}
                     </h3>
 

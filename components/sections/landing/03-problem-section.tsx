@@ -34,7 +34,7 @@ export function ProblemSection() {
             <div className="flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:border-slate-300 transition-colors">
               <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4 bg-white">
                 <div className="space-y-3">
-                  <h3 className="text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                  <h3 className="text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
                     Menunggu Menjelang Hari H
                   </h3>
                   <div className="space-y-2.5">
@@ -69,7 +69,7 @@ export function ProblemSection() {
             <div className="flex flex-col h-full bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:border-slate-300 transition-colors">
               <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4 bg-white">
                 <div className="space-y-3">
-                  <h3 className="text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                  <h3 className="text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
                     Mulai Dipersiapkan dari Sekarang
                   </h3>
                   <div className="space-y-2.5">

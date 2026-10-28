@@ -71,7 +71,7 @@ export function ValuePropSection() {
               >
                 <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4 bg-white">
                   <div className="space-y-2.5">
-                    <h3 className="text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                    <h3 className="text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
                       {item.title}
                     </h3>
 

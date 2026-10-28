@@ -93,7 +93,7 @@ export function CalculatorSection({
               <div className="space-y-2.5">
                 <label
                   htmlFor="package-select"
-                  className="block text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug"
+                  className="block text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug"
                 >
                   Target Paket Qurban
                 </label>
@@ -138,7 +138,7 @@ export function CalculatorSection({
               <div className="space-y-2.5">
                 <label
                   htmlFor="start-month-select"
-                  className="block text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug"
+                  className="block text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug"
                 >
                   Mulai Menabung
                 </label>
@@ -175,7 +175,7 @@ export function CalculatorSection({
               <div className="space-y-4">
                 <div className="rounded-2xl bg-white p-5 sm:p-6 border border-slate-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] space-y-4">
                   <div>
-                    <h3 className="text-base sm:text-lg font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                    <h3 className="text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
                       Estimasi Setoran per Bulan
                     </h3>
                     <div className="flex items-baseline gap-1.5 flex-wrap mt-2">
