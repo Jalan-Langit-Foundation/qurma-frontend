@@ -4,6 +4,8 @@ import * as React from "react";
 import { Container, Button, AmbientGlow } from "@/components/ui";
 import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 
+import { FINAL_CTA_CONTENT } from "@/content/landing/final-cta";
+
 export function FinalCtaSection() {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -13,10 +15,8 @@ export function FinalCtaSection() {
   };
 
   const waConsultationUrl =
-    "https://wa.me/6285173473189?text=" +
-    encodeURIComponent(
-      "Assalamualaikum Admin Yayasan Jalan Langit, saya ingin berkonsultasi seputar program Tabungan Qurban QURMA 2027."
-    );
+    `https://wa.me/${FINAL_CTA_CONTENT.waPhoneNumber}?text=` +
+    encodeURIComponent(FINAL_CTA_CONTENT.waMessage);
 
   return (
     <section
@@ -36,17 +36,16 @@ export function FinalCtaSection() {
           {/* Pill Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-xs sm:text-sm font-semibold tracking-wide uppercase font-['Poppins',sans-serif] mb-6">
             <Sparkles className="w-4 h-4 text-[#EAF5FB]" />
-            <span>Persiapan Terencana Menuju Idul Adha 1448 H</span>
+            <span>{FINAL_CTA_CONTENT.pillBadge}</span>
           </div>
 
           {/* Headline Persis Sesuai Requirement */}
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold font-['Poppins',sans-serif] tracking-tight leading-tight max-w-2xl mx-auto">
-            Qurban 2027 Bisa Dimulai Hari Ini.
+            {FINAL_CTA_CONTENT.headline}
           </h2>
 
           <p className="mt-4 sm:mt-6 text-sm sm:text-base text-white/90 font-['Lato',sans-serif] max-w-xl mx-auto leading-relaxed">
-            Niat baik tidak perlu ditunda. Mari sambut Idul Adha 2027 dengan hati
-            tenang, persiapan teratur, dan kepastian qurban terbaik bagi sesama.
+            {FINAL_CTA_CONTENT.description}
           </p>
 
           {/* Dual Action Buttons */}

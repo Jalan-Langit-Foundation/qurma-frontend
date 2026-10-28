@@ -4,33 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import { Container, SectionHeader, FaqAccordion, AmbientGlow } from "@/components/ui";
 
-// 4 Foto dokumentasi qurban pilihan untuk kolase statis 50:50
-const QURBAN_COLLAGE = [
-  {
-    id: "qurban-01",
-    src: "/images/programs/qurban/qurban-01.webp",
-    alt: "Domba Qurban Sehat & Sesuai Syariat",
-    caption: "Domba Sehat Sesuai Syariat",
-  },
-  {
-    id: "qurban-02",
-    src: "/images/programs/qurban/qurban-02.webp",
-    alt: "Perawatan Pakan Bernutrisi di Peternakan",
-    caption: "Perawatan Pakan Bernutrisi",
-  },
-  {
-    id: "qurban-03",
-    src: "/images/programs/qurban/qurban-03.webp",
-    alt: "Verifikasi Bobot Timbangan Digital",
-    caption: "Verifikasi Bobot Timbangan",
-  },
-  {
-    id: "qurban-04",
-    src: "/images/programs/qurban/qurban-04.webp",
-    alt: "Penyaluran Daging Qurban Tepat Sasaran",
-    caption: "Penyaluran Tepat Sasaran",
-  },
-];
+import { QURBAN_COLLAGE } from "@/content/landing/media";
 
 export function FaqSection() {
   return (

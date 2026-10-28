@@ -7,44 +7,9 @@ import { Button, Badge, Container, Reveal } from "@/components/ui";
 import { useAutoPlay } from "@/hooks";
 import { cn } from "@/lib/utils";
 
-export interface HeroSlide {
-  id: string;
-  src: string;
-  alt: string;
-}
-
-export const HERO_CONFIG = {
-  /** Durasi pergantian gambar otomatis (dalam milidetik) */
-  intervalMs: 5000,
-  /** Daftar foto background slideshow hero section */
-  slides: [
-    {
-      id: "slide-1",
-      src: "/images/programs/qurban/qurban-01.webp",
-      alt: "Penyaluran dan dokumentasi qurban berkah Yayasan Jalan Langit",
-    },
-    {
-      id: "slide-2",
-      src: "/images/programs/qurban/qurban-02.webp",
-      alt: "Pemberdayaan dan kebersamaan program qurban bagi masyarakat dan santri",
-    },
-    {
-      id: "slide-3",
-      src: "/images/programs/qurban/qurban-03.webp",
-      alt: "Amanah penyaluran hewan qurban sehat bersama Yayasan Jalan Langit",
-    },
-    {
-      id: "slide-4",
-      src: "/images/programs/qurban/qurban-04.webp",
-      alt: "Peternak binaan dan hewan qurban terawat sesuai syariat",
-    },
-    {
-      id: "slide-5",
-      src: "/images/programs/qurban/qurban-05.webp",
-      alt: "Keceriaan dan keberkahan Idul Adha bersama Shohibul Qurban",
-    },
-  ] satisfies HeroSlide[],
-};
+import { HERO_CONFIG, type HeroSlide } from "@/content/landing/hero";
+export { HERO_CONFIG };
+export type { HeroSlide };
 
 export function HeroSection() {
   const { currentIndex: currentSlideIndex } = useAutoPlay({

@@ -3,36 +3,20 @@
  * Mengeliminasi magic numbers dengan konstanta semantik.
  */
 
-export const PROGRAM_TARGET_YEAR = 2027;
-export const FINAL_PAYMENT_MONTH = "2027-04"; // Batas akhir pelunasan dana qurban
-export const DEFAULT_START_MONTH = "2026-10"; // Bulan mulai default (Oktober 2026)
-export const DEFAULT_TENOR_MONTHS = 7;
-export const SAVINGS_ROUNDING_UNIT = 500; // Pembulatan kelipatan Rp500
-export const DAYS_PER_MONTH_APPROX = 30; // Estimasi hari dalam satu bulan
-
-// Alias untuk kompatibilitas kode sebelumnya
-export const BULAN_MULAI_DEFAULT = DEFAULT_START_MONTH;
-export const BATAS_PELUNASAN = FINAL_PAYMENT_MONTH;
-export const ROUNDING = SAVINGS_ROUNDING_UNIT;
-
-export interface AvailableMonth {
-  value: string; // "YYYY-MM"
-  label: string; // "Oktober 2026"
-  remainingMonths: number;
-}
-
-/**
- * Daftar opsi bulan mulai yang diizinkan untuk tabungan QURMA 2027
- */
-export const AVAILABLE_START_MONTHS: AvailableMonth[] = [
-  { value: "2026-10", label: "Oktober 2026", remainingMonths: 7 },
-  { value: "2026-11", label: "November 2026", remainingMonths: 6 },
-  { value: "2026-12", label: "Desember 2026", remainingMonths: 5 },
-  { value: "2027-01", label: "Januari 2027", remainingMonths: 4 },
-  { value: "2027-02", label: "Februari 2027", remainingMonths: 3 },
-  { value: "2027-03", label: "Maret 2027", remainingMonths: 2 },
-  { value: "2027-04", label: "April 2027", remainingMonths: 1 },
-];
+export {
+  PROGRAM_TARGET_YEAR,
+  FINAL_PAYMENT_MONTH,
+  DEFAULT_START_MONTH,
+  DEFAULT_TENOR_MONTHS,
+  SAVINGS_ROUNDING_UNIT,
+  DAYS_PER_MONTH_APPROX,
+  BULAN_MULAI_DEFAULT,
+  BATAS_PELUNASAN,
+  ROUNDING,
+  AVAILABLE_START_MONTHS,
+} from "@/content/landing/calculator";
+export type { AvailableMonth } from "@/content/landing/calculator";
+import { FINAL_PAYMENT_MONTH, DEFAULT_START_MONTH, SAVINGS_ROUNDING_UNIT, PROGRAM_TARGET_YEAR } from "@/content/landing/calculator";
 
 /**
  * Menghitung selisih periode bulan inklusif antara bulan mulai dan batas pelunasan
