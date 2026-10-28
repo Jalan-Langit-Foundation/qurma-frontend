@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { formatRupiah, formatTanggal } from "@/lib/format";
 import { StatusBadge } from "./status-badge";
-import { Button } from "@/components/ui";
+import { Button } from "./button";
 import { Calendar, ReceiptText } from "lucide-react";
 import type { Deposit } from "@/types/qurma";
 

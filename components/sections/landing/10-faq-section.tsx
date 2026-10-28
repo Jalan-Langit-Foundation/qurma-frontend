@@ -2,8 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Container, SectionHeader } from "@/components/ui";
-import { FaqAccordion } from "@/components/qurma/faq-accordion";
+import { Container, SectionHeader, FaqAccordion } from "@/components/ui";
 
 // 4 Foto dokumentasi qurban pilihan untuk kolase statis 50:50
 const QURBAN_COLLAGE = [

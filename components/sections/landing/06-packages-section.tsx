@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Container, SectionHeader } from "@/components/ui";
-import { PackageCard } from "@/components/qurma/package-card";
+import { Container, SectionHeader, PackageCard } from "@/components/ui";
 import { PACKAGES } from "@/lib/data/packages";
 import type { Package } from "@/types/qurma";
 

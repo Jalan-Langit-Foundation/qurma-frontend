@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui";
+import { Button } from "./button";
 import { AlertTriangle, RefreshCw, Inbox } from "lucide-react";
 
 export type SectionStateType = "loading" | "empty" | "error" | "success";

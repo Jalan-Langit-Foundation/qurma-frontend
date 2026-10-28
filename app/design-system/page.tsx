@@ -7,8 +7,6 @@ import {
   Badge,
   Card,
   Container,
-} from "@/components/ui";
-import {
   PackageCard,
   ProgressBar,
   JourneyChecklist,
@@ -18,7 +16,7 @@ import {
   FaqAccordion,
   SectionState,
   SectionStateType,
-} from "@/components/qurma";
+} from "@/components/ui";
 import { PACKAGES } from "@/lib/data/packages";
 import { MOCK_DEPOSITS_SAVING } from "@/lib/data/mock/deposits";
 import type { PackageId, DepositStatus, PreparationState, MudhohiStatus } from "@/types/qurma";

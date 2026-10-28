@@ -4,7 +4,7 @@ import * as React from "react";
 import { PACKAGES } from "@/lib/data/packages";
 import { BULAN_MULAI_DEFAULT, hitungSetoran } from "@/lib/data/savings-config";
 import { formatRupiah } from "@/lib/format";
-import { StickyCTA, StickyCTASpacer } from "@/components/qurma/sticky-cta";
+import { StickyCTA, StickyCTASpacer } from "@/components/ui";
 import {
   HeroSection,
   TrustBarSection,

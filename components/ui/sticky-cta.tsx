@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { formatRupiah } from "@/lib/format";
-import { Button } from "@/components/ui";
+import { Button } from "./button";
 import { ArrowRight } from "lucide-react";
 
 export interface StickyCTAProps {

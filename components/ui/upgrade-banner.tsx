@@ -4,7 +4,8 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { formatRupiah } from "@/lib/format";
 import { getPackageById, getUpgradeOptions } from "@/lib/data/packages";
-import { Button, Badge } from "@/components/ui";
+import { Button } from "./button";
+import { Badge } from "./badge";
 import { Sparkles, ArrowRight, X } from "lucide-react";
 import type { Package, PackageId } from "@/types/qurma";
 
