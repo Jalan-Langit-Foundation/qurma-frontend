@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { Container, SectionHeader, Button } from "@/components/ui";
+import { Container, SectionHeader, Button, CardTitle, AmbientGlow } from "@/components/ui";
 import { VALUE_PROPOSITIONS } from "@/lib/data/landing";
 
 export function ValuePropSection() {
@@ -33,8 +33,7 @@ export function ValuePropSection() {
       className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-16 border-b border-slate-200/80"
     >
       {/* Decorative Background Accents matching Visi Misi & Problem Section */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+      <AmbientGlow size="lg" />
 
       <Container size="xl" className="relative z-10">
         <SectionHeader
@@ -71,9 +70,9 @@ export function ValuePropSection() {
               >
                 <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4 bg-white">
                   <div className="space-y-2.5">
-                    <h3 className="text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                    <CardTitle as="h3" size="base">
                       {item.title}
-                    </h3>
+                    </CardTitle>
 
                     <p className="text-xs sm:text-sm text-[#555555] font-['Lato',sans-serif] leading-relaxed">
                       {item.description}

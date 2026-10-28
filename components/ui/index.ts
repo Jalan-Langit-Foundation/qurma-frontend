@@ -13,6 +13,7 @@ export * from "./phone-input";
 export * from "./checkbox";
 export * from "./form-alert";
 export * from "./form-divider";
+export * from "./ambient-glow";
 export * from "./package-card";
 export * from "./faq-accordion";
 export * from "./progress-bar";

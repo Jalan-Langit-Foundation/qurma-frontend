@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Container, SectionHeader, PackageCard } from "@/components/ui";
+import { Container, SectionHeader, PackageCard, AmbientGlow } from "@/components/ui";
 import { PACKAGES } from "@/lib/data/packages";
 import type { Package } from "@/types/qurma";
 
@@ -21,8 +21,7 @@ export function PackagesSection({
       className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
     >
       {/* Decorative Background Accents matching Visi Misi & Problem Section */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+      <AmbientGlow size="lg" />
 
       <Container size="xl" className="relative z-10">
         <SectionHeader

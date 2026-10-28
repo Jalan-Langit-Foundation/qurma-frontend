@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { Container, SectionHeader, Button } from "@/components/ui";
+import { Container, SectionHeader, Button, CardTitle, AmbientGlow } from "@/components/ui";
 import { HOW_IT_WORKS_STEPS } from "@/lib/data/landing";
 
 export function HowItWorksSection() {
@@ -33,8 +33,7 @@ export function HowItWorksSection() {
       className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-16 border-b border-slate-200/80"
     >
       {/* Decorative Background Accents matching Visi Misi & Problem Section */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+      <AmbientGlow size="lg" />
 
       <Container size="xl" className="relative z-10">
         <SectionHeader
@@ -76,9 +75,9 @@ export function HowItWorksSection() {
                       0{step.step}
                     </span>
 
-                    <h3 className="text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                    <CardTitle as="h3" size="base">
                       {step.title}
-                    </h3>
+                    </CardTitle>
 
                     <p className="text-xs sm:text-sm text-[#555555] font-['Lato',sans-serif] leading-relaxed">
                       {step.description}

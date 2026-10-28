@@ -4,6 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { formatRupiahJuta } from "@/lib/format";
 import { Check } from "lucide-react";
+import { CardTitle } from "./card";
 import type { Package } from "@/types/qurma";
 
 export interface PackageCardProps {
@@ -80,9 +81,9 @@ export function PackageCard({
         <div>
           {/* 1. Header: Plan Name */}
           <div className="mb-3">
-            <h3 className="text-base font-bold font-['Poppins',sans-serif] text-[#2C2C2C] leading-snug">
+            <CardTitle as="h3" size="base">
               Paket {pkg.name}
-            </h3>
+            </CardTitle>
           </div>
 
           {/* 2. Price & Suffix (Opsi 1: Ringkas Jt) */}

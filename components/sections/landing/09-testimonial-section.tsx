@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Container, SectionHeader, Card } from "@/components/ui";
+import { Container, SectionHeader, Card, AmbientGlow } from "@/components/ui";
 import { TESTIMONIALS_DATA, TestimonialItem } from "@/lib/data/landing";
 import { Quote, Star } from "lucide-react";
 
@@ -24,8 +24,7 @@ export function TestimonialSection({
       className="w-full bg-[linear-gradient(180deg,#F4F9FD_0%,#FFFFFF_50%,#EDF7FD_100%)] py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 relative overflow-hidden"
     >
       {/* Subtle Background Lighting Accent */}
-      <div className="absolute top-1/4 -left-36 w-96 h-96 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-1/4 -right-36 w-96 h-96 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
+      <AmbientGlow size="lg" intensity="soft" />
 
       <Container size="xl" className="relative z-10">
         <SectionHeader

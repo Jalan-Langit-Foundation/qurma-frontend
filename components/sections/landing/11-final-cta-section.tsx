@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Container, Button } from "@/components/ui";
+import { Container, Button, AmbientGlow } from "@/components/ui";
 import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 
 export function FinalCtaSection() {
@@ -25,7 +25,7 @@ export function FinalCtaSection() {
       className="w-full bg-[linear-gradient(180deg,#F4F9FD_0%,#FFFFFF_50%,#EDF7FD_100%)] py-14 sm:py-20 lg:py-24 border-b border-slate-200/80 relative overflow-hidden scroll-mt-16"
     >
       {/* Decorative Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#3C95C8]/10 blur-3xl rounded-full pointer-events-none -z-0" />
+      <AmbientGlow layout="center" intensity="accent" size="xl" />
 
       <Container size="xl" className="relative z-10">
         <div className="w-full rounded-3xl bg-gradient-to-br from-[#1E5B7D] via-[#2F7FA9] to-[#3C95C8] p-8 sm:p-12 lg:p-16 text-center text-white shadow-2xl relative overflow-hidden">

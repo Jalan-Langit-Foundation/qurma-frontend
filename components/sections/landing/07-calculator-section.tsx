@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Container, SectionHeader, Button, Select } from "@/components/ui";
+import { Container, SectionHeader, Button, Select, CardTitle, AmbientGlow } from "@/components/ui";
 import { PACKAGES } from "@/lib/data/packages";
 import { AVAILABLE_START_MONTHS, hitungSetoran, HasilHitungSetoran } from "@/lib/data/savings-config";
 import { formatRupiah } from "@/lib/format";
@@ -71,8 +71,7 @@ export function CalculatorSection({
       className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
     >
       {/* Decorative Background Accents matching Visi Misi, Problem & Value Prop Sections */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-[#EAF5FB] rounded-full blur-3xl pointer-events-none -z-0" />
+      <AmbientGlow size="lg" />
 
       <Container size="xl" className="relative z-10">
         <SectionHeader

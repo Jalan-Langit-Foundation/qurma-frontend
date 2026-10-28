@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Container, SectionHeader, FaqAccordion } from "@/components/ui";
+import { Container, SectionHeader, FaqAccordion, AmbientGlow } from "@/components/ui";
 
 // 4 Foto dokumentasi qurban pilihan untuk kolase statis 50:50
 const QURBAN_COLLAGE = [
@@ -40,8 +40,7 @@ export function FaqSection() {
       className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
     >
       {/* Decorative Soft Ambient Accents matching Design System */}
-      <div className="absolute top-1/4 -left-32 w-80 h-80 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-[#EAF5FB]/70 rounded-full blur-3xl pointer-events-none -z-0" />
+      <AmbientGlow size="md" intensity="soft" />
 
       <Container size="xl" className="relative z-10">
         {/* Section Header */}

@@ -10,6 +10,8 @@ import { Mail } from "lucide-react";
 import {
   Container,
   Card,
+  CardTitle,
+  AmbientGlow,
   Input,
   PasswordInput,
   Checkbox,
@@ -70,8 +72,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:py-16 bg-[#FAFCFE] relative overflow-hidden">
       {/* Decorative Soft Ambient Background */}
-      <div className="absolute top-1/4 -left-32 w-80 h-80 bg-[#EAF5FB]/80 rounded-full blur-3xl pointer-events-none -z-0" />
-      <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-[#EAF5FB]/80 rounded-full blur-3xl pointer-events-none -z-0" />
+      <AmbientGlow size="md" intensity="soft" />
 
       <Container size="sm" className="relative z-10">
         {/* Card Formulir Login */}
@@ -91,9 +92,9 @@ export default function LoginPage() {
                 priority
               />
             </Link>
-            <h1 className="text-xl sm:text-2xl font-bold text-[#2C2C2C] font-['Poppins',sans-serif]">
+            <CardTitle as="h1" size="xl" className="text-xl sm:text-2xl">
               Masuk ke Akun Mudhohi
-            </h1>
+            </CardTitle>
             <p className="text-xs sm:text-sm text-[#555555] mt-1 font-['Lato',sans-serif]">
               Pantau progres tabungan dan persiapan qurban Anda
             </p>
