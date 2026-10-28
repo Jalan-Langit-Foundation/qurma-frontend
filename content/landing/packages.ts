@@ -98,9 +98,16 @@ export function getPackageById(id: string): Package | undefined {
 
 /**
  * Mengambil opsi paket upgrade (hanya paket dengan target lebih tinggi dari paket aktif)
+ * Paket Loyalty tidak pernah ditawarkan sebagai opsi upgrade.
  */
-export function getUpgradePackageOptions(currentPackageId: string): Package[] {
-  const current = getPackageById(currentPackageId);
-  if (!current) return [];
-  return PACKAGES.filter((pkg) => pkg.target > current.target);
+export function getUpgradeOptions(currentId: string): Package[] {
+  const currentPkg = getPackageById(currentId);
+  if (!currentPkg) return [];
+
+  return PACKAGES.filter(
+    (pkg) => !pkg.loyaltyOnly && pkg.target > currentPkg.target
+  );
 }
+
+// Alias kompatibilitas
+export const getUpgradePackageOptions = getUpgradeOptions;

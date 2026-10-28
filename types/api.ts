@@ -114,3 +114,14 @@ export interface SavingDepositsData {
   schedule: ScheduleItem[];
   deposits: DepositItem[];
 }
+
+/**
+ * Concrete API Response Types sesuai API.md
+ */
+export type RegisterApiResponse = ApiResponse<AuthData>;
+export type LoginApiResponse = ApiResponse<AuthData>;
+export type CurrentUserApiResponse = ApiResponse<{ user: User }>;
+export type CreateSavingApiResponse = ApiResponse<{ saving: SavingSummary }>;
+export type CurrentSavingApiResponse = ApiResponse<{ saving: SavingSummary }>;
+export type SavingDepositsApiResponse = ApiResponse<SavingDepositsData>;
+export type LogoutApiResponse = ApiResponse<null>;
