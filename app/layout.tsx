@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Poppins, Lato, Caveat } from "next/font/google";
 import {
