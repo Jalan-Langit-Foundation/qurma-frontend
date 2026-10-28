@@ -7,4 +7,5 @@ export * from "./textarea";
 export * from "./page-loader";
 export * from "./section-header";
 export * from "./reveal";
+export * from "./select";
 
