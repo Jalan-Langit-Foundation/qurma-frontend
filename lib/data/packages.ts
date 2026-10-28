@@ -15,7 +15,7 @@ export const PACKAGES: Package[] = [
     note: "Khusus Mudhohi QURMA 2026",
     recommended: false,
     loyaltyOnly: true,
-    description: "Pilihan apresiasi tarif khusus bagi mudhohi setia guna menunaikan qurban terencana.",
+    description: "Khusus alumni mudhohi 2026.",
     features: [
       "Estimasi bobot 20–22 kg",
       "Setoran terjangkau ±Rp214 rb/bln",
@@ -35,7 +35,7 @@ export const PACKAGES: Package[] = [
     note: "Paling direkomendasikan",
     recommended: true,
     loyaltyOnly: false,
-    description: "Pilihan paling ideal dan terfavorit untuk memulai tabungan qurban keluarga terencana.",
+    description: "Ideal untuk shohibul pemula.",
     features: [
       "Estimasi bobot 23–25 kg",
       "Setoran ringan ±Rp271 rb/bln",
@@ -55,7 +55,7 @@ export const PACKAGES: Package[] = [
     note: "Untuk meningkatkan target",
     recommended: false,
     loyaltyOnly: false,
-    description: "Pilihan tepat untuk menambah bobot hewan serta meluaskan manfaat qurban bagi sesama.",
+    description: "Untuk manfaat lebih luas.",
     features: [
       "Estimasi bobot 26–28 kg",
       "Setoran terencana ±Rp357 rb/bln",
@@ -75,7 +75,7 @@ export const PACKAGES: Package[] = [
     note: "Bobot lebih besar",
     recommended: false,
     loyaltyOnly: false,
-    description: "Pilihan istimewa dengan bobot domba maksimal demi keutamaan ibadah qurban terbaik.",
+    description: "Pilihan bobot maksimal terbaik.",
     features: [
       "Estimasi bobot unggul 29–34 kg",
       "Setoran teratur ±Rp427 rb/bln",
