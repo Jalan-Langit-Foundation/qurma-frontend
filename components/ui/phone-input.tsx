@@ -25,7 +25,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
       value,
       onChange,
       onRawChange,
-      placeholder = "Contoh: 081234567890",
+      placeholder = "081234567890",
       ...props
     },
     ref
@@ -51,15 +51,9 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           </label>
         )}
         <div className="relative flex items-center">
-          {/* Prefix Badge Bendera Indonesia & Ikon */}
-          <div className="absolute left-3.5 flex items-center gap-1.5 pointer-events-none text-[#555555]/70">
-            <span className="text-base leading-none select-none" aria-hidden="true">
-              🇮🇩
-            </span>
-            <Phone className="w-3.5 h-3.5 text-[#555555]/60" />
-            <span className="text-xs font-semibold text-slate-400 font-['Poppins',sans-serif] pl-0.5 border-r border-slate-200 pr-2">
-              +62
-            </span>
+          {/* Ikon Tunggal Phone dengan Warna Solid */}
+          <div className="absolute left-3.5 flex items-center justify-center pointer-events-none text-[#777777]">
+            <Phone className="w-4 h-4 text-[#777777]" />
           </div>
 
           <input
@@ -72,7 +66,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
             onChange={handleChange}
             placeholder={placeholder}
             className={cn(
-              "w-full rounded-xl border bg-white pl-24 pr-4 py-2.5 text-xs sm:text-sm font-medium text-[#2C2C2C] placeholder:text-slate-400 placeholder:font-normal transition-all duration-200",
+              "w-full rounded-xl border bg-white pl-11 pr-4 py-2.5 text-xs sm:text-sm font-medium text-[#2C2C2C] placeholder:text-slate-400 placeholder:font-normal transition-all duration-200",
               "border-slate-200/80 hover:border-slate-300",
               "focus:border-[#3C95C8] focus:outline-none focus:ring-2 focus:ring-[#3C95C8]/20",
               "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50",

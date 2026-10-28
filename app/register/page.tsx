@@ -4,7 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { User, Mail, ArrowLeft } from "lucide-react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { User, Mail } from "lucide-react";
 import {
   Container,
   Card,
@@ -15,71 +17,67 @@ import {
   Button,
   FormAlert,
 } from "@/components/ui";
-import { register, ApiClientError } from "@/lib/api";
+import { register as registerApi, ApiClientError } from "@/lib/api";
+import { registerSchema, type RegisterFormData } from "@/lib/validations/auth";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [serverError, setServerError] = React.useState<string | null>(null);
 
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
-  const [agreeTerms, setAgreeTerms] = React.useState(false);
+  const {
+    register,
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      password_confirmation: "",
+      agreeTerms: false,
+    },
+  });
 
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string[]>>({});
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrorMessage(null);
-    setFieldErrors({});
-
-    // Validasi sederhana sisi klien
-    const errors: Record<string, string[]> = {};
-    if (!name.trim()) errors.name = ["Nama lengkap wajib diisi."];
-    if (!email.trim()) errors.email = ["Alamat email wajib diisi."];
-    if (!phone.trim()) errors.phone = ["Nomor WhatsApp wajib diisi."];
-    if (!password) errors.password = ["Kata sandi wajib diisi minimal 8 karakter."];
-    if (password && password.length < 8) errors.password = ["Kata sandi minimal 8 karakter."];
-    if (password !== passwordConfirmation) {
-      errors.password_confirmation = ["Konfirmasi kata sandi tidak cocok."];
-    }
-    if (!agreeTerms) {
-      errors.agree = ["Anda wajib menyetujui syarat & ketentuan sebelum mendaftar."];
-    }
-
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
-      return;
-    }
+  const onSubmit = async (data: RegisterFormData) => {
+    setServerError(null);
 
     try {
-      setIsLoading(true);
-      const res = await register({
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
-        password,
-        password_confirmation: passwordConfirmation,
+      const res = await registerApi({
+        name: data.name.trim(),
+        email: data.email.trim(),
+        phone: data.phone.trim(),
+        password: data.password,
+        password_confirmation: data.password_confirmation,
       });
 
-      // Berhasil registrasi -> arahkan ke dashboard
       if (res?.token) {
         router.push("/dashboard");
       }
     } catch (err) {
       if (err instanceof ApiClientError) {
-        setErrorMessage(err.message || "Data pendaftaran tidak valid.");
+        setServerError(err.message || "Data pendaftaran tidak valid.");
+
+        // Pasangkan error spesifik field dari backend Laravel jika ada
         if (err.errors) {
-          setFieldErrors(err.errors);
+          Object.entries(err.errors).forEach(([field, messages]) => {
+            if (
+              field === "name" ||
+              field === "email" ||
+              field === "phone" ||
+              field === "password" ||
+              field === "password_confirmation"
+            ) {
+              setError(field as keyof RegisterFormData, { message: messages[0] });
+            }
+          });
         }
       } else {
-        setErrorMessage("Terjadi kendala jaringan. Silakan coba beberapa saat lagi.");
+        setServerError("Terjadi kendala jaringan. Silakan coba beberapa saat lagi.");
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -90,17 +88,6 @@ export default function RegisterPage() {
       <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-[#EAF5FB]/80 rounded-full blur-3xl pointer-events-none -z-0" />
 
       <Container size="sm" className="relative z-10">
-        {/* Tombol Kembali ke Beranda */}
-        <div className="mb-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-[#555555] hover:text-[#3C95C8] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Kembali ke Beranda
-          </Link>
-        </div>
-
         {/* Card Formulir Register */}
         <Card
           variant="outline"
@@ -126,31 +113,30 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Alert Notifikasi Error dari API jika ada */}
-          {errorMessage && (
+          {/* Alert Notifikasi Error Server */}
+          {serverError && (
             <div className="mb-5">
               <FormAlert
                 variant="error"
-                message={errorMessage}
-                onDismiss={() => setErrorMessage(null)}
+                message={serverError}
+                onDismiss={() => setServerError(null)}
               />
             </div>
           )}
 
           {/* Form Registrasi */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
             {/* Input Nama Lengkap */}
             <Input
               id="register-name"
               type="text"
               label="Nama Lengkap"
-              placeholder="Contoh: Ahmad Fauzi"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              disabled={isLoading}
-              leftIcon={<User className="w-4 h-4 text-[#555555]/60" />}
-              error={fieldErrors.name?.[0]}
+              placeholder="Ahmad Fauzi"
+              disabled={isSubmitting}
+              leftIcon={<User className="w-4 h-4 text-[#777777]" />}
+              error={errors.name?.message}
               autoComplete="name"
+              {...register("name")}
             />
 
             {/* Input Email */}
@@ -159,22 +145,28 @@ export default function RegisterPage() {
               type="email"
               label="Alamat Email"
               placeholder="nama@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
-              leftIcon={<Mail className="w-4 h-4 text-[#555555]/60" />}
-              error={fieldErrors.email?.[0]}
+              disabled={isSubmitting}
+              leftIcon={<Mail className="w-4 h-4 text-[#777777]" />}
+              error={errors.email?.message}
               autoComplete="email"
+              {...register("email")}
             />
 
-            {/* Input WhatsApp dengan formatting Indonesia */}
-            <PhoneInput
-              id="register-phone"
-              label="Nomor WhatsApp"
-              value={phone}
-              onChange={(val) => setPhone(val)}
-              disabled={isLoading}
-              error={fieldErrors.phone?.[0]}
+            {/* Input WhatsApp dengan PhoneInput */}
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  id="register-phone"
+                  label="Nomor WhatsApp"
+                  placeholder="081234567890"
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={isSubmitting}
+                  error={errors.phone?.message}
+                />
+              )}
             />
 
             {/* Input Password */}
@@ -182,40 +174,44 @@ export default function RegisterPage() {
               id="register-password"
               label="Kata Sandi"
               placeholder="Minimal 8 karakter"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
-              error={fieldErrors.password?.[0]}
+              disabled={isSubmitting}
+              error={errors.password?.message}
               autoComplete="new-password"
+              {...register("password")}
             />
 
             {/* Input Konfirmasi Password */}
             <PasswordInput
               id="register-password-confirmation"
               label="Konfirmasi Kata Sandi"
-              placeholder="Ulangi kata sandi Anda"
-              value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
-              disabled={isLoading}
-              error={fieldErrors.password_confirmation?.[0]}
+              placeholder="Ulangi kata sandi"
+              disabled={isSubmitting}
+              error={errors.password_confirmation?.message}
               autoComplete="new-password"
+              {...register("password_confirmation")}
             />
 
             {/* Checkbox Persetujuan Syarat & Ketentuan */}
             <div className="pt-1">
-              <Checkbox
-                id="agree-terms"
-                checked={agreeTerms}
-                onChange={(e) => setAgreeTerms(e.target.checked)}
-                label={
-                  <span>
-                    Saya menyetujui{" "}
-                    <span className="text-[#3C95C8] font-semibold">Syarat & Ketentuan</span>{" "}
-                    serta program tabungan QURMA.
-                  </span>
-                }
-                disabled={isLoading}
-                error={fieldErrors.agree?.[0]}
+              <Controller
+                name="agreeTerms"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    id="agree-terms"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                    label={
+                      <span>
+                        Saya menyetujui{" "}
+                        <span className="text-[#3C95C8] font-semibold">Syarat & Ketentuan</span>{" "}
+                        serta program tabungan QURMA.
+                      </span>
+                    }
+                    disabled={isSubmitting}
+                    error={errors.agreeTerms?.message}
+                  />
+                )}
               />
             </div>
 
@@ -226,7 +222,7 @@ export default function RegisterPage() {
                 variant="primary"
                 size="md"
                 className="w-full justify-center shadow-sm hover:shadow"
-                isLoading={isLoading}
+                isLoading={isSubmitting}
               >
                 Daftar & Lanjutkan
               </Button>

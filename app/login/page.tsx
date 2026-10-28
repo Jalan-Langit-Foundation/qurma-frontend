@@ -4,7 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Mail, ArrowLeft } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Mail } from "lucide-react";
 import {
   Container,
   Card,
@@ -15,52 +17,53 @@ import {
   FormAlert,
 } from "@/components/ui";
 import { login, ApiClientError } from "@/lib/api";
+import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [serverError, setServerError] = React.useState<string | null>(null);
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [rememberMe, setRememberMe] = React.useState(false);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+  });
 
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string[]>>({});
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrorMessage(null);
-    setFieldErrors({});
-
-    // Validasi sederhana sisi klien
-    if (!email.trim()) {
-      setFieldErrors((prev) => ({ ...prev, email: ["Alamat email wajib diisi."] }));
-      return;
-    }
-    if (!password) {
-      setFieldErrors((prev) => ({ ...prev, password: ["Kata sandi wajib diisi."] }));
-      return;
-    }
+  const onSubmit = async (data: LoginFormData) => {
+    setServerError(null);
 
     try {
-      setIsLoading(true);
-      const res = await login({ email: email.trim(), password });
+      const res = await login({
+        email: data.email.trim(),
+        password: data.password,
+      });
 
-      // Berhasil login -> redirect ke dashboard mudhohi
       if (res?.token) {
         router.push("/dashboard");
       }
     } catch (err) {
       if (err instanceof ApiClientError) {
-        setErrorMessage(err.message || "Email atau kata sandi tidak sesuai.");
+        setServerError(err.message || "Email atau kata sandi tidak sesuai.");
+
+        // Pasangkan error spesifik field dari backend Laravel jika ada
         if (err.errors) {
-          setFieldErrors(err.errors);
+          Object.entries(err.errors).forEach(([field, messages]) => {
+            if (field === "email" || field === "password") {
+              setError(field, { message: messages[0] });
+            }
+          });
         }
       } else {
-        setErrorMessage("Terjadi kendala jaringan. Silakan coba beberapa saat lagi.");
+        setServerError("Terjadi kendala jaringan. Silakan coba beberapa saat lagi.");
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -71,18 +74,7 @@ export default function LoginPage() {
       <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-[#EAF5FB]/80 rounded-full blur-3xl pointer-events-none -z-0" />
 
       <Container size="sm" className="relative z-10">
-        {/* Tombol Kembali ke Beranda */}
-        <div className="mb-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-[#555555] hover:text-[#3C95C8] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Kembali ke Beranda
-          </Link>
-        </div>
-
-        {/* Card Formulir Login Sederhana */}
+        {/* Card Formulir Login */}
         <Card
           variant="outline"
           className="border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] bg-white p-6 sm:p-8 rounded-2xl"
@@ -107,53 +99,50 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Alert Notifikasi Error dari API jika ada */}
-          {errorMessage && (
+          {/* Alert Notifikasi Error Server */}
+          {serverError && (
             <div className="mb-5">
               <FormAlert
                 variant="error"
-                message={errorMessage}
-                onDismiss={() => setErrorMessage(null)}
+                message={serverError}
+                onDismiss={() => setServerError(null)}
               />
             </div>
           )}
 
           {/* Form Login */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
             {/* Input Email */}
             <Input
               id="login-email"
               type="email"
               label="Alamat Email"
               placeholder="nama@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
-              leftIcon={<Mail className="w-4 h-4 text-[#555555]/60" />}
-              error={fieldErrors.email?.[0]}
+              disabled={isSubmitting}
+              leftIcon={<Mail className="w-4 h-4 text-[#777777]" />}
+              error={errors.email?.message}
               autoComplete="email"
+              {...register("email")}
             />
 
-            {/* Input Password dengan Toggle Mata */}
+            {/* Input Password */}
             <PasswordInput
               id="login-password"
               label="Kata Sandi"
-              placeholder="Masukkan kata sandi akun Anda"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
-              error={fieldErrors.password?.[0]}
+              placeholder="Masukkan kata sandi"
+              disabled={isSubmitting}
+              error={errors.password?.message}
               autoComplete="current-password"
+              {...register("password")}
             />
 
             {/* Opsi Ingat Saya & Lupa Password */}
             <div className="flex items-center justify-between pt-1">
               <Checkbox
                 id="remember-me"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
                 label="Ingat saya"
-                disabled={isLoading}
+                disabled={isSubmitting}
+                {...register("rememberMe")}
               />
 
               <Link
@@ -171,7 +160,7 @@ export default function LoginPage() {
                 variant="primary"
                 size="md"
                 className="w-full justify-center shadow-sm hover:shadow"
-                isLoading={isLoading}
+                isLoading={isSubmitting}
               >
                 Masuk ke Dashboard
               </Button>
