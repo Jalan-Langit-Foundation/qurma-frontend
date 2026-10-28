@@ -8,4 +8,8 @@ export * from "./page-loader";
 export * from "./section-header";
 export * from "./reveal";
 export * from "./select";
-
+export * from "./password-input";
+export * from "./phone-input";
+export * from "./checkbox";
+export * from "./form-alert";
+export * from "./form-divider";

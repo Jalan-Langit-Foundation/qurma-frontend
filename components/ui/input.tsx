@@ -34,7 +34,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-semibold text-[#2c2c2c] font-['Poppins',sans-serif]"
+            className="block text-sm font-semibold text-[#2C2C2C] font-['Poppins',sans-serif]"
           >
             {label}
           </label>
@@ -51,9 +51,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             disabled={disabled}
             ref={ref}
             className={cn(
-              "w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-[#2c2c2c] placeholder:text-slate-400 transition-all duration-200",
+              "w-full rounded-xl border bg-white px-4 py-2.5 text-xs sm:text-sm font-medium text-[#2C2C2C] placeholder:text-slate-400 placeholder:font-normal transition-all duration-200",
+              "border-slate-200/80 hover:border-slate-300",
               "focus:border-[#3C95C8] focus:outline-none focus:ring-2 focus:ring-[#3C95C8]/20",
-              "disabled:cursor-not-allowed disabled:bg-slate-100 disabled:opacity-60",
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50",
               leftIcon && "pl-11",
               rightIcon && "pr-11",
               error && "border-rose-500 focus:border-rose-500 focus:ring-rose-500/20",
