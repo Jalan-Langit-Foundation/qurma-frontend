@@ -37,7 +37,7 @@ export function CalculatorSection({
     <section
       id="simulasi"
       aria-label="Kalkulator Simulasi Tabungan Qurban"
-      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
+      className="w-full bg-[linear-gradient(180deg,#F4F9FD_0%,#FFFFFF_50%,#EDF7FD_100%)] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
     >
       {/* Decorative Background Accents matching Visi Misi, Problem & Value Prop Sections */}
       <AmbientGlow size="lg" />

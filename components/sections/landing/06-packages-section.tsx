@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Container, SectionHeader, PackageCard, AmbientGlow } from "@/components/ui";
+import { Container, SectionHeader, PackageCard } from "@/components/ui";
 import { PACKAGES } from "@/lib/data/packages";
 import type { Package } from "@/types/qurma";
 
@@ -18,11 +18,8 @@ export function PackagesSection({
     <section
       id="paket"
       aria-label="Pilihan Target Paket Qurban 2027"
-      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
+      className="w-full bg-white py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative"
     >
-      {/* Decorative Background Accents matching Visi Misi & Problem Section */}
-      <AmbientGlow size="lg" />
-
       <Container size="xl" className="relative z-10">
         <SectionHeader
           headline={{

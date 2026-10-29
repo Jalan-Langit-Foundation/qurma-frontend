@@ -30,7 +30,7 @@ export function HowItWorksSection() {
     <section
       id="cara-kerja"
       aria-label="Cara Kerja Program Tabungan QURMA"
-      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-16 border-b border-slate-200/80"
+      className="w-full bg-[linear-gradient(180deg,#F4F9FD_0%,#FFFFFF_50%,#EDF7FD_100%)] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-16 border-b border-slate-200/80"
     >
       {/* Decorative Background Accents matching Visi Misi & Problem Section */}
       <AmbientGlow size="lg" />

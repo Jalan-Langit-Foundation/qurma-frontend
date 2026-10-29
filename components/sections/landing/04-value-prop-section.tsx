@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { Container, SectionHeader, Button, CardTitle, AmbientGlow } from "@/components/ui";
+import { Container, SectionHeader, Button, CardTitle } from "@/components/ui";
 import { VALUE_PROPOSITIONS } from "@/lib/data/landing";
 
 export function ValuePropSection() {
@@ -30,11 +30,8 @@ export function ValuePropSection() {
     <section
       id="nilai-tambah"
       aria-label="Keunggulan Program QURMA"
-      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-16 border-b border-slate-200/80"
+      className="w-full bg-white py-12 sm:py-16 lg:py-20 relative scroll-mt-16 border-b border-slate-200/80"
     >
-      {/* Decorative Background Accents matching Visi Misi & Problem Section */}
-      <AmbientGlow size="lg" />
-
       <Container size="xl" className="relative z-10">
         <SectionHeader
           headline={{

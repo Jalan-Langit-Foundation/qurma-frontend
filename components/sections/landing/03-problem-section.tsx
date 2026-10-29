@@ -9,7 +9,7 @@ export function ProblemSection() {
     <section
       id="problem"
       aria-label="Perbandingan Menunggu vs Mempersiapkan Qurban dari Sekarang"
-      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-20 border-b border-slate-200/80"
+      className="w-full bg-[linear-gradient(180deg,#F4F9FD_0%,#FFFFFF_50%,#EDF7FD_100%)] py-12 sm:py-16 lg:py-20 relative overflow-hidden scroll-mt-20 border-b border-slate-200/80"
     >
       {/* Decorative Background Accents matching Visi Misi section */}
       <AmbientGlow size="lg" />

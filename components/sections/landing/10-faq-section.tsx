@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Container, SectionHeader, FaqAccordion, AmbientGlow } from "@/components/ui";
+import { Container, SectionHeader, FaqAccordion } from "@/components/ui";
 
 import { QURBAN_COLLAGE } from "@/content/landing/media";
 
@@ -11,11 +11,8 @@ export function FaqSection() {
     <section
       id="faq"
       aria-label="Pertanyaan yang Sering Diajukan"
-      className="w-full bg-[#FAFCFE] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative overflow-hidden"
+      className="w-full bg-white py-12 sm:py-16 lg:py-20 border-b border-slate-200/80 scroll-mt-16 relative"
     >
-      {/* Decorative Soft Ambient Accents matching Design System */}
-      <AmbientGlow size="md" intensity="soft" />
-
       <Container size="xl" className="relative z-10">
         {/* Section Header */}
         <SectionHeader
