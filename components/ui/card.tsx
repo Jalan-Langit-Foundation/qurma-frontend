@@ -54,8 +54,9 @@ export const CardHeader = React.forwardRef<
 ));
 CardHeader.displayName = "CardHeader";
 
-export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
+export interface CardTitleProps extends React.HTMLAttributes<HTMLElement> {
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "label" | "span";
+  htmlFor?: string;
   size?: "sm" | "base" | "lg" | "xl";
 }
 
@@ -66,10 +67,10 @@ const titleSizeStyles: Record<NonNullable<CardTitleProps["size"]>, string> = {
   xl: "text-xl font-bold tracking-tight leading-snug",
 };
 
-export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
+export const CardTitle = React.forwardRef<HTMLElement, CardTitleProps>(
   ({ as: Component = "h3", size = "base", className, ...props }, ref) => (
     <Component
-      ref={ref}
+      ref={ref as React.Ref<any>}
       className={cn(
         "font-['Poppins',sans-serif] text-[#2C2C2C]",
         titleSizeStyles[size],

@@ -59,9 +59,9 @@ export function CalculatorSection({
             <div className="lg:col-span-7 p-5 sm:p-6 lg:p-8 space-y-5 bg-white rounded-t-2xl lg:rounded-tr-none lg:rounded-l-2xl relative z-20">
               {/* Input 1: Pilihan Paket */}
               <div className="space-y-2.5">
-                <label className="block text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug">
+                <CardTitle as="label" size="base" className="block">
                   Target Paket Qurban
-                </label>
+                </CardTitle>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   {PACKAGES.map((pkg) => {
                     const isSelected = pkg.id === selectedPackage.id;
@@ -73,14 +73,14 @@ export function CalculatorSection({
                         className={cn(
                           "p-3 rounded-xl border text-left transition-all cursor-pointer",
                           isSelected
-                            ? "border-[#3C95C8] bg-[#EAF5FB] ring-1 ring-[#3C95C8]"
+                            ? "border-[#3C95C8] bg-[#3C95C8] text-white shadow-sm"
                             : "border-slate-200/80 hover:border-slate-300 bg-white"
                         )}
                       >
                         <span
                           className={cn(
                             "block text-xs sm:text-sm font-bold font-['Poppins',sans-serif]",
-                            isSelected ? "text-[#3C95C8]" : "text-[#2C2C2C]"
+                            isSelected ? "text-white" : "text-[#2C2C2C]"
                           )}
                         >
                           {pkg.name}
@@ -88,7 +88,7 @@ export function CalculatorSection({
                         <span
                           className={cn(
                             "block text-xs font-semibold mt-0.5 font-['Poppins',sans-serif]",
-                            isSelected ? "text-[#3C95C8]" : "text-[#555555]"
+                            isSelected ? "text-white/90" : "text-[#555555]"
                           )}
                         >
                           {formatRupiah(pkg.target)}
@@ -101,12 +101,14 @@ export function CalculatorSection({
 
               {/* Input 2: Pilihan Bulan Mulai dengan Dropdown Kustom Brand Jalan Langit */}
               <div className="space-y-2.5">
-                <label
+                <CardTitle
+                  as="label"
                   htmlFor="start-month-select"
-                  className="block text-base font-bold text-[#2C2C2C] font-['Poppins',sans-serif] leading-snug cursor-pointer"
+                  size="base"
+                  className="block cursor-pointer"
                 >
                   Mulai Menabung
-                </label>
+                </CardTitle>
                 <Select
                   id="start-month-select"
                   value={startMonth}
