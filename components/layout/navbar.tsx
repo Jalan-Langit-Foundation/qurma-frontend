@@ -4,9 +4,9 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Heart, ChevronDown } from "lucide-react";
+import { Menu, X, Coins, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NAVBAR_LINKS, SITE_CONFIG } from "@/lib/data";
+import { NAVBAR_LINKS } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -55,6 +55,19 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Tutup menu drawer otomatis jika layar di-resize ke ukuran desktop (>= 768px)
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsOpen(false);
+        setActiveDropdown(null);
+      }
+    };
+
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Reset lock scroll saat user melakukan scroll manual (wheel atau touch)
   React.useEffect(() => {
     const handleUserScroll = () => {
@@ -77,7 +90,8 @@ export function Navbar() {
   React.useEffect(() => {
     if (pathname !== "/") return;
 
-    const sectionIds = NAVBAR_LINKS.map((link) => link.href.replace("/#", "")).filter(Boolean);
+    const sectionIds = NAVBAR_LINKS.map((link) => link.href.replace(/^\/?#/, "")).filter(Boolean);
+    if (sectionIds.length === 0) return;
 
     // Cek jika halaman dimuat dengan hash URL tertentu (misal /#cerita-dampak)
     if (window.location.hash) {
@@ -164,6 +178,13 @@ export function Navbar() {
   }, [pathname]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href === "#") {
+      e.preventDefault();
+      setIsOpen(false);
+      setActiveDropdown(null);
+      return;
+    }
+
     if (href.startsWith("/#") && pathname === "/") {
       e.preventDefault();
       const targetId = href.replace("/#", "");
@@ -231,7 +252,7 @@ export function Navbar() {
           </Link>
 
           {/* Bagian Tengah: Desktop Navigation Links */}
-          <ul className="hidden lg:flex h-full items-center gap-5 xl:gap-7 list-none m-0 p-0">
+          <ul className="hidden md:flex h-full items-center gap-4 lg:gap-6 xl:gap-7 list-none m-0 p-0">
             {NAVBAR_LINKS.map((item) => {
               const hasChildren = Boolean(item.children && item.children.length > 0);
               const targetId = item.href.replace("/#", "");
@@ -247,7 +268,7 @@ export function Navbar() {
                 const isMenuOpen = activeDropdown === item.href;
 
                 return (
-                  <li key={item.href} className="relative h-full flex items-center">
+                  <li key={item.label} className="relative h-full flex items-center">
                     <button
                       type="button"
                       onClick={() => toggleDropdown(item.href)}
@@ -320,7 +341,7 @@ export function Navbar() {
               }
 
               return (
-                <li key={item.href} className="h-full flex items-center">
+                <li key={item.label} className="h-full flex items-center">
                   <Link
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
@@ -340,17 +361,16 @@ export function Navbar() {
 
           {/* Sisi Kanan: Action CTA & Mobile Toggle */}
           <div className="flex items-center gap-3">
-            {/* Desktop / Tablet CTA Button */}
-            <div className="hidden sm:block">
+            {/* Desktop CTA Button (Tampil saat layout desktop/tablet md+) */}
+            <div className="hidden md:block">
               <Button
                 variant="primary"
                 size="md"
-                href={SITE_CONFIG.contact.donationUrl}
-                external
-                leftIcon={<Heart className="w-4 h-4 fill-white text-white" />}
+                href="#"
+                leftIcon={<Coins className="w-4 h-4 fill-white text-white" />}
                 className="shadow-sm hover:shadow-md transition-all font-semibold"
               >
-                Donasi Sekarang
+                Mulai Menabung
               </Button>
             </div>
 
@@ -359,7 +379,7 @@ export function Navbar() {
               type="button"
               onClick={() => setIsOpen(!isOpen)}
               className={cn(
-                "inline-flex lg:hidden items-center justify-center p-1.5 bg-transparent border-0 text-[#555555]",
+                "inline-flex md:hidden items-center justify-center p-1.5 bg-transparent border-0 text-[#555555]",
                 "hover:text-[#3C95C8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3C95C8] rounded-md cursor-pointer"
               )}
               aria-expanded={isOpen}
@@ -378,10 +398,10 @@ export function Navbar() {
       {/* Mobile Navigation Drawer / Dropdown (Overlay Menimpa Layer Bawah) */}
       <div
         className={cn(
-          "absolute left-0 top-full w-full bg-white shadow-xl border-b border-slate-100 lg:hidden transition-all duration-200 ease-in-out z-50",
+          "absolute left-0 top-full w-full bg-white shadow-xl border-b border-slate-100 md:hidden transition-all duration-200 ease-in-out z-50",
           isOpen
-            ? "opacity-100 translate-y-0 pointer-events-auto visible"
-            : "opacity-0 -translate-y-2 pointer-events-none invisible"
+            ? "opacity-100 translate-y-0 pointer-events-auto visible block"
+            : "opacity-0 -translate-y-2 pointer-events-none invisible hidden"
         )}
       >
         <div className="w-full px-4 py-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
@@ -401,7 +421,7 @@ export function Navbar() {
                 const isExpanded = mobileExpanded[item.href] ?? isActive;
 
                 return (
-                  <li key={item.href} className="flex flex-col">
+                  <li key={item.label} className="flex flex-col">
                     <button
                       type="button"
                       onClick={() => toggleMobileSubmenu(item.href)}
@@ -459,7 +479,7 @@ export function Navbar() {
               }
 
               return (
-                <li key={item.href}>
+                <li key={item.label}>
                   <Link
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
@@ -482,12 +502,11 @@ export function Navbar() {
             <Button
               variant="primary"
               size="md"
-              href={SITE_CONFIG.contact.donationUrl}
-              external
-              leftIcon={<Heart className="w-4 h-4 fill-white text-white" />}
+              href="#"
+              leftIcon={<Coins className="w-4 h-4 fill-white text-white" />}
               className="w-full justify-center shadow-sm hover:shadow-md transition-all font-semibold text-sm px-6"
             >
-              Donasi Sekarang
+              Mulai Menabung
             </Button>
           </div>
         </div>

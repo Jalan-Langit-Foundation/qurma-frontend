@@ -695,4 +695,25 @@ body {
   will-change: transform;
 }
 
+@keyframes marqueeTrust {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-trust {
+  display: flex;
+  width: max-content;
+  animation: marqueeTrust 30s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-trust:hover {
+  animation-play-state: paused;
+}
+
+
 
