@@ -68,17 +68,20 @@ const titleSizeStyles: Record<NonNullable<CardTitleProps["size"]>, string> = {
 };
 
 export const CardTitle = React.forwardRef<HTMLElement, CardTitleProps>(
-  ({ as: Component = "h3", size = "base", className, ...props }, ref) => (
-    <Component
-      ref={ref as React.Ref<any>}
-      className={cn(
-        "font-['Poppins',sans-serif] text-[#2C2C2C]",
-        titleSizeStyles[size],
-        className
-      )}
-      {...props}
-    />
-  )
+  ({ as: Component = "h3", size = "base", className, ...props }, ref) => {
+    const Tag = Component as "h3";
+    return (
+      <Tag
+        ref={ref as unknown as React.Ref<HTMLHeadingElement>}
+        className={cn(
+          "font-['Poppins',sans-serif] text-[#2C2C2C]",
+          titleSizeStyles[size],
+          className
+        )}
+        {...props}
+      />
+    );
+  }
 );
 CardTitle.displayName = "CardTitle";
 
