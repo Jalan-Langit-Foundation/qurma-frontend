@@ -1,90 +1,74 @@
-/**
- * Utilitas pemformatan angka, mata uang, dan tanggal untuk QURMA 2027
- * Sesuai dengan spesifikasi T0.3
- */
+const LOCALE = "id-ID";
 
-/**
- * Format Rupiah tanpa spasi dan tanpa desimal
- * Contoh: formatRupiah(1900000) -> "Rp1.900.000"
- */
 export function formatRupiah(amount: number): string {
-  if (isNaN(amount)) return "Rp0";
-  const isNegative = amount < 0;
-  const abs = Math.abs(Math.round(amount));
-  const formatted = abs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  return `${isNegative ? "-" : ""}Rp${formatted}`;
+  if (!Number.isFinite(amount)) return "Rp0";
+  const sign = amount < 0 ? "-" : "";
+  const formatted = Math.abs(Math.round(amount))
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return `${sign}Rp${formatted}`;
 }
 
-/**
- * Format tanggal dalam Bahasa Indonesia
- * Contoh: formatTanggal(new Date(2026, 11, 15)) -> "15 Desember 2026"
- */
-export function formatTanggal(date: Date | string | number): string {
-  let d: Date;
-  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    const [y, m, day] = date.split("-").map(Number);
-    d = new Date(y, m - 1, day);
-  } else {
-    d = typeof date === "string" || typeof date === "number" ? new Date(date) : date;
-  }
+export function formatRupiahRibu(
+  amount: number,
+  options: { prefix?: string; unit?: "ribu" | "rb" } = {},
+): string {
+  const { prefix = "±", unit = "ribu" } = options;
+  if (!Number.isFinite(amount) || amount <= 0) return `${prefix}Rp0`;
+  return `${prefix}Rp${Math.floor(amount / 1000)} ${unit}`;
+}
 
-  return new Intl.DateTimeFormat("id-ID", {
+export function formatRupiahJuta(amount: number): string {
+  if (!Number.isFinite(amount) || amount === 0) return "Rp 0";
+  const juta = Number((amount / 1_000_000).toFixed(2));
+  return `Rp ${juta.toString().replace(".", ",")} Jt`;
+}
+
+export function formatPersen(persen: number): string {
+  return `${Math.round(Number.isFinite(persen) ? persen : 0)}%`;
+}
+
+const PROGRAM_TIME_ZONE = "Asia/Jakarta";
+
+function toDisplayDate(date: Date | string | number): {
+  date: Date;
+  timeZone: string;
+} {
+  if (typeof date === "string") {
+    const ymd = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/.exec(date);
+    if (ymd) {
+      const [, y, m, d] = ymd;
+      return {
+        date: new Date(Date.UTC(Number(y), Number(m) - 1, d ? Number(d) : 1)),
+        timeZone: "UTC",
+      };
+    }
+  }
+  return {
+    date: date instanceof Date ? date : new Date(date),
+    timeZone: PROGRAM_TIME_ZONE,
+  };
+}
+
+export function formatTanggal(date: Date | string | number): string {
+  const { date: value, timeZone } = toDisplayDate(date);
+  return new Intl.DateTimeFormat(LOCALE, {
     day: "numeric",
     month: "long",
     year: "numeric",
-  }).format(d);
+    timeZone,
+  }).format(value);
 }
 
-/**
- * Format bulan dan tahun dalam Bahasa Indonesia
- * Contoh: formatBulanTahun("2026-10") -> "Oktober 2026"
- */
 export function formatBulanTahun(date: Date | string | number): string {
-  let d: Date;
-  if (typeof date === "string" && /^\d{4}-\d{2}$/.test(date)) {
-    const [y, m] = date.split("-").map(Number);
-    d = new Date(y, m - 1, 1);
-  } else if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    const [y, m, day] = date.split("-").map(Number);
-    d = new Date(y, m - 1, day);
-  } else {
-    d = typeof date === "string" || typeof date === "number" ? new Date(date) : date;
-  }
-
-  return new Intl.DateTimeFormat("id-ID", {
+  const { date: value, timeZone } = toDisplayDate(date);
+  return new Intl.DateTimeFormat(LOCALE, {
     month: "long",
     year: "numeric",
-  }).format(d);
+    timeZone,
+  }).format(value);
 }
 
-/**
- * Format persen bulat
- * Contoh: formatPersen(54) -> "54%"
- */
-export function formatPersen(persen: number): string {
-  const rounded = Math.round(persen);
-  return `${rounded}%`;
-}
-
-/**
- * Format angka pendek untuk kartu estimasi
- * Contoh: formatRupiahShort(271500) -> "±Rp271 ribu"
- */
-export function formatRupiahShort(amount: number, prefix: string = "±"): string {
-  if (isNaN(amount) || amount === 0) return `${prefix}Rp0`;
-  const ribuan = Math.floor(amount / 1000);
-  return `${prefix}Rp${ribuan} ribu`;
-}
-
-/**
- * Format Rupiah ringkas dalam satuan Juta (Opsi 1)
- * Contoh: formatRupiahJuta(1900000) -> "Rp 1,9 Jt"
- * Contoh: formatRupiahJuta(2990000) -> "Rp 2,99 Jt"
- * Contoh: formatRupiahJuta(1500000) -> "Rp 1,5 Jt"
- */
-export function formatRupiahJuta(amount: number): string {
-  if (isNaN(amount) || amount === 0) return "Rp 0";
-  const juta = amount / 1000000;
-  const formatted = Number(juta.toFixed(2)).toString().replace(".", ",");
-  return `Rp ${formatted} Jt`;
+export function formatKilogram(weight: number): string {
+  return `${new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 1 }).format(weight)} kg`;
 }

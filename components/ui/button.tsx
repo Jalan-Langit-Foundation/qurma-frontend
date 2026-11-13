@@ -1,20 +1,17 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?:
-    | "primary"
-    | "secondary"
-    | "outline"
-    | "ghost"
-    | "gradient"
-    | "destructive"
-    | "dark"
-    | "white";
-  size?: "sm" | "md" | "lg" | "icon";
+type ButtonVariant = "primary" | "outline" | "ghost" | "destructive" | "white";
+
+type ButtonSize = "sm" | "md" | "lg" | "icon";
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -22,31 +19,36 @@ export interface ButtonProps
   external?: boolean;
 }
 
-const variantStyles: Record<NonNullable<ButtonProps["variant"]>, string> = {
+const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-[#3C95C8] text-white hover:bg-[#337fac] active:bg-[#2c6f96] shadow-sm hover:shadow transition-all duration-200 border border-transparent",
-  secondary:
-    "bg-[#6EB6D6] text-white hover:bg-[#5aa4c4] active:bg-[#4a93b3] shadow-sm hover:shadow transition-all duration-200 border border-transparent",
+    "border border-transparent bg-brand text-white shadow-sm hover:bg-brand-hover hover:shadow active:bg-brand-active",
   outline:
-    "bg-transparent text-[#3C95C8] border-2 border-[#3C95C8] hover:bg-[#EAF5FB] active:bg-[#d5ecf8] transition-all duration-200",
+    "border-2 border-brand bg-transparent text-brand-strong hover:bg-brand-soft active:bg-brand-soft-hover",
   ghost:
-    "bg-transparent text-[#555555] hover:text-[#3C95C8] hover:bg-[#EAF5FB] active:bg-[#d5ecf8] transition-all duration-200 border border-transparent",
-  gradient:
-    "bg-gradient-to-b from-[#6EB6D6] to-[#3C95C8] text-white hover:opacity-95 hover:shadow-md active:opacity-100 transition-all duration-200 border border-transparent",
+    "border border-transparent bg-transparent text-body hover:bg-brand-soft hover:text-brand-strong active:bg-brand-soft-hover",
   destructive:
-    "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm transition-all duration-200 border border-transparent",
-  dark:
-    "bg-[#2c2c2c] text-white hover:bg-[#1a1a1a] active:bg-[#000000] shadow-sm transition-all duration-200 border border-transparent",
+    "border border-transparent bg-red-600 text-white shadow-sm hover:bg-red-700 active:bg-red-800",
   white:
-    "bg-white text-[#3C95C8] hover:bg-[#f0f7fb] active:bg-[#e4eff6] shadow-sm hover:shadow transition-all duration-200 border border-slate-100",
+    "border border-slate-100 bg-white text-brand-strong shadow-sm hover:bg-[#f0f7fb] hover:shadow active:bg-[#e4eff6]",
 };
 
-const sizeStyles: Record<NonNullable<ButtonProps["size"]>, string> = {
-  sm: "text-xs font-semibold px-3 py-1.5 min-h-[34px] gap-1.5 rounded-full",
-  md: "text-sm font-bold px-5 py-2.5 min-h-[42px] gap-2 rounded-full",
-  lg: "text-base font-bold px-7 py-3.5 min-h-[50px] gap-2.5 rounded-full",
-  icon: "h-10 w-10 p-0 rounded-full justify-center items-center",
+const sizeStyles: Record<ButtonSize, string> = {
+  sm: "min-h-[34px] gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold",
+  md: "min-h-[42px] gap-2 rounded-full px-5 py-2.5 text-sm font-bold",
+  lg: "min-h-[50px] gap-2.5 rounded-full px-7 py-3.5 text-base font-bold",
+  icon: "h-10 w-10 items-center justify-center rounded-full p-0",
 };
+
+type ButtonOnlyAttributes =
+  | "type"
+  | "form"
+  | "formAction"
+  | "formEncType"
+  | "formMethod"
+  | "formNoValidate"
+  | "formTarget"
+  | "name"
+  | "value";
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -61,48 +63,79 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       external = false,
       disabled,
       children,
+      onClick,
+      type = "button",
       ...props
     },
-    ref
+    ref,
   ) => {
-    const baseClasses = cn(
-      "inline-flex items-center justify-center font-['Poppins',sans-serif] text-center select-none cursor-pointer tracking-normal leading-none",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3C95C8] focus-visible:ring-offset-2",
-      "disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
+    const isDisabled = Boolean(disabled || isLoading);
+
+    const classes = cn(
+      "inline-flex cursor-pointer select-none items-center justify-center text-center font-heading leading-none tracking-normal transition-all duration-200",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2",
+      "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+      "aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50",
       variantStyles[variant],
       sizeStyles[size],
-      className
+      className,
     );
 
     const content = (
       <>
         {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+          <Loader2
+            className="h-4 w-4 shrink-0 animate-spin"
+            aria-hidden="true"
+          />
         ) : (
-          leftIcon && <span className="shrink-0 inline-flex">{leftIcon}</span>
+          leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>
         )}
         {children && <span>{children}</span>}
         {!isLoading && rightIcon && (
-          <span className="shrink-0 inline-flex">{rightIcon}</span>
+          <span className="inline-flex shrink-0">{rightIcon}</span>
         )}
       </>
     );
 
     if (href) {
+      const anchorProps = omitButtonOnly(
+        props,
+      ) as React.AnchorHTMLAttributes<HTMLAnchorElement>;
+
+      const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (isDisabled) {
+          event.preventDefault();
+          return;
+        }
+        onClick?.(event as unknown as React.MouseEvent<HTMLButtonElement>);
+      };
+
+      const linkProps = {
+        ...anchorProps,
+        className: classes,
+        onClick: handleLinkClick,
+        "aria-disabled": isDisabled || undefined,
+        "aria-busy": isLoading || undefined,
+        tabIndex: isDisabled ? -1 : anchorProps.tabIndex,
+      };
+
       if (external) {
         return (
           <a
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className={baseClasses}
+            {...linkProps}
           >
             {content}
+            <span className="sr-only"> (membuka tab baru)</span>
           </a>
         );
       }
+
       return (
-        <Link href={href} className={baseClasses}>
+        <Link href={href} {...linkProps}>
           {content}
         </Link>
       );
@@ -111,14 +144,34 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        disabled={disabled || isLoading}
-        className={baseClasses}
+        type={type}
+        disabled={isDisabled}
+        aria-busy={isLoading || undefined}
+        onClick={onClick}
+        className={classes}
         {...props}
       >
         {content}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";
+
+function omitButtonOnly<T extends Record<string, unknown>>(props: T) {
+  const result: Record<string, unknown> = { ...props };
+  const buttonOnly: ButtonOnlyAttributes[] = [
+    "type",
+    "form",
+    "formAction",
+    "formEncType",
+    "formMethod",
+    "formNoValidate",
+    "formTarget",
+    "name",
+    "value",
+  ];
+  for (const key of buttonOnly) delete result[key];
+  return result;
+}

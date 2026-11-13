@@ -1,15 +1,78 @@
 "use client";
 
 import * as React from "react";
-import { AlertCircle, CheckCircle2, AlertTriangle, Info, X } from "lucide-react";
+import {
+  AlertCircle,
+  AlertTriangle,
+  CheckCircle2,
+  Info,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
+type FormAlertVariant = "error" | "success" | "warning" | "info";
+
 export interface FormAlertProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "error" | "success" | "warning" | "info";
+  variant?: FormAlertVariant;
   title?: string;
   message?: string;
   errors?: Record<string, string[]> | string[];
   onDismiss?: () => void;
+}
+
+const variantConfig: Record<
+  FormAlertVariant,
+  { container: string; icon: React.ReactNode; title: string; text: string }
+> = {
+  error: {
+    container: "border-rose-200 bg-rose-50",
+    icon: (
+      <AlertCircle
+        className="mt-0.5 h-4 w-4 shrink-0 text-rose-600"
+        aria-hidden="true"
+      />
+    ),
+    title: "text-rose-900",
+    text: "text-rose-700",
+  },
+  success: {
+    container: "border-emerald-200 bg-emerald-50",
+    icon: (
+      <CheckCircle2
+        className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600"
+        aria-hidden="true"
+      />
+    ),
+    title: "text-emerald-900",
+    text: "text-emerald-700",
+  },
+  warning: {
+    container: "border-amber-200 bg-amber-50",
+    icon: (
+      <AlertTriangle
+        className="mt-0.5 h-4 w-4 shrink-0 text-amber-600"
+        aria-hidden="true"
+      />
+    ),
+    title: "text-amber-900",
+    text: "text-amber-800",
+  },
+  info: {
+    container: "border-brand/30 bg-brand-soft",
+    icon: (
+      <Info
+        className="mt-0.5 h-4 w-4 shrink-0 text-brand-strong"
+        aria-hidden="true"
+      />
+    ),
+    title: "text-[#1F4D66]",
+    text: "text-[#2F6585]",
+  },
+};
+
+function normalizeErrors(errors: FormAlertProps["errors"]): string[] {
+  if (!errors) return [];
+  return Array.isArray(errors) ? errors : Object.values(errors).flat();
 }
 
 export function FormAlert({
@@ -22,81 +85,51 @@ export function FormAlert({
   children,
   ...props
 }: FormAlertProps) {
-  if (!message && !title && !errors && !children) {
-    return null;
-  }
+  const errorList = normalizeErrors(errors);
+  if (!message && !title && errorList.length === 0 && !children) return null;
 
-  // Normalisasi list of errors
-  let errorList: string[] = [];
-  if (Array.isArray(errors)) {
-    errorList = errors;
-  } else if (errors && typeof errors === "object") {
-    errorList = Object.values(errors).flat();
-  }
-
-  const variantConfig = {
-    error: {
-      container: "bg-rose-50 border-rose-200 text-rose-900",
-      icon: <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />,
-      titleColor: "text-rose-900",
-      textColor: "text-rose-700",
-      bulletColor: "bg-rose-500",
-    },
-    success: {
-      container: "bg-emerald-50 border-emerald-200 text-emerald-900",
-      icon: <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />,
-      titleColor: "text-emerald-900",
-      textColor: "text-emerald-700",
-      bulletColor: "bg-emerald-500",
-    },
-    warning: {
-      container: "bg-amber-50 border-amber-200 text-amber-900",
-      icon: <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />,
-      titleColor: "text-amber-900",
-      textColor: "text-amber-700",
-      bulletColor: "bg-amber-500",
-    },
-    info: {
-      container: "bg-[#EAF5FB] border-[#3C95C8]/30 text-[#1F4D66]",
-      icon: <Info className="w-4 h-4 text-[#3C95C8] shrink-0 mt-0.5" />,
-      titleColor: "text-[#1F4D66]",
-      textColor: "text-[#2F6585]",
-      bulletColor: "bg-[#3C95C8]",
-    },
-  }[variant];
+  const config = variantConfig[variant];
+  const isUrgent = variant === "error" || variant === "warning";
 
   return (
     <div
-      role="alert"
+      role={isUrgent ? "alert" : "status"}
       className={cn(
-        "relative rounded-xl border p-3.5 sm:p-4 text-sm font-['Lato',sans-serif] flex gap-3 transition-all duration-200",
-        variantConfig.container,
-        className
+        "relative flex gap-3 rounded-xl border p-3.5 font-body text-sm transition-all duration-200 sm:p-4",
+        config.container,
+        className,
       )}
       {...props}
     >
-      {variantConfig.icon}
+      {config.icon}
 
       <div className="flex-1 space-y-1">
         {title && (
-          <h4 className={cn("font-semibold text-sm font-['Poppins',sans-serif] leading-tight", variantConfig.titleColor)}>
+          <p
+            className={cn(
+              "font-heading text-sm leading-tight font-semibold",
+              config.title,
+            )}
+          >
             {title}
-          </h4>
+          </p>
         )}
-
         {message && (
-          <p className={cn("text-xs sm:text-sm leading-relaxed", variantConfig.textColor)}>
+          <p className={cn("text-xs leading-relaxed sm:text-sm", config.text)}>
             {message}
           </p>
         )}
-
         {children}
-
         {errorList.length > 0 && (
-          <ul className={cn("mt-1.5 space-y-1 text-xs list-disc list-inside", variantConfig.textColor)}>
-            {errorList.map((err, idx) => (
-              <li key={idx} className="leading-snug">
-                {err}
+          <ul
+            className={cn(
+              "mt-1.5 list-inside list-disc space-y-1 text-xs",
+              config.text,
+            )}
+          >
+            {errorList.map((item, index) => (
+              <li key={`${index}-${item}`} className="leading-snug">
+                {item}
               </li>
             ))}
           </ul>
@@ -107,10 +140,10 @@ export function FormAlert({
         <button
           type="button"
           onClick={onDismiss}
-          className="text-slate-400 hover:text-slate-700 p-0.5 rounded transition-colors self-start cursor-pointer"
           aria-label="Tutup notifikasi"
+          className="cursor-pointer self-start rounded p-0.5 text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
         >
-          <X className="w-4 h-4" />
+          <X className="h-4 w-4" aria-hidden="true" />
         </button>
       )}
     </div>

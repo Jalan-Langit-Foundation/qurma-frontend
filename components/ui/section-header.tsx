@@ -2,16 +2,14 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface SectionHeaderProps {
-  eyebrow?: string; // Diabaikan / tidak ditampilkan sesuai design rule
   headline: {
-    line1?: string;
+    line1: string;
     line2?: string;
-    prefix?: string;
-    highlight?: string;
-    suffix?: string;
   };
   description?: string;
   align?: "left" | "center";
+
+  as?: "h1" | "h2" | "h3";
   className?: string;
 }
 
@@ -19,37 +17,33 @@ export function SectionHeader({
   headline,
   description,
   align = "left",
+  as: Heading = "h2",
   className,
 }: SectionHeaderProps) {
   const isCenter = align === "center";
-
-  // Baris pertama (hitam) & Baris kedua (biru)
-  const line1 = headline.line1 ?? headline.prefix ?? "";
-  const line2 =
-    headline.line2 ??
-    (headline.highlight
-      ? `${headline.highlight}${headline.suffix ? ` ${headline.suffix}` : ""}`
-      : headline.suffix ?? "");
 
   return (
     <div
       className={cn(
         "max-w-3xl",
         isCenter ? "mx-auto text-center" : "text-left",
-        className
+        className,
       )}
     >
-      {/* Tidak ada lagi tulisan / eyebrow di atas heading */}
-      <h2 className="text-2xl sm:text-3xl lg:text-[36px] font-extrabold font-['Poppins',sans-serif] leading-tight tracking-tight">
-        {line1 && <span className="block text-[#2C2C2C]">{line1}</span>}
-        {line2 && <span className="block text-[#3C95C8] mt-1 sm:mt-1.5">{line2}</span>}
-      </h2>
+      <Heading className="font-heading text-2xl leading-tight font-extrabold tracking-tight sm:text-3xl lg:text-[36px]">
+        <span className="block text-ink">{headline.line1}</span>
+        {headline.line2 && (
+          <span className="mt-1 block text-brand sm:mt-1.5">
+            {headline.line2}
+          </span>
+        )}
+      </Heading>
 
       {description && (
         <p
           className={cn(
-            "text-sm sm:text-base text-[#555555] font-['Lato',sans-serif] leading-relaxed mt-3.5 sm:mt-4",
-            isCenter && "max-w-xl mx-auto"
+            "mt-3.5 font-body text-sm leading-relaxed text-body sm:mt-4 sm:text-base",
+            isCenter && "mx-auto max-w-xl",
           )}
         >
           {description}

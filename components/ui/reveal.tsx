@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface RevealProps {
   children: React.ReactNode;
@@ -9,9 +10,15 @@ interface RevealProps {
   direction?: "up" | "down" | "none";
 }
 
+const hiddenStyles: Record<NonNullable<RevealProps["direction"]>, string> = {
+  up: "translate-y-8 opacity-0",
+  down: "-translate-y-8 opacity-0",
+  none: "opacity-0",
+};
+
 export function Reveal({
   children,
-  className = "",
+  className,
   delay = 0,
   direction = "up",
 }: RevealProps) {
@@ -22,49 +29,37 @@ export function Reveal({
     const element = ref.current;
     if (!element) return;
 
-    // Jika elemen sudah berada di layar saat halaman dimuat (seperti Hero section), langsung trigger animasi
     const rect = element.getBoundingClientRect();
     if (rect.top < window.innerHeight && rect.bottom > 0) {
-      const raf = requestAnimationFrame(() => setIsVisible(true));
-      return () => cancelAnimationFrame(raf);
+      const frame = requestAnimationFrame(() => setIsVisible(true));
+      return () => cancelAnimationFrame(frame);
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry && entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(element);
-        }
+        if (!entry?.isIntersecting) return;
+        setIsVisible(true);
+        observer.disconnect();
       },
-      {
-        threshold: 0,
-        rootMargin: "0px 0px 40px 0px",
-      }
+      { threshold: 0, rootMargin: "0px 0px 40px 0px" },
     );
 
     observer.observe(element);
-
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
-
-  const getTransformStyle = () => {
-    if (isVisible) return "opacity-100 transform-none";
-    if (direction === "up") return "opacity-0 translate-y-8 will-change-[opacity,transform]";
-    if (direction === "down") return "opacity-0 -translate-y-8 will-change-[opacity,transform]";
-    return "opacity-0";
-  };
 
   return (
     <div
       ref={ref}
-      style={{
-        transitionDuration: "700ms",
-        transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-        transitionDelay: `${delay}ms`,
-      }}
-      className={`transition-all ${getTransformStyle()} ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={cn(
+        "transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        isVisible
+          ? "transform-none opacity-100"
+          : cn(hiddenStyles[direction], "will-change-[opacity,transform]"),
+        "motion-reduce:transform-none motion-reduce:opacity-100",
+        className,
+      )}
     >
       {children}
     </div>

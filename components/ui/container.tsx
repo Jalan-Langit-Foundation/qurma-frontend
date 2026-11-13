@@ -15,22 +15,19 @@ const sizeStyles: Record<NonNullable<ContainerProps["size"]>, string> = {
   full: "max-w-full",
 };
 
+/** Pembatas lebar konten + padding horizontal responsif. */
 export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
-  ({ className, size = "2xl", as: Component = "div", children, ...props }, ref) => {
-    return (
-      <Component
-        ref={ref}
-        className={cn(
-          "w-full mx-auto px-4 sm:px-6 lg:px-8",
-          sizeStyles[size],
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </Component>
-    );
-  }
+  ({ className, size = "2xl", as: Component = "div", ...props }, ref) => (
+    <Component
+      ref={ref}
+      className={cn(
+        "mx-auto w-full px-4 sm:px-6 lg:px-8",
+        sizeStyles[size],
+        className,
+      )}
+      {...props}
+    />
+  ),
 );
 
 Container.displayName = "Container";

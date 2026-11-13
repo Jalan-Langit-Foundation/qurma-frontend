@@ -3,14 +3,29 @@
 import * as React from "react";
 import { Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  FieldLabel,
+  FieldMessage,
+  fieldControlClass,
+  getFieldAriaProps,
+  useFieldIds,
+} from "./field";
 
-export interface PhoneInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+export interface PhoneInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "type"
+> {
   label?: string;
   error?: string;
   helperText?: string;
+
   onChange?: (value: string) => void;
   onRawChange?: React.ChangeEventHandler<HTMLInputElement>;
+}
+
+function sanitizePhone(raw: string): string {
+  const digits = raw.replace(/[^\d]/g, "");
+  return raw.trimStart().startsWith("+") ? `+${digits}` : digits;
 }
 
 export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
@@ -21,69 +36,58 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
       error,
       helperText = "Digunakan untuk konfirmasi setoran dan reminder berkala.",
       id,
-      disabled,
-      value,
       onChange,
       onRawChange,
       placeholder = "081234567890",
+      "aria-describedby": describedBy,
       ...props
     },
-    ref
+    ref,
   ) => {
-    const generatedId = React.useId();
-    const inputId = id || generatedId;
+    const { fieldId, messageId } = useFieldIds(id);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      // Hapus karakter non-digit selain '+' jika ada di awal
-      const cleanValue = e.target.value.replace(/[^\d+]/g, "");
-      onChange?.(cleanValue);
-      onRawChange?.(e);
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChange?.(sanitizePhone(event.target.value));
+      onRawChange?.(event);
     };
 
     return (
-      <div className="w-full space-y-1.5 font-['Lato',sans-serif]">
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="block text-sm font-semibold text-[#2C2C2C] font-['Poppins',sans-serif]"
-          >
-            {label}
-          </label>
-        )}
+      <div className="w-full space-y-1.5 font-body">
+        {label && <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>}
+
         <div className="relative flex items-center">
-          {/* Ikon Tunggal Phone dengan Warna Solid */}
-          <div className="absolute left-3.5 flex items-center justify-center pointer-events-none text-[#777777]">
-            <Phone className="w-4 h-4 text-[#777777]" />
+          <div className="pointer-events-none absolute left-3.5 flex items-center justify-center text-muted">
+            <Phone className="h-4 w-4" aria-hidden="true" />
           </div>
 
           <input
-            id={inputId}
-            type="tel"
-            inputMode="numeric"
-            disabled={disabled}
             ref={ref}
-            value={value}
-            onChange={handleChange}
+            id={fieldId}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            maxLength={16}
             placeholder={placeholder}
+            onChange={handleChange}
             className={cn(
-              "w-full rounded-xl border bg-white pl-11 pr-4 py-2.5 text-xs sm:text-sm font-medium text-[#2C2C2C] placeholder:text-slate-400 placeholder:font-normal transition-all duration-200",
-              "border-slate-200/80 hover:border-slate-300",
-              "focus:border-[#3C95C8] focus:outline-none focus:ring-2 focus:ring-[#3C95C8]/20",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50",
-              error && "border-rose-500 focus:border-rose-500 focus:ring-rose-500/20",
-              className
+              fieldControlClass(Boolean(error)),
+              "pl-11",
+              className,
             )}
+            {...getFieldAriaProps({
+              messageId,
+              error,
+              helperText,
+              describedBy,
+            })}
             {...props}
           />
         </div>
-        {error ? (
-          <p className="text-xs text-rose-600 font-medium">{error}</p>
-        ) : helperText ? (
-          <p className="text-xs text-[#555555]/80">{helperText}</p>
-        ) : null}
+
+        <FieldMessage id={messageId} error={error} helperText={helperText} />
       </div>
     );
-  }
+  },
 );
 
 PhoneInput.displayName = "PhoneInput";
