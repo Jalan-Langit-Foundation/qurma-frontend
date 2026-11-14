@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/lib/api/api-error";
 import { backendFileRequest, backendRequest } from "@/lib/api/backend-client";
+import { serverEnv } from "@/lib/server/env";
+
+const API = serverEnv.apiBaseUrl;
 
 function jsonResponse(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
@@ -46,7 +49,7 @@ describe("backendRequest", () => {
 
     expect(data).toEqual({ user: { id: 1 } });
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe("http://localhost:8000/api/auth/me");
+    expect(url).toBe(`${API}/auth/me`);
     expect(init.headers).toMatchObject({
       Accept: "application/json",
       Authorization: "Bearer 1|abc",
@@ -168,9 +171,7 @@ describe("backendRequest query", () => {
     });
 
     const [url] = fetchMock.mock.calls[0] as [string];
-    expect(url).toBe(
-      "http://localhost:8000/api/transactions?page=2&per_page=10",
-    );
+    expect(url).toBe(`${API}/transactions?page=2&per_page=10`);
   });
 });
 
