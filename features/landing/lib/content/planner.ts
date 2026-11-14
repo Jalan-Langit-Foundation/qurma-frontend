@@ -1,3 +1,5 @@
+import { PROGRAM } from "@/config/program";
+
 export const PLANNER_CONTENT = {
   packages: {
     headline: {
@@ -21,7 +23,7 @@ export const PLANNER_CONTENT = {
     headlineSuffix: "Untuk Qurban Terbaik Anda",
   },
   closed: {
-    title: "Pendaftaran Tabungan Qurban 2027 Telah Ditutup",
+    title: `Pendaftaran Tabungan Qurban ${PROGRAM.year} Telah Ditutup`,
     description:
       "Batas pelunasan program sudah terlewati. Hubungi admin QURMA via WhatsApp untuk informasi program berikutnya.",
   },

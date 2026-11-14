@@ -1,76 +1,58 @@
 import * as React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { AmbientGlow } from "@/components/ui/ambient-glow";
-import { Card, CardTitle } from "@/components/ui/card";
-import { Container } from "@/components/ui/container";
-import { ROUTES } from "@/config/navigation";
+import { MAIN_CONTENT_ID, SkipLink } from "@/components/layout";
 import { SITE_CONFIG } from "@/config/site";
+import { cn } from "@/lib/utils";
+import { AuthTabs, type AuthMode } from "./auth-tabs";
+import { AuthTopBar } from "./auth-top-bar";
 
 interface AuthCardProps {
+  mode: AuthMode;
   title: string;
   description: string;
-
-  footer: React.ReactNode;
+  next: string | null;
+  size?: "sm" | "md";
   children: React.ReactNode;
 }
 
 export function AuthCard({
+  mode,
   title,
   description,
-  footer,
+  next,
+  size = "sm",
   children,
 }: AuthCardProps) {
   return (
-    <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-canvas py-12 sm:py-16">
-      <AmbientGlow size="md" intensity="soft" />
+    <div className="flex min-h-dvh flex-col bg-surface">
+      <SkipLink />
+      <AuthTopBar />
 
-      <Container size="sm" className="relative z-10">
-        <Card className="rounded-2xl border-2 border-slate-200/80 bg-white p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.03)] sm:p-8">
-          <div className="mb-6 flex flex-col items-center text-center">
-            <Link href={ROUTES.home} className="mb-4 inline-block">
-              <Image
-                src={SITE_CONFIG.logo.blue}
-                alt="Logo QURMA"
-                width={150}
-                height={40}
-                className="h-9 w-auto object-contain"
-                loading="eager"
-              />
-            </Link>
-            <CardTitle as="h1" size="xl" className="text-xl sm:text-2xl">
+      <main
+        id={MAIN_CONTENT_ID}
+        className="flex flex-1 justify-center px-3 pt-2 pb-10 sm:px-6 sm:pt-6 sm:pb-14"
+      >
+        <div
+          className={cn(
+            "flex h-fit w-full flex-col gap-6 rounded-[28px] bg-white p-5 sm:p-8",
+            size === "md" ? "max-w-[640px]" : "max-w-[460px]",
+          )}
+        >
+          <AuthTabs mode={mode} next={next} />
+
+          <div className="space-y-1.5">
+            <h1 className="font-heading text-2xl font-semibold text-ink sm:text-[26px]">
               {title}
-            </CardTitle>
-            <p className="mt-1 font-body text-xs text-body sm:text-sm">
-              {description}
-            </p>
+            </h1>
+            <p className="text-sm text-body sm:text-[15px]">{description}</p>
           </div>
 
           {children}
+        </div>
+      </main>
 
-          <div className="mt-6 border-t border-slate-100 pt-5 text-center">
-            <p className="text-xs text-body sm:text-sm">{footer}</p>
-          </div>
-        </Card>
-      </Container>
+      <footer className="pb-6 text-center text-xs text-muted sm:pb-8">
+        Program tabungan qurban {SITE_CONFIG.legalName}
+      </footer>
     </div>
-  );
-}
-
-/** Tautan teks di footer kartu auth. */
-export function AuthFooterLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="font-semibold text-brand-strong hover:underline"
-    >
-      {children}
-    </Link>
   );
 }

@@ -7,6 +7,7 @@ import { MOBILE_MENU_ID } from "./navbar.utils";
 
 interface MobileMenuProps {
   isOpen: boolean;
+  isLoggedIn: boolean;
   pathname: string;
   activeSection: string;
   onLinkClick: (event: React.MouseEvent<HTMLElement>, href: string) => void;
@@ -14,6 +15,7 @@ interface MobileMenuProps {
 
 export function MobileMenu({
   isOpen,
+  isLoggedIn,
   pathname,
   activeSection,
   onLinkClick,
@@ -37,6 +39,7 @@ export function MobileMenu({
         />
         <NavbarCta
           onLinkClick={onLinkClick}
+          isLoggedIn={isLoggedIn}
           className="mt-4 border-t border-slate-100 pt-3"
           buttonClassName="w-full justify-center px-6 text-sm"
         />

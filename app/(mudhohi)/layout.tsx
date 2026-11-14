@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SiteShell } from "@/components/layout";
+import { MemberShell } from "@/features/account/server";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 export default function MudhohiLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <SiteShell>{children}</SiteShell>;
+  return <MemberShell>{children}</MemberShell>;
 }

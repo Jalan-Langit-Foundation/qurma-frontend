@@ -27,7 +27,7 @@ export function StickyCta({
       aria-label="Aksi cepat tabungan qurban"
       className={cn(
         "fixed right-0 bottom-0 left-0 z-40 md:hidden",
-        "border-t border-slate-200/90 bg-white/95 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur-md",
+        "border-t border-slate-200/90 bg-white/95 shadow-dock backdrop-blur-md",
         "px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]",
         className,
       )}

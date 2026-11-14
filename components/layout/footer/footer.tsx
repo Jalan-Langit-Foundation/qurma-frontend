@@ -1,18 +1,15 @@
-import Image from "next/image";
 import { Container } from "@/components/ui/container";
+import { ExternalLink } from "@/components/ui/external-link";
 import {
   FOOTER_ORGANIZATION_LINKS,
   FOOTER_PROGRAM_LINKS,
   SECTION_IDS,
 } from "@/config/navigation";
 import { SITE_CONFIG } from "@/config/site";
+import { BrandLogo } from "../shared/brand-logo";
 import { HomeLink } from "../shared/home-link";
 import { CopyrightYear } from "./copyright-year";
-import {
-  ExternalHint,
-  FooterColumn,
-  footerHeadingClass,
-} from "./footer-column";
+import { FooterColumn, footerHeadingClass } from "./footer-column";
 
 const socialPillClass =
   "rounded-full bg-white/10 px-3.5 py-1.5 font-heading text-xs font-medium text-white transition-colors hover:bg-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky";
@@ -29,13 +26,7 @@ export function Footer() {
               aria-label="Beranda QURMA"
               className="inline-flex w-fit items-center rounded-md transition-opacity duration-200 hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky"
             >
-              <Image
-                src={SITE_CONFIG.logo.white}
-                alt="Logo QURMA"
-                width={200}
-                height={54}
-                className="h-12 w-auto object-contain sm:h-14"
-              />
+              <BrandLogo tone="white" className="h-12 sm:h-14" />
             </HomeLink>
 
             <div className="flex max-w-sm flex-col gap-2.5 text-sm leading-relaxed">
@@ -51,24 +42,23 @@ export function Footer() {
             </div>
 
             <ul className="m-0 flex list-none flex-wrap items-center gap-2 p-0 pt-2">
-              {SITE_CONFIG.socialLinks.map((social) => {
-                const opensNewTab = social.href.startsWith("http");
-                return (
-                  <li key={social.label}>
-                    <a
+              {SITE_CONFIG.socialLinks.map((social) => (
+                <li key={social.label}>
+                  {social.href.startsWith("http") ? (
+                    <ExternalLink
                       href={social.href}
+                      srHint="membuka tab baru"
                       className={socialPillClass}
-                      {...(opensNewTab && {
-                        target: "_blank",
-                        rel: "noopener noreferrer",
-                      })}
                     >
                       {social.label}
-                      {opensNewTab && <ExternalHint />}
+                    </ExternalLink>
+                  ) : (
+                    <a href={social.href} className={socialPillClass}>
+                      {social.label}
                     </a>
-                  </li>
-                );
-              })}
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
 

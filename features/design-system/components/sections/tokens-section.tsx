@@ -46,7 +46,7 @@ export function TokensSection({ onAction }: { onAction: DemoActionHandler }) {
             key={color.hex}
             type="button"
             onClick={() => copyHex(color.hex)}
-            className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-3 text-left shadow-xs transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-3 text-left shadow-xs transition-all hover:shadow-md focus-ring"
           >
             <div
               className={cn(

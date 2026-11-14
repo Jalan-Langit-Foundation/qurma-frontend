@@ -39,4 +39,53 @@ describe("config/env", () => {
       }),
     ).rejects.toThrow(/NEXT_PUBLIC_SAVING_REGISTRATION_OPEN/);
   });
+
+  it("fitur yang menunggu backend default mati", async () => {
+    const env = await loadEnv({ NEXT_PUBLIC_SITE_URL: "https://qurma.id" });
+    expect(Object.values(env.features).every((on) => on === false)).toBe(true);
+  });
+
+  it("fitur bisa dinyalakan satu per satu", async () => {
+    const env = await loadEnv({
+      NEXT_PUBLIC_SITE_URL: "https://qurma.id",
+      NEXT_PUBLIC_FEATURE_PROFILE: "true",
+    });
+    expect(env.features.profile).toBe(true);
+    expect(env.features.transactions).toBe(false);
+  });
+
+  it("nomor WhatsApp dirapikan ke format 62…", async () => {
+    const env = await loadEnv({
+      NEXT_PUBLIC_SITE_URL: "https://qurma.id",
+      NEXT_PUBLIC_WHATSAPP_NUMBER: "+62 851-7347-3189",
+    });
+    expect(env.whatsappNumber).toBe("6285173473189");
+  });
+
+  it("nomor WhatsApp boleh kosong di luar production", async () => {
+    const env = await loadEnv({
+      NEXT_PUBLIC_SITE_URL: "https://qurma.id",
+      NEXT_PUBLIC_WHATSAPP_NUMBER: undefined,
+    });
+    expect(env.whatsappNumber).toBe("");
+  });
+
+  it("menolak nomor WhatsApp yang tidak valid", async () => {
+    await expect(
+      loadEnv({
+        NEXT_PUBLIC_SITE_URL: "https://qurma.id",
+        NEXT_PUBLIC_WHATSAPP_NUMBER: "12345",
+      }),
+    ).rejects.toThrow(/NEXT_PUBLIC_WHATSAPP_NUMBER/);
+  });
+
+  it("nomor WhatsApp wajib di production", async () => {
+    await expect(
+      loadEnv({
+        NODE_ENV: "production",
+        NEXT_PUBLIC_SITE_URL: "https://qurma.id",
+        NEXT_PUBLIC_WHATSAPP_NUMBER: undefined,
+      }),
+    ).rejects.toThrow(/NEXT_PUBLIC_WHATSAPP_NUMBER/);
+  });
 });

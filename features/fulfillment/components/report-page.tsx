@@ -24,7 +24,6 @@ export async function ReportPage({
 
   const report = await getShohibulReport(savingId);
 
-  // Backend memakai 404 yang sama untuk "belum terbit" dan "bukan milik Anda"
   if (!report) {
     return (
       <PagePlaceholder

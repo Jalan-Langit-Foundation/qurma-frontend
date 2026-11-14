@@ -62,7 +62,6 @@ describe("toShohibulReport", () => {
     notes: "Alhamdulillah qurban telah ditunaikan.",
     published_at: "2027-05-19T10:00:00+07:00",
     photos: {
-      // Contoh di contract memuat spasi di akhir URL
       animal: [{ id: 1, url: "https://api.example.id/storage/reports/1.jpg " }],
       slaughter: [],
       distribution: [{ id: 3, url: "   " }],

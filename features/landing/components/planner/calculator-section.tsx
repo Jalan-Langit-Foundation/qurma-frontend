@@ -9,6 +9,7 @@ import type { QurbanPackage } from "@/features/packages";
 import {
   formatYearMonth,
   SAVINGS_PROGRAM,
+  toStartMonthSelectOptions,
   type SavingSimulationState,
 } from "@/features/savings";
 import { PLANNER_CONTENT } from "../../lib/content/planner";
@@ -26,7 +27,6 @@ interface CalculatorSectionProps {
   onSelectStartMonth?: (month: string) => void;
 }
 
-/** Section kalkulator: merakit kolom input & kolom hasil dari satu state simulasi. */
 export function CalculatorSection({
   packages,
   selectedPackage,
@@ -40,10 +40,7 @@ export function CalculatorSection({
     simulation.status === "ready" || simulation.status === "error";
 
   const monthOptions = hasOptions
-    ? simulation.startMonthOptions.map((option) => ({
-        value: option.value,
-        label: `${option.label} (${option.tenorMonths} bulan s/d ${deadline})`,
-      }))
+    ? toStartMonthSelectOptions(simulation.startMonthOptions, deadline)
     : [];
 
   return (

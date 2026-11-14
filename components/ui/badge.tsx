@@ -103,8 +103,8 @@ function RopeTail({
       >
         <polygon
           points={points}
-          fill="#eaf4fb"
-          stroke="#c5e2f3"
+          fill="var(--color-brand-soft)"
+          stroke="var(--color-brand-line)"
           strokeWidth="1"
           strokeLinejoin="round"
         />
@@ -163,7 +163,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 
           <span
             className={cn(
-              "relative z-10 inline-flex items-center justify-center rounded-[1px] border-t border-b border-[#cce4f4] bg-white font-bold tracking-wider text-brand-strong uppercase shadow-[0_4px_10px_rgba(0,0,0,0.1)]",
+              "relative z-10 inline-flex items-center justify-center rounded-[1px] border-t border-b border-brand-line bg-white font-bold tracking-wider text-brand-strong uppercase shadow-ribbon",
               config.height,
               config.text,
             )}

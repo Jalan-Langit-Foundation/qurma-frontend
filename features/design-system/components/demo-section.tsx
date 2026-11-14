@@ -1,7 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-/** Callback untuk menampilkan "Aksi terakhir" di atas halaman. */
 export type DemoActionHandler = (message: string) => void;
 
 interface DemoSectionProps {
@@ -13,7 +12,6 @@ interface DemoSectionProps {
   children: React.ReactNode;
 }
 
-/** Kerangka satu blok demo: eyebrow, judul, deskripsi, kontrol, isi. */
 export function DemoSection({
   id,
   eyebrow,
@@ -74,10 +72,6 @@ interface PillGroupProps<T extends string | number> {
   pillClassName?: string;
 }
 
-/**
- * Deretan tombol pilihan (aria-pressed).
- * Sebelumnya pola yang sama ditulis ulang 3 kali di halaman ini.
- */
 export function PillGroup<T extends string | number>({
   label,
   options,
@@ -101,7 +95,7 @@ export function PillGroup<T extends string | number>({
             aria-pressed={active}
             onClick={() => onChange(option.value)}
             className={cn(
-              "cursor-pointer rounded-full px-3 py-1 text-xs font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+              "cursor-pointer rounded-full px-3 py-1 text-xs font-bold transition-all focus-ring",
               active
                 ? "bg-brand text-white shadow-xs"
                 : "bg-slate-100 text-body hover:bg-slate-200",

@@ -13,7 +13,6 @@ import {
   Type,
 } from "lucide-react";
 
-/** Urutan & ID section demo. id dipakai sebagai anchor di navigasi. */
 export const DEMO_NAV_ITEMS = [
   { id: "tokens", label: "Token Warna", icon: Palette },
   { id: "typography", label: "Tipografi", icon: Type },

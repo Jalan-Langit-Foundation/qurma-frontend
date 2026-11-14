@@ -17,7 +17,7 @@ export function FinalCtaSection() {
       glow={{ layout: "center", intensity: "accent", size: "xl" }}
       className="py-14 sm:py-20 lg:py-24"
     >
-      <div className="relative w-full overflow-hidden rounded-3xl bg-gradient-to-br from-[#1E5B7D] via-[#2F7FA9] to-brand p-8 text-center text-white shadow-2xl sm:p-12 lg:p-16">
+      <div className="relative w-full overflow-hidden rounded-3xl bg-gradient-to-br from-brand-active via-brand to-brand p-8 text-center text-white shadow-2xl sm:p-12 lg:p-16">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full border border-white/10"
@@ -51,7 +51,7 @@ export function FinalCtaSection() {
                 aria-hidden="true"
               />
             }
-            className="w-full font-bold text-[#245c7d] shadow-lg hover:bg-[#F5FAFD] hover:text-[#1E5B7D] sm:w-auto"
+            className="w-full font-bold text-brand-active shadow-lg hover:bg-brand-mist hover:text-brand-active sm:w-auto"
           >
             {primaryCta.label}
           </Button>

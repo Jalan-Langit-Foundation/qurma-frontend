@@ -33,8 +33,8 @@ export function getFieldAriaProps({
 
 export function fieldControlClass(hasError: boolean) {
   return cn(
-    "w-full rounded-xl border bg-white px-4 py-2.5 text-xs font-medium text-ink transition-all duration-200 sm:text-sm",
-    "placeholder:font-normal placeholder:text-slate-400",
+    "h-12 w-full rounded-2xl border bg-white px-4 text-base font-medium text-ink transition-all duration-200 sm:text-[15px]",
+    "placeholder:font-normal placeholder:text-placeholder",
     "border-slate-200/80 hover:border-slate-300",
     "focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20",
     "disabled:cursor-not-allowed disabled:bg-slate-50 disabled:opacity-50",
@@ -49,7 +49,7 @@ interface FieldLabelProps {
   children: React.ReactNode;
 }
 
-export function FieldLabel({ htmlFor, id, children }: FieldLabelProps) {
+function FieldLabel({ htmlFor, id, children }: FieldLabelProps) {
   return (
     <label
       htmlFor={htmlFor}
@@ -91,4 +91,40 @@ export function FieldMessage({
   }
 
   return null;
+}
+
+interface FieldShellProps {
+  fieldId: string;
+  messageId: string;
+  labelId?: string;
+  label?: string;
+  error?: string;
+  helperText?: string;
+  className?: string;
+  ref?: React.Ref<HTMLDivElement>;
+  children: React.ReactNode;
+}
+
+export function FieldShell({
+  fieldId,
+  messageId,
+  labelId,
+  label,
+  error,
+  helperText,
+  className,
+  ref,
+  children,
+}: FieldShellProps) {
+  return (
+    <div ref={ref} className={cn("w-full space-y-1.5 font-body", className)}>
+      {label && (
+        <FieldLabel htmlFor={fieldId} id={labelId}>
+          {label}
+        </FieldLabel>
+      )}
+      {children}
+      <FieldMessage id={messageId} error={error} helperText={helperText} />
+    </div>
+  );
 }

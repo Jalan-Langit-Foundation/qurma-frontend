@@ -2,6 +2,7 @@ import * as React from "react";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import { Card, CardTitle } from "@/components/ui/card";
+import { ExternalLink } from "@/components/ui/external-link";
 import { formatKilogram, formatTanggal } from "@/lib/format";
 import type { ReportPhotoGroup, ShohibulReport } from "../lib/types";
 import { DetailList } from "./detail-list";
@@ -44,13 +45,11 @@ function PhotoGroup({
               key={photo.id}
               className="relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-100"
             >
-              <a
+              <ExternalLink
                 href={photo.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block h-full w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+                srHint="buka ukuran penuh di tab baru"
+                className="block h-full w-full focus-ring"
               >
-                {/* unoptimized: domain storage backend belum final (catatan D1) */}
                 <Image
                   src={photo.url}
                   alt={`${alt} ${index + 1}`}
@@ -59,11 +58,7 @@ function PhotoGroup({
                   sizes="(min-width: 640px) 33vw, 50vw"
                   className="object-cover"
                 />
-                <span className="sr-only">
-                  {" "}
-                  (buka ukuran penuh di tab baru)
-                </span>
-              </a>
+              </ExternalLink>
             </li>
           ))}
         </ul>

@@ -56,3 +56,20 @@ export interface CreateSavingInput {
   /** Selalu dikirim agar tabungan berakhir tepat di batas pelunasan program */
   tenorMonths: number;
 }
+
+export interface UpgradeOption {
+  /** null bila kode paket dari backend belum dikenal frontend */
+  packageId: PackageId | null;
+  packageName: string;
+  targetAmount: number;
+  additionalAmount: number;
+  newMonthlyAmount: number;
+  remainingMonths: number;
+}
+
+export interface UpgradeOptions {
+  savingId: number;
+  eligible: boolean;
+  reason: string | null;
+  options: UpgradeOption[];
+}

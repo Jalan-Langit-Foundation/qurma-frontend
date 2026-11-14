@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorView } from "@/components/layout/error-view/error-view";
+import { ErrorView } from "@/components/layout";
 import { ROUTES } from "@/config/navigation";
 
 export default function MudhohiError({

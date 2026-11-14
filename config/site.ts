@@ -1,4 +1,5 @@
 import { env } from "./env";
+import { PROGRAM } from "./program";
 
 const CONTACT = {
   email: "jalanlangitfoundation@gmail.com",
@@ -16,24 +17,23 @@ const CONTACT = {
 export const SITE_CONFIG = {
   name: "Jalan Langit Foundation",
   legalName: "Yayasan Jalan Langit",
-  programName: "QURMA 2027",
-  programFullName: "Tabungan Qurban QURMA 2027",
+  programName: PROGRAM.name,
+  programFullName: PROGRAM.fullName,
   tagline: "#BergandenganLangitkanKebaikan",
   url: env.siteUrl,
   foundationUrl: "https://www.jalanlangitfoundation.id",
-  description:
-    "Qurban Nggak Harus Menunggu. Bisa Dipersiapkan dari Sekarang. Program pendampingan tabungan qurban 1448 H / 2027 M yang terencana, transparan, dan terpercaya bersama Yayasan Jalan Langit.",
+  description: `Qurban Nggak Harus Menunggu. Bisa Dipersiapkan dari Sekarang. Program pendampingan tabungan qurban ${PROGRAM.periodLabel} yang terencana, transparan, dan terpercaya bersama Yayasan Jalan Langit.`,
   foundationSummary:
     "Menggerakkan kebaikan menjadi manfaat nyata bagi masyarakat melalui program sosial, pendidikan, kemanusiaan, dan pemberdayaan.",
   keywords: [
     "Tabungan Qurban",
-    "QURMA 2027",
-    "Qurban 1448 H",
+    PROGRAM.name,
+    `Qurban ${PROGRAM.hijriLabel}`,
     "Jalan Langit Foundation",
     "Yayasan Jalan Langit",
     "Qurban Sukabumi",
     "Simulasi Tabungan Qurban",
-    "Domba Qurban 2027",
+    `Domba Qurban ${PROGRAM.year}`,
   ],
   logo: {
     blue: "/images/brand/logo-biru.png",

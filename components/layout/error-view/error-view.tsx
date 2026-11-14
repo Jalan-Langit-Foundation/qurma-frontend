@@ -8,14 +8,9 @@ import { Container } from "@/components/ui/container";
 export interface ErrorViewProps {
   error: Error & { digest?: string };
   reset: () => void;
-  /** Tombol kedua, mis. kembali ke beranda/dashboard */
   secondaryAction: { label: string; href: string };
 }
 
-/**
- * Tampilan error untuk error.tsx. Pesan teknis tidak ditampilkan;
- * hanya kode referensi (digest) yang bisa dicocokkan dengan log server.
- */
 export function ErrorView({ error, reset, secondaryAction }: ErrorViewProps) {
   React.useEffect(() => {
     console.error(error);

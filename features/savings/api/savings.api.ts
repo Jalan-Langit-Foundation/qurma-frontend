@@ -1,6 +1,6 @@
 import "server-only";
 import { ApiError } from "@/lib/api/api-error";
-import { authedRequest } from "@/lib/api/authed-request";
+import { authedRequest, nullIfNotFound } from "@/lib/api/authed-request";
 import type { CreateSavingInput, Saving, SavingLedger } from "../lib/types";
 import type { SavingDepositsDto, SavingSummaryDto } from "./savings.dto";
 import {
@@ -9,17 +9,6 @@ import {
   toSavingLedger,
 } from "./savings.mapper";
 
-/** 404 dari backend berarti "tidak ada" (bukan error) untuk endpoint ini. */
-async function nullIfNotFound<T>(request: Promise<T>): Promise<T | null> {
-  try {
-    return await request;
-  } catch (error) {
-    if (error instanceof ApiError && error.kind === "not_found") return null;
-    throw error;
-  }
-}
-
-/** Tabungan berjalan (atau terakhir) milik pengguna. null = belum punya tabungan. */
 export async function getCurrentSaving(): Promise<Saving | null> {
   const data = await nullIfNotFound(
     authedRequest<{ saving: SavingSummaryDto }>("/savings/current"),
@@ -27,7 +16,6 @@ export async function getCurrentSaving(): Promise<Saving | null> {
   return data ? toSaving(data.saving) : null;
 }
 
-/** Jadwal & catatan setoran. null = tabungan tidak ada / bukan milik pengguna. */
 export async function getSavingLedger(
   savingId: number,
 ): Promise<SavingLedger | null> {

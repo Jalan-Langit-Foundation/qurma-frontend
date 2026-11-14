@@ -1,3 +1,4 @@
+import { PROGRAM } from "@/config/program";
 import type { QurbanPackage } from "./types";
 
 export const PACKAGE_IDS = ["loyalty", "start", "plus", "premium"] as const;
@@ -9,13 +10,13 @@ export const PACKAGES = [
     target: 1_500_000,
     weightMinKg: 20,
     weightMaxKg: 22,
-    note: "Khusus Mudhohi QURMA 2026",
-    description: "Khusus alumni mudhohi 2026.",
+    note: `Khusus Mudhohi ${PROGRAM.previousName}`,
+    description: `Khusus alumni mudhohi ${PROGRAM.previousYear}.`,
     recommended: false,
     loyaltyOnly: true,
     copy: { weightLabel: "Estimasi bobot", depositLabel: "Setoran terjangkau" },
     perks: [
-      "Khusus mudhohi aktif QURMA 2026",
+      `Khusus mudhohi aktif ${PROGRAM.previousName}`,
       "Perawatan pakan sehat terjamin",
       "Monitoring progres via dashboard",
       "Shohibul report foto & video lengkap",

@@ -1,4 +1,4 @@
-import { SiteShell } from "@/components/layout";
+import { SiteShell } from "@/components/layout/server";
 
 export default function MarketingLayout({
   children,

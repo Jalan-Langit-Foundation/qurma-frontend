@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorView } from "@/components/layout/error-view/error-view";
+import { ErrorView, MAIN_CONTENT_ID } from "@/components/layout";
 import { ROUTES } from "@/config/navigation";
 
 export default function ErrorPage({
@@ -11,7 +11,7 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   return (
-    <main id="konten-utama" className="flex flex-1">
+    <main id={MAIN_CONTENT_ID} className="flex flex-1">
       <ErrorView
         error={error}
         reset={reset}

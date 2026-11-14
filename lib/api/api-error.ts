@@ -25,6 +25,9 @@ const FRIENDLY_MESSAGES: Record<ApiErrorKind, string> = {
   timeout: "Server terlalu lama merespons. Silakan coba beberapa saat lagi.",
 };
 
+export const ACTION_NETWORK_ERROR =
+  "Terjadi kendala jaringan. Silakan coba beberapa saat lagi.";
+
 export function kindFromStatus(status: number): ApiErrorKind {
   switch (status) {
     case 401:

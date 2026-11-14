@@ -3,10 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DemoSection } from "../demo-section";
 
-/**
- * Mock statis: StickyCta asli memakai position: fixed & hanya tampil < md,
- * jadi tidak bisa dirender di dalam halaman demo.
- */
 export function StickyCtaSection() {
   return (
     <DemoSection

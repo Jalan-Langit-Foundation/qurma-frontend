@@ -3,6 +3,7 @@
 import * as React from "react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { SECTION_IDS } from "@/config/navigation";
+import { PROGRAM } from "@/config/program";
 import { PackageCard, type QurbanPackage } from "@/features/packages";
 import {
   formatYearMonth,
@@ -33,7 +34,7 @@ export function PackagesSection({
   return (
     <LandingSection
       id={SECTION_IDS.packages}
-      label="Pilihan paket qurban 2027"
+      label={`Pilihan paket qurban ${PROGRAM.year}`}
       tone="white"
     >
       <SectionHeader

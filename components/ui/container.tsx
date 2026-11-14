@@ -15,7 +15,6 @@ const sizeStyles: Record<NonNullable<ContainerProps["size"]>, string> = {
   full: "max-w-full",
 };
 
-/** Pembatas lebar konten + padding horizontal responsif. */
 export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
   ({ className, size = "2xl", as: Component = "div", ...props }, ref) => (
     <Component

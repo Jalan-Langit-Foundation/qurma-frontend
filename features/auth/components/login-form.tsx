@@ -3,24 +3,26 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
+import { WhatsappLink } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormAlert } from "@/components/ui/form-alert";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
-import { ROUTES } from "@/config/navigation";
+import { WHATSAPP_MESSAGES } from "@/config/contact";
+import { useActionFeedback } from "@/hooks/use-action-feedback";
+import { FIELD_LIMITS } from "@/lib/validation";
 import { loginAction } from "../actions";
 import { useAuthParams } from "../hooks/use-auth-params";
-import { applyFieldErrors } from "../lib/apply-field-errors";
 import { loginSchema, type LoginFormData } from "../lib/schemas";
-import { AuthCard, AuthFooterLink } from "./auth-card";
-
-const NETWORK_ERROR =
-  "Terjadi kendala jaringan. Silakan coba beberapa saat lagi.";
+import { AuthCard } from "./auth-card";
 
 const FIELDS = ["email", "password"] as const;
+const EXPIRED_FEEDBACK = {
+  variant: "info",
+  message: "Sesi Anda telah berakhir. Silakan masuk kembali.",
+} as const;
 
 interface LoginFormViewProps {
   next: string | null;
@@ -28,9 +30,6 @@ interface LoginFormViewProps {
 }
 
 function LoginFormView({ next, expired }: LoginFormViewProps) {
-  const [serverError, setServerError] = React.useState<string | null>(null);
-  const [showExpired, setShowExpired] = React.useState(expired);
-
   const {
     register,
     handleSubmit,
@@ -41,66 +40,44 @@ function LoginFormView({ next, expired }: LoginFormViewProps) {
     defaultValues: { email: "", password: "", remember: false },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    setServerError(null);
-    setShowExpired(false);
+  const { feedback, clearFeedback, run } = useActionFeedback({
+    initial: expired ? EXPIRED_FEEDBACK : null,
+    setError,
+    fields: FIELDS,
+  });
 
-    try {
-      // Bila berhasil, action langsung mengarahkan ke dashboard
-      const result = await loginAction(data, next);
-      if (!result) return;
-      setServerError(result.message);
-      applyFieldErrors(result.fieldErrors, FIELDS, setError);
-    } catch {
-      setServerError(NETWORK_ERROR);
-    }
-  };
+  const onSubmit = (data: LoginFormData) => run(() => loginAction(data, next));
 
   return (
     <AuthCard
-      title="Masuk ke Akun Mudhohi"
-      description="Pantau progres tabungan dan persiapan qurban Anda"
-      footer={
-        <>
-          Belum memiliki akun?{" "}
-          <AuthFooterLink
-            href={
-              next
-                ? `${ROUTES.register}?next=${encodeURIComponent(next)}`
-                : ROUTES.register
-            }
-          >
-            Daftar di sini
-          </AuthFooterLink>
-        </>
-      }
+      mode="login"
+      next={next}
+      title="Assalamualaikum!"
+      description="Masuk untuk melihat progres tabungan qurban Anda."
     >
-      {(serverError || showExpired) && (
-        <div className="mb-5">
-          {serverError ? (
-            <FormAlert
-              variant="error"
-              message={serverError}
-              onDismiss={() => setServerError(null)}
-            />
-          ) : (
-            <FormAlert
-              variant="info"
-              message="Sesi Anda telah berakhir. Silakan masuk kembali."
-              onDismiss={() => setShowExpired(false)}
-            />
-          )}
-        </div>
+      {feedback && (
+        <FormAlert
+          variant={feedback.variant}
+          message={feedback.message}
+          onDismiss={clearFeedback}
+        />
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+      <form
+        method="post"
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-5"
+        noValidate
+      >
         <Input
           id="login-email"
+          maxLength={FIELD_LIMITS.email}
           type="email"
-          label="Alamat Email"
-          placeholder="nama@email.com"
+          inputMode="email"
+          label="Email"
+          placeholder="Email yang Anda daftarkan"
           disabled={isSubmitting}
-          leftIcon={<Mail className="h-4 w-4 text-[#777777]" />}
+          leftIcon={<Mail className="h-4 w-4" aria-hidden="true" />}
           error={errors.email?.message}
           autoComplete="email"
           {...register("email")}
@@ -108,15 +85,17 @@ function LoginFormView({ next, expired }: LoginFormViewProps) {
 
         <PasswordInput
           id="login-password"
+          maxLength={FIELD_LIMITS.password}
           label="Kata Sandi"
           placeholder="Masukkan kata sandi"
           disabled={isSubmitting}
+          leftIcon={<Lock className="h-4 w-4" aria-hidden="true" />}
           error={errors.password?.message}
           autoComplete="current-password"
           {...register("password")}
         />
 
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center justify-between gap-3">
           <Checkbox
             id="remember-me"
             label="Ingat saya"
@@ -125,31 +104,24 @@ function LoginFormView({ next, expired }: LoginFormViewProps) {
           />
 
           {/* Reset kata sandi belum tersedia di API → dibantu admin via WhatsApp */}
-          <a
-            href={buildWhatsappUrl(WHATSAPP_MESSAGES.forgotPassword)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-semibold text-brand-strong hover:underline"
+          <WhatsappLink
+            message={WHATSAPP_MESSAGES.forgotPassword}
+            srHint="hubungi admin via WhatsApp, tab baru"
+            className="rounded text-sm font-semibold text-brand-strong hover:underline focus-ring"
           >
             Lupa kata sandi?
-            <span className="sr-only">
-              {" "}
-              (hubungi admin via WhatsApp, tab baru)
-            </span>
-          </a>
+          </WhatsappLink>
         </div>
 
-        <div className="pt-2">
-          <Button
-            type="submit"
-            variant="primary"
-            size="md"
-            className="w-full justify-center shadow-sm hover:shadow"
-            isLoading={isSubmitting}
-          >
-            Masuk ke Dashboard
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full"
+          isLoading={isSubmitting}
+        >
+          Masuk
+        </Button>
       </form>
     </AuthCard>
   );

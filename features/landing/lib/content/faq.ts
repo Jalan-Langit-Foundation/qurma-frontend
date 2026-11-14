@@ -1,4 +1,6 @@
 import type { AccordionItem } from "@/components/ui/accordion";
+import { PROGRAM } from "@/config/program";
+import { formatYearMonth, SAVINGS_PROGRAM } from "@/features/savings";
 
 export const FAQ_CONTENT = {
   headline: {
@@ -10,10 +12,8 @@ export const FAQ_CONTENT = {
   items: [
     {
       id: "faq-1",
-      question:
-        "Apa itu Program Tabungan Qurban QURMA 2027 bersama Yayasan Jalan Langit?",
-      answer:
-        "QURMA (Qurban untuk Sesama) adalah program pendampingan ibadah qurban terencana yang memfasilitasi umat untuk mempersiapkan dana qurban secara bertahap, transparan, dan teratur menyambut Idul Adha 1448 H / 2027 M.",
+      question: `Apa itu Program ${PROGRAM.fullName} bersama Yayasan Jalan Langit?`,
+      answer: `QURMA (Qurban untuk Sesama) adalah program pendampingan ibadah qurban terencana yang memfasilitasi umat untuk mempersiapkan dana qurban secara bertahap, transparan, dan teratur menyambut Idul Adha ${PROGRAM.periodLabel}.`,
     },
     {
       id: "faq-2",
@@ -38,10 +38,8 @@ export const FAQ_CONTENT = {
     },
     {
       id: "faq-5",
-      question:
-        "Kapan batas akhir waktu pelunasan tabungan qurban untuk periode 1448 H / 2027 M?",
-      answer:
-        "Batas akhir pelunasan dana qurban adalah April 2027 (1–2 bulan sebelum Idul Adha). Batas waktu ini diperlukan agar tim logistik dan peternak dapat mengalokasikan dan memelihara hewan qurban Anda dalam kondisi terbaik.",
+      question: `Kapan batas akhir waktu pelunasan tabungan qurban untuk periode ${PROGRAM.periodLabel}?`,
+      answer: `Batas akhir pelunasan dana qurban adalah ${formatYearMonth(SAVINGS_PROGRAM.finalPaymentMonth)} (1–2 bulan sebelum Idul Adha). Batas waktu ini diperlukan agar tim logistik dan peternak dapat mengalokasikan dan memelihara hewan qurban Anda dalam kondisi terbaik.`,
     },
     {
       id: "faq-6",

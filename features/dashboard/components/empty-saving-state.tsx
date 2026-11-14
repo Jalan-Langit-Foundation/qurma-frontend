@@ -1,50 +1,91 @@
 import * as React from "react";
-import { PiggyBank } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
-import { ROUTES, SECTION_IDS, sectionHref } from "@/config/navigation";
+import { MEMBER_SECTION_IDS } from "@/config/navigation";
+import { PROGRAM } from "@/config/program";
+import { PackageCompareList } from "@/features/packages";
 import { isSavingRegistrationOpen } from "@/features/savings";
+import { buildEmptyStateCta } from "../lib/dashboard-cta";
+import { CtaButton } from "./dashboard-greeting";
+
+const STEPS = [
+  {
+    title: "Pilih paket",
+    text: "Tentukan bobot domba sesuai target tabungan Anda.",
+  },
+  {
+    title: isSavingRegistrationOpen ? "Atur setoran" : "Daftar lewat admin",
+    text: isSavingRegistrationOpen
+      ? "Pilih bulan mulai; setoran bulanan dihitung otomatis."
+      : "Admin QURMA mendaftarkan tabungan dan jadwal setoran Anda.",
+  },
+  {
+    title: "Pantau di sini",
+    text: "Progres, jadwal, dan persiapan domba tampil di dashboard ini.",
+  },
+] as const;
+
+const EMPTY_STATE_CTA = buildEmptyStateCta();
 
 export function EmptySavingState() {
   return (
-    <Card className="border-2 border-dashed bg-white/60 p-8 text-center hover:shadow-sm">
-      <div className="mx-auto flex max-w-md flex-col items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand-strong">
-          <PiggyBank className="h-6 w-6" aria-hidden="true" />
-        </div>
-        <h2 className="font-heading text-lg font-semibold text-ink">
-          Anda Belum Memiliki Tabungan Qurban
-        </h2>
-        <p className="text-sm text-body">
-          {isSavingRegistrationOpen
-            ? "Pilih paket domba dan bulan mulai menabung untuk memulai persiapan qurban 2027."
-            : "Pendaftaran tabungan saat ini dibantu langsung oleh admin QURMA. Setelah didaftarkan, progres tabungan akan tampil di sini."}
-        </p>
-        <div className="flex flex-wrap justify-center gap-3 pt-2">
-          {isSavingRegistrationOpen ? (
-            <Button href={ROUTES.newSaving} variant="primary" size="sm">
-              Mulai Tabungan
-            </Button>
-          ) : (
-            <Button
-              href={buildWhatsappUrl(WHATSAPP_MESSAGES.general)}
-              external
-              variant="primary"
-              size="sm"
-            >
-              Daftar via WhatsApp
-            </Button>
-          )}
-          <Button
-            href={sectionHref(SECTION_IDS.packages)}
-            variant="outline"
-            size="sm"
+    <div className="space-y-4">
+      <section
+        aria-labelledby="empty-saving-title"
+        className="grid gap-6 rounded-[28px] bg-brand p-6 text-white sm:p-8 lg:grid-cols-[1.1fr_1fr] lg:items-center"
+      >
+        <div className="space-y-4">
+          <h2
+            id="empty-saving-title"
+            className="font-heading text-2xl font-semibold sm:text-3xl"
           >
-            Lihat Pilihan Paket
-          </Button>
+            Anda belum memiliki tabungan qurban
+          </h2>
+          <p className="max-w-md text-sm text-white/85 sm:text-base">
+            {isSavingRegistrationOpen
+              ? `Mulai menabung sekarang agar qurban ${PROGRAM.hijriLabel} terasa ringan.`
+              : "Pendaftaran tabungan saat ini dibantu langsung oleh admin QURMA. Setelah didaftarkan, progres tabungan akan tampil di sini."}
+          </p>
+          <CtaButton
+            cta={EMPTY_STATE_CTA}
+            className="w-full bg-white text-brand-strong hover:bg-brand-soft sm:w-auto"
+          />
         </div>
-      </div>
-    </Card>
+
+        <ol className="grid gap-3">
+          {STEPS.map((step, index) => (
+            <li
+              key={step.title}
+              className="flex gap-4 rounded-2xl bg-white/10 p-4"
+            >
+              <span
+                aria-hidden="true"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white font-heading text-sm font-semibold text-brand-strong"
+              >
+                {index + 1}
+              </span>
+              <div>
+                <p className="font-heading text-sm font-semibold">
+                  {step.title}
+                </p>
+                <p className="text-xs text-white/80">{step.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section
+        id={MEMBER_SECTION_IDS.packages}
+        aria-labelledby="empty-packages-title"
+        className="scroll-mt-6 space-y-3 pt-4"
+      >
+        <h2
+          id="empty-packages-title"
+          className="font-heading text-lg font-semibold text-ink"
+        >
+          Pilihan Paket {PROGRAM.name}
+        </h2>
+        <PackageCompareList />
+      </section>
+    </div>
   );
 }

@@ -9,12 +9,12 @@ import {
   getSessionToken,
   setSessionToken,
 } from "@/lib/server/session";
+import { zodFieldErrors } from "@/lib/validation";
 import { loginRequest, logoutRequest, registerRequest } from "./api/auth.api";
 import { getSafeRedirectPath } from "./lib/redirect";
 import {
   loginSchema,
   registerSchema,
-  zodFieldErrors,
   type LoginFormData,
   type RegisterFormData,
 } from "./lib/schemas";
@@ -58,7 +58,6 @@ export async function loginAction(
       password: parsed.data.password,
     });
 
-    // Admin mengelola data lewat panel Filament, bukan lewat website ini
     if (session.user.role === "admin") {
       await logoutRequest(session.token);
       const panelHint = serverEnv.adminPanelUrl
@@ -75,14 +74,9 @@ export async function loginAction(
     return toActionError(error);
   }
 
-  // redirect() harus di luar try/catch
   redirect(getSafeRedirectPath(next));
 }
 
-/**
- * Daftar akun penabung. Backend langsung memberi token, jadi pengguna
- * tidak perlu login ulang (API Contract: Catatan tambahan no. 4).
- */
 export async function registerAction(
   input: RegisterFormData,
   next: string | null,
@@ -104,7 +98,7 @@ export async function registerAction(
       password: parsed.data.password,
       password_confirmation: parsed.data.password_confirmation,
     });
-    // Akun baru belum memilih "ingat saya" → sesi bertahan 30 hari agar tidak langsung keluar
+
     await setSessionToken(session.token, { remember: true });
   } catch (error) {
     return toActionError(error);

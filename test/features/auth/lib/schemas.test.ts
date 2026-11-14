@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-  loginSchema,
-  registerSchema,
-  zodFieldErrors,
-} from "@/features/auth/lib/schemas";
+import { loginSchema, registerSchema } from "@/features/auth/lib/schemas";
+import { zodFieldErrors } from "@/lib/validation";
 
 const validRegister = {
   name: " Budi Santoso ",

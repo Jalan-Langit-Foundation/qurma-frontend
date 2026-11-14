@@ -66,7 +66,6 @@ export function CalculatorResult({
             message={errorMessage}
           />
         ) : (
-          // aria-live: hasil baru dibacakan saat paket/bulan diganti
           <div
             aria-live="polite"
             className="space-y-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6"

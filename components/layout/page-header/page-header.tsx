@@ -8,11 +8,10 @@ export interface PageHeaderProps {
   title: string;
   description?: React.ReactNode;
   backLink?: { href: string; label: string };
-  /** Elemen di sisi kanan judul (mis. tombol Keluar) */
+
   actions?: React.ReactNode;
 }
 
-/** Judul halaman area mudhohi: tautan kembali, badge kecil, judul, deskripsi. */
 export function PageHeader({
   eyebrow,
   title,
@@ -26,7 +25,7 @@ export function PageHeader({
         <div>
           <Link
             href={backLink.href}
-            className="inline-flex items-center gap-2 rounded-md text-sm text-body transition-colors hover:text-brand-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className="inline-flex items-center gap-2 rounded-md text-sm text-body transition-colors hover:text-brand-strong focus-ring"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {backLink.label}

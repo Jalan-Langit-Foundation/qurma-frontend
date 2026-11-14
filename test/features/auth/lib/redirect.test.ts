@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getSafeRedirectPath } from "@/features/auth/lib/redirect";
+import { getSafeRedirectPath, withNext } from "@/features/auth/lib/redirect";
 
 describe("getSafeRedirectPath", () => {
   it("meneruskan path internal beserta query", () => {
@@ -24,5 +24,17 @@ describe("getSafeRedirectPath", () => {
     expect(getSafeRedirectPath("/login?next=/dashboard")).toBe("/dashboard");
     expect(getSafeRedirectPath("/register")).toBe("/dashboard");
     expect(getSafeRedirectPath("/session/expired")).toBe("/dashboard");
+  });
+});
+
+describe("withNext", () => {
+  it("tanpa next → path apa adanya", () => {
+    expect(withNext("/login", null)).toBe("/login");
+  });
+
+  it("next di-encode agar query & hash tujuan tetap utuh", () => {
+    expect(withNext("/register", "/qurban/7?tab=foto#atas")).toBe(
+      "/register?next=%2Fqurban%2F7%3Ftab%3Dfoto%23atas",
+    );
   });
 });

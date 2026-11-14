@@ -65,7 +65,7 @@ export function UpgradeBanner({
           type="button"
           onClick={handleDismiss}
           aria-label="Tutup rekomendasi upgrade"
-          className="absolute top-4 right-4 cursor-pointer rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+          className="absolute top-4 right-4 cursor-pointer rounded-full p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-ring"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>

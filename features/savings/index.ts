@@ -1,27 +1,21 @@
-/**
- * Public API fitur tabungan yang aman dipakai di Client & Server Component.
- * Fungsi yang memanggil backend (butuh sesi) ada di "@/features/savings/server".
- * Helper internal diimpor langsung dari file-nya oleh kode di dalam fitur & unit test.
- */
-
-// Aturan program
 export { isSavingRegistrationOpen, SAVINGS_PROGRAM } from "./lib/program";
-
-// Bulan
-export { formatYearMonth, type YearMonth } from "./lib/year-month";
-export type { StartMonthOption } from "./lib/start-months";
-
-// Perhitungan
+export {
+  formatYearMonth,
+  formatYearMonthShort,
+  type YearMonth,
+} from "./lib/year-month";
+export {
+  toStartMonthSelectOptions,
+  type StartMonthOption,
+} from "./lib/start-months";
 export {
   estimateMonthlyAmount,
   type InstallmentPlan,
 } from "./lib/installment-plan";
-
-// Status & perjalanan
 export type { InstallmentStatus } from "./lib/installment-status";
+export { getSavingStatus, type SavingStatusTone } from "./lib/saving-status";
 export { buildJourneyStepsFromStage, type JourneyStep } from "./lib/journey";
 
-// Model domain
 export type {
   CreateSavingInput,
   DepositRecord,
@@ -29,15 +23,15 @@ export type {
   Saving,
   SavingLedger,
   SavingStatus,
+  UpgradeOption,
+  UpgradeOptions,
 } from "./lib/types";
 
-// Hooks
 export {
   useSavingSimulation,
   type SavingSimulationState,
 } from "./hooks/use-saving-simulation";
 
-// Komponen
 export {
   DepositTable,
   type DepositTableProps,
@@ -52,4 +46,4 @@ export {
   type JourneyChecklistProps,
 } from "./components/journey-checklist";
 export { DepositRecords } from "./components/deposit-records";
-export { SavingSummaryCard } from "./components/saving-summary-card";
+export { PlanInputs } from "./components/plan-inputs";

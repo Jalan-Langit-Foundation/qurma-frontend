@@ -1,113 +1,136 @@
 import "server-only";
 import * as React from "react";
-import { FileText, PackageSearch } from "lucide-react";
-import { MemberPage, PageHeader } from "@/components/layout";
-import { Button } from "@/components/ui/button";
-import { Card, CardTitle } from "@/components/ui/card";
-import { ROUTES } from "@/config/navigation";
-import { LogoutButton } from "@/features/auth";
-import { getCurrentUser } from "@/features/auth/server";
-import {
-  DepositRecords,
-  DepositTable,
-  JourneyChecklist,
-  SavingSummaryCard,
-  type Saving,
-} from "@/features/savings";
-import { getCurrentSaving, getSavingLedger } from "@/features/savings/server";
+import { MessageCircle } from "lucide-react";
+import { MemberContainer, WhatsappLink } from "@/components/layout";
+import { buttonClassName } from "@/components/ui/button-styles";
+import { WHATSAPP_MESSAGES } from "@/config/contact";
+import { MEMBER_SECTION_IDS } from "@/config/navigation";
+import { PackageCompareList } from "@/features/packages";
+import { DepositRecords, DepositTable } from "@/features/savings";
+import { getSavingLedger } from "@/features/savings/server";
+import { buildDashboardView, getFirstName } from "../lib/dashboard-view";
+import { loadDashboard } from "../lib/load-dashboard";
+import { DashboardGreeting } from "./dashboard-greeting";
+import { DepositPlanCard } from "./deposit-plan-card";
 import { EmptySavingState } from "./empty-saving-state";
+import { JourneyCard } from "./journey-card";
+import { LastDepositCard } from "./last-deposit-card";
+import { MyPackageCard } from "./my-package-card";
+import { ProgressGaugeCard } from "./progress-gauge-card";
 
 function Section({
+  id,
   title,
+  description,
   children,
 }: {
+  id: string;
   title: string;
+  description?: string;
   children: React.ReactNode;
 }) {
   return (
-    <section aria-label={title} className="space-y-3">
-      <h2 className="font-heading text-lg font-bold text-ink">{title}</h2>
+    <section
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className="scroll-mt-6 space-y-4 pt-10"
+    >
+      <div className="space-y-1">
+        <h2
+          id={`${id}-title`}
+          className="font-heading text-xl font-semibold text-ink"
+        >
+          {title}
+        </h2>
+        {description && <p className="text-sm text-body">{description}</p>}
+      </div>
       {children}
     </section>
   );
 }
 
-function JourneyCard({ saving }: { saving: Saving }) {
-  const reportPublished = saving.journey.at(-1)?.completed ?? false;
-
-  return (
-    <Card className="h-fit space-y-6 p-5 shadow-card hover:shadow-card sm:p-6">
-      <CardTitle as="h2" size="lg">
-        Perjalanan Qurban
-      </CardTitle>
-      <JourneyChecklist steps={saving.journey} />
-      <div className="flex flex-col gap-2.5 border-t border-slate-100 pt-5">
-        <Button
-          href={ROUTES.qurban(saving.id)}
-          variant="outline"
-          size="sm"
-          leftIcon={
-            <PackageSearch className="h-3.5 w-3.5" aria-hidden="true" />
-          }
-        >
-          Lacak Persiapan Qurban
-        </Button>
-        {reportPublished && (
-          <Button
-            href={ROUTES.report(saving.id)}
-            variant="primary"
-            size="sm"
-            leftIcon={<FileText className="h-3.5 w-3.5" aria-hidden="true" />}
-          >
-            Lihat Shohibul Report
-          </Button>
-        )}
-      </div>
-    </Card>
-  );
-}
-
 /** Halaman /dashboard (dirender di server, di dalam <Suspense>). */
 export async function DashboardPage() {
-  const [user, saving] = await Promise.all([
-    getCurrentUser(),
-    getCurrentSaving(),
-  ]);
-  const ledger = saving ? await getSavingLedger(saving.id) : null;
-  const firstName = user.name.trim().split(/\s+/)[0];
+  const { user, saving } = await loadDashboard();
+
+  if (!saving) {
+    return (
+      <MemberContainer>
+        <DashboardGreeting
+          firstName={getFirstName(user.name)}
+          subtitle="Selamat datang di area penabung QURMA."
+        />
+        <div className="mt-8">
+          <EmptySavingState />
+        </div>
+      </MemberContainer>
+    );
+  }
+
+  const ledger = await getSavingLedger(saving.id);
+  const view = buildDashboardView(saving, ledger, user);
+  const member = {
+    name: user.name,
+    email: user.email,
+    saving: { id: saving.id, packageName: saving.packageName },
+  };
 
   return (
-    <MemberPage className="gap-8">
-      <PageHeader
-        eyebrow="Area Mudhohi"
-        title={`Assalamualaikum, ${firstName}`}
-        description="Pantau progres tabungan dan persiapan qurban Anda."
-        actions={<LogoutButton />}
+    <MemberContainer>
+      <DashboardGreeting
+        firstName={view.firstName}
+        subtitle={view.subtitle}
+        cta={view.cta}
+        chips={view.chips}
       />
 
-      {!saving ? (
-        <EmptySavingState />
-      ) : (
-        <>
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <SavingSummaryCard saving={saving} />
-            </div>
-            <JourneyCard saving={saving} />
-          </div>
+      {/* Urutan kartu: ponsel → progres dulu; desktop → paket di kolom kiri. */}
+      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <MyPackageCard
+          data={view.package}
+          className="order-5 md:col-span-2 lg:order-1 lg:col-span-1 lg:row-span-2"
+        />
+        <DepositPlanCard data={view.plan} className="order-2 lg:order-2" />
+        <ProgressGaugeCard data={view.gauge} className="order-1 lg:order-3" />
+        <LastDepositCard
+          data={view.lastDeposit}
+          className="order-4 md:order-3 lg:order-4"
+        />
+        <JourneyCard
+          data={view.journey}
+          savingId={saving.id}
+          className="order-3 md:order-4 lg:order-5"
+        />
+      </div>
 
-          {ledger && (
-            <>
-              <Section title="Jadwal Setoran">
-                <DepositTable installments={ledger.installments} />
-              </Section>
-              <Section title="Riwayat Setoran">
-                <DepositRecords deposits={ledger.deposits} />
-              </Section>
-            </>
-          )}
-        </>
+      {ledger && (
+        <Section
+          id={MEMBER_SECTION_IDS.schedule}
+          title="Jadwal & Riwayat Setoran"
+          description="Setoran dicatat admin setelah bukti diterima."
+        >
+          <DepositTable installments={ledger.installments} />
+          <h3 className="pt-2 font-heading text-base font-semibold text-ink">
+            Setoran yang sudah tercatat
+          </h3>
+          <DepositRecords deposits={ledger.deposits} />
+        </Section>
       )}
-    </MemberPage>
+
+      <Section
+        id={MEMBER_SECTION_IDS.packages}
+        title="Bandingkan Paket"
+        description="Ingin pindah paket? Admin akan membantu menghitung ulang setoran Anda."
+      >
+        <PackageCompareList currentPackageId={saving.packageId} />
+        <WhatsappLink
+          message={WHATSAPP_MESSAGES.memberQuestion(member)}
+          className={buttonClassName({ variant: "soft", size: "pill" })}
+        >
+          <MessageCircle className="h-4 w-4" aria-hidden="true" />
+          Tanya admin soal ganti paket
+        </WhatsappLink>
+      </Section>
+    </MemberContainer>
   );
 }

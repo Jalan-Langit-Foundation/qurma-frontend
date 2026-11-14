@@ -4,7 +4,6 @@ import { SectionState } from "@/components/ui/section-state";
 import { formatRupiah, formatTanggal } from "@/lib/format";
 import type { DepositRecord } from "../lib/types";
 
-/** Catatan setoran yang benar-benar diterima admin (urut dari yang paling lama). */
 export function DepositRecords({ deposits }: { deposits: DepositRecord[] }) {
   if (deposits.length === 0) {
     return (

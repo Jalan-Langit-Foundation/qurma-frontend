@@ -20,7 +20,7 @@ export interface PackageCardProps {
 }
 
 const buttonBase =
-  "flex min-h-[42px] w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-heading text-sm leading-none font-bold tracking-normal transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2";
+  "flex min-h-[42px] w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-heading text-sm leading-none font-bold tracking-normal transition-all duration-200 focus-ring focus-visible:ring-offset-2";
 
 export function PackageCard({
   pkg,

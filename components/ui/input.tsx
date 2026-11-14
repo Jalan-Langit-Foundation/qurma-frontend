@@ -1,8 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import {
-  FieldLabel,
-  FieldMessage,
+  FieldShell,
   fieldControlClass,
   getFieldAriaProps,
   useFieldIds,
@@ -35,9 +34,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const { fieldId, messageId } = useFieldIds(id);
 
     return (
-      <div className="w-full space-y-1.5 font-body">
-        {label && <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>}
-
+      <FieldShell
+        fieldId={fieldId}
+        messageId={messageId}
+        label={label}
+        error={error}
+        helperText={helperText}
+      >
         <div className="relative flex items-center">
           {leftIcon && (
             <div className="pointer-events-none absolute left-3.5 flex items-center justify-center text-muted">
@@ -70,9 +73,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
         </div>
-
-        <FieldMessage id={messageId} error={error} helperText={helperText} />
-      </div>
+      </FieldShell>
     );
   },
 );

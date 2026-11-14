@@ -3,7 +3,6 @@ import { Container } from "@/components/ui/container";
 import { SectionState } from "@/components/ui/section-state";
 import { cn } from "@/lib/utils";
 
-/** Kerangka halaman area mudhohi (lebar & jarak seragam). */
 export function MemberPage({
   children,
   className,
@@ -12,7 +11,7 @@ export function MemberPage({
   className?: string;
 }) {
   return (
-    <div className="py-12 md:py-16">
+    <div className="py-8 md:py-12">
       <Container size="lg">
         <div className={cn("flex flex-col gap-6", className)}>{children}</div>
       </Container>
@@ -20,7 +19,6 @@ export function MemberPage({
   );
 }
 
-/** Placeholder saat data halaman area mudhohi sedang dimuat dari server. */
 export function MemberPageSkeleton() {
   return (
     <MemberPage>

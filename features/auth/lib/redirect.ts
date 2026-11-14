@@ -23,3 +23,7 @@ export function getSafeRedirectPath(
   }
   return next;
 }
+
+export function withNext(path: string, next: string | null): string {
+  return next ? `${path}?next=${encodeURIComponent(next)}` : path;
+}

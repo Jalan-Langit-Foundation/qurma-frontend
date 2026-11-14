@@ -1,4 +1,5 @@
 import { SECTION_IDS } from "@/config/navigation";
+import { PROGRAM } from "@/config/program";
 
 export interface HeroSlide {
   id: string;
@@ -7,10 +8,9 @@ export interface HeroSlide {
 }
 
 export const HERO_CONTENT = {
-  badge: "QURMA 2027 • Jalan Langit Foundation",
+  badge: `${PROGRAM.name} • Jalan Langit Foundation`,
   headline: ["Qurban Tanpa Beban,", "Siapkan dari Sekarang"],
-  description:
-    "Tunaikan niat mulia berqurban 1448 H / 2027 M tanpa beban finansial mendadak. Kumpulkan dana secara bertahap, pantau pertumbuhan hewan secara transparan, dan raih keberkahan bersama Yayasan Jalan Langit.",
+  description: `Tunaikan niat mulia berqurban ${PROGRAM.periodLabel} tanpa beban finansial mendadak. Kumpulkan dana secara bertahap, pantau pertumbuhan hewan secara transparan, dan raih keberkahan bersama Yayasan Jalan Langit.`,
   primaryCta: {
     label: "Mulai Tabungan Qurban",
     href: `#${SECTION_IDS.packages}`,

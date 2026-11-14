@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  // Sesuai blueprint: pendaftaran online belum dinyatakan aktif sampai sistem siap
   if (!isSavingRegistrationOpen) {
     return (
       <PagePlaceholder

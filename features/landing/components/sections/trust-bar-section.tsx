@@ -27,7 +27,7 @@ export function TrustBarSection() {
   return (
     <section
       aria-label="Keunggulan utama QURMA"
-      className="relative w-full overflow-hidden border-b border-slate-200/80 bg-white py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] sm:py-5"
+      className="relative w-full overflow-hidden border-b border-slate-200/80 bg-white py-4 shadow-hairline sm:py-5"
     >
       <ul className="sr-only">
         {TRUST_ITEMS.map((item) => (

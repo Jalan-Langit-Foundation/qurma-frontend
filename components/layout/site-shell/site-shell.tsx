@@ -1,6 +1,6 @@
 import { FloatingWhatsappButton } from "../floating-whatsapp/floating-whatsapp-button";
 import { Footer } from "../footer/footer";
-import { Navbar } from "../navbar/navbar";
+import { SessionAwareNavbar } from "../navbar/session-aware-navbar";
 import { MAIN_CONTENT_ID, SkipLink } from "./skip-link";
 
 export function SiteShell({
@@ -9,7 +9,7 @@ export function SiteShell({
   return (
     <>
       <SkipLink />
-      <Navbar />
+      <SessionAwareNavbar />
       <main id={MAIN_CONTENT_ID} className="flex-1">
         {children}
       </main>

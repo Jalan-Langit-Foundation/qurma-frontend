@@ -1,3 +1,4 @@
+import type { FeatureName } from "./env";
 import type { NavLink } from "@/types/navigation";
 import { SITE_CONFIG } from "./site";
 
@@ -10,6 +11,10 @@ export const ROUTES = {
   sessionExpired: "/session/expired",
   qurban: (id: number | string) => `/qurban/${id}`,
   report: (id: number | string) => `/report/${id}`,
+  account: "/akun",
+  terms: "/syarat-ketentuan",
+  transactions: "/transaksi",
+  receipt: (transactionId: number | string) => `/kwitansi/${transactionId}`,
 } as const;
 
 export const PROTECTED_ROUTE_PREFIXES = [
@@ -17,6 +22,9 @@ export const PROTECTED_ROUTE_PREFIXES = [
   "/tabungan",
   "/qurban",
   "/report",
+  ROUTES.account,
+  ROUTES.transactions,
+  "/kwitansi",
 ] as const;
 
 export const GUEST_ONLY_ROUTES = [ROUTES.login, ROUTES.register] as const;
@@ -51,6 +59,56 @@ export const NAVBAR_CTA: NavLink = {
   href: sectionHref(SECTION_IDS.packages),
 };
 
+export const NAVBAR_MEMBER_CTA: NavLink = {
+  label: "Dashboard",
+  href: ROUTES.dashboard,
+};
+
+export const MEMBER_SECTION_IDS = {
+  packages: "paket",
+  schedule: "jadwal",
+} as const;
+
+export type MemberNavIcon = "home" | "package" | "calendar" | "receipt";
+
+export interface MemberNavItem {
+  label: string;
+  href: string;
+  icon: MemberNavIcon;
+  feature?: FeatureName;
+  activePrefixes?: readonly string[];
+}
+
+export const MEMBER_NAV_ITEMS: readonly MemberNavItem[] = [
+  {
+    label: "Ringkasan",
+    href: ROUTES.dashboard,
+    icon: "home",
+    activePrefixes: ["/tabungan", "/qurban", "/report"],
+  },
+  {
+    label: "Paket",
+    href: `${ROUTES.dashboard}#${MEMBER_SECTION_IDS.packages}`,
+    icon: "package",
+  },
+  {
+    label: "Jadwal",
+    href: `${ROUTES.dashboard}#${MEMBER_SECTION_IDS.schedule}`,
+    icon: "calendar",
+  },
+  {
+    label: "Transaksi",
+    href: ROUTES.transactions,
+    icon: "receipt",
+    feature: "transactions",
+  },
+];
+
+export const ACCOUNT_SECTION_IDS = {
+  personal: "data-pribadi",
+  security: "keamanan",
+} as const;
+
 const foundation = (hash: string) => `${SITE_CONFIG.foundationUrl}/#${hash}`;
 
 export const FOOTER_PROGRAM_LINKS: NavLink[] = [
@@ -77,4 +135,5 @@ export const FOOTER_ORGANIZATION_LINKS: NavLink[] = [
   { label: "Berita & Kabar", href: foundation("berita"), external: true },
   { label: "Kontak Kami", href: sectionHref(SECTION_IDS.contact) },
   { label: "Legalitas Resmi", href: `#${SECTION_IDS.legal}` },
+  { label: "Syarat & Ketentuan", href: ROUTES.terms },
 ];

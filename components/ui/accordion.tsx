@@ -54,7 +54,7 @@ export function Accordion({
             className={cn(
               "overflow-hidden rounded-2xl border bg-white transition-colors duration-200",
               isOpen
-                ? "border-slate-300/90 shadow-[0_12px_32px_rgba(0,0,0,0.07)]"
+                ? "border-slate-300/90 shadow-raised"
                 : "border-slate-200/80 hover:border-slate-300/90",
             )}
           >
@@ -65,7 +65,7 @@ export function Accordion({
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => toggle(item.id)}
-                className="group/btn flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl p-5 text-left select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-inset sm:p-6"
+                className="group/btn flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl p-5 text-left select-none focus-ring focus-visible:ring-inset sm:p-6"
               >
                 <span
                   className={cn(

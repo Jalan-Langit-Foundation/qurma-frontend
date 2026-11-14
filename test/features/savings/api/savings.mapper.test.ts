@@ -4,6 +4,7 @@ import {
   toCreateSavingRequest,
   toInstallment,
   toSaving,
+  toUpgradeOptions,
 } from "@/features/savings/api/savings.mapper";
 
 const baseDto: SavingSummaryDto = {
@@ -103,5 +104,63 @@ describe("toCreateSavingRequest", () => {
       start_month: "2026-12",
       tenor_months: 5,
     });
+  });
+});
+
+describe("toUpgradeOptions", () => {
+  const option = {
+    package: { code: "plus", name: "Plus" },
+    target_amount: 2_500_000,
+    additional_amount: 600_000,
+    new_monthly_amount: 350_000,
+    remaining_months: 5,
+  };
+
+  it("memetakan pilihan upgrade", () => {
+    expect(
+      toUpgradeOptions({
+        saving_id: 7,
+        eligible: true,
+        reason: null,
+        options: [option],
+      }),
+    ).toEqual({
+      savingId: 7,
+      eligible: true,
+      reason: null,
+      options: [
+        {
+          packageId: "plus",
+          packageName: "Plus",
+          targetAmount: 2_500_000,
+          additionalAmount: 600_000,
+          newMonthlyAmount: 350_000,
+          remainingMonths: 5,
+        },
+      ],
+    });
+  });
+
+  it("tidak eligible → pilihan dikosongkan walau backend mengirim isi", () => {
+    const result = toUpgradeOptions({
+      saving_id: 7,
+      eligible: false,
+      reason: "Tabungan sudah lunas",
+      options: [option],
+    });
+    expect(result.eligible).toBe(false);
+    expect(result.options).toEqual([]);
+    expect(result.reason).toBe("Tabungan sudah lunas");
+  });
+
+  it("eligible tapi tanpa pilihan → dianggap tidak tersedia", () => {
+    expect(
+      toUpgradeOptions({
+        saving_id: 7,
+        eligible: true,
+        reason: null,
+        options: [],
+      }).eligible,
+    ).toBe(false);
   });
 });

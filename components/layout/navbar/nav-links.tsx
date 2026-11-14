@@ -2,9 +2,13 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Coins } from "lucide-react";
+import { Coins, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NAVBAR_CTA, NAVBAR_LINKS } from "@/config/navigation";
+import {
+  NAVBAR_CTA,
+  NAVBAR_LINKS,
+  NAVBAR_MEMBER_CTA,
+} from "@/config/navigation";
 import { cn } from "@/lib/utils";
 import { isLinkActive } from "./navbar.utils";
 
@@ -54,7 +58,7 @@ export function NavLinks({
               className={cn(
                 styles.link,
                 "font-heading text-sm font-medium transition-colors duration-200",
-                "hover:text-brand-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+                "hover:text-brand-strong focus-ring",
                 active ? "text-brand-strong" : "text-body",
               )}
             >
@@ -69,33 +73,41 @@ export function NavLinks({
 
 interface NavbarCtaProps {
   onLinkClick: NavClickHandler;
+  isLoggedIn: boolean;
   className?: string;
   buttonClassName?: string;
 }
 
 export function NavbarCta({
   onLinkClick,
+  isLoggedIn,
   className,
   buttonClassName,
 }: NavbarCtaProps) {
+  const cta = isLoggedIn ? NAVBAR_MEMBER_CTA : NAVBAR_CTA;
+  const Icon = isLoggedIn ? LayoutDashboard : Coins;
+
   return (
     <div
       className={className}
-      onClickCapture={(event) => onLinkClick(event, NAVBAR_CTA.href)}
+      onClickCapture={(event) => onLinkClick(event, cta.href)}
     >
       <Button
         variant="primary"
         size="md"
-        href={NAVBAR_CTA.href}
+        href={cta.href}
         leftIcon={
-          <Coins className="h-4 w-4 fill-white text-white" aria-hidden="true" />
+          <Icon
+            className={cn("h-4 w-4 text-white", !isLoggedIn && "fill-white")}
+            aria-hidden="true"
+          />
         }
         className={cn(
           "font-semibold shadow-sm transition-all hover:shadow-md",
           buttonClassName,
         )}
       >
-        {NAVBAR_CTA.label}
+        {cta.label}
       </Button>
     </div>
   );

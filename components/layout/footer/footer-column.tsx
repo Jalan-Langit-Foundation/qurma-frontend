@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ExternalLink } from "@/components/ui/external-link";
 import type { NavLink } from "@/types/navigation";
 
 export const footerHeadingClass =
@@ -7,22 +8,16 @@ export const footerHeadingClass =
 const linkClass =
   "inline-block rounded-sm text-footer-text transition-colors hover:text-brand-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky";
 
-export function ExternalHint() {
-  return <span className="sr-only"> (membuka tab baru)</span>;
-}
-
 function FooterLink({ link }: { link: NavLink }) {
   if (link.external) {
     return (
-      <a
+      <ExternalLink
         href={link.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        srHint="membuka tab baru"
         className={linkClass}
       >
         {link.label}
-        <ExternalHint />
-      </a>
+      </ExternalLink>
     );
   }
 

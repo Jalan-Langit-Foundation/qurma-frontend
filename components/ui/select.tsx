@@ -4,8 +4,7 @@ import * as React from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  FieldLabel,
-  FieldMessage,
+  FieldShell,
   fieldControlClass,
   getFieldAriaProps,
   useFieldIds,
@@ -171,20 +170,16 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     };
 
     return (
-      <div
+      <FieldShell
         ref={containerRef}
-        className={cn(
-          "relative w-full space-y-1.5 font-body",
-          isOpen && "z-40",
-          className,
-        )}
+        fieldId={fieldId}
+        messageId={messageId}
+        labelId={labelId}
+        label={label}
+        error={error}
+        helperText={helperText}
+        className={cn("relative", isOpen && "z-40", className)}
       >
-        {label && (
-          <FieldLabel htmlFor={fieldId} id={labelId}>
-            {label}
-          </FieldLabel>
-        )}
-
         <div className="relative">
           {name && <input type="hidden" name={name} value={selectedValue} />}
 
@@ -277,9 +272,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
             </ul>
           )}
         </div>
-
-        <FieldMessage id={messageId} error={error} helperText={helperText} />
-      </div>
+      </FieldShell>
     );
   },
 );

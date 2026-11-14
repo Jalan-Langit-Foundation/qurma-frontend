@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   getStartMonthOptions,
   resolveStartMonth,
+  toStartMonthSelectOptions,
 } from "@/features/savings/lib/start-months";
+import { formatYearMonth } from "@/features/savings/lib/year-month";
 
 const program = {
   openingMonth: "2026-10",
@@ -55,5 +57,25 @@ describe("resolveStartMonth", () => {
 
   it("null bila tidak ada opsi", () => {
     expect(resolveStartMonth("2026-11", [])).toBeNull();
+  });
+});
+
+describe("toStartMonthSelectOptions", () => {
+  it("menambahkan lama menabung & batas pelunasan ke label", () => {
+    const options = getStartMonthOptions("2027-03", program);
+    expect(toStartMonthSelectOptions(options, "April 2027")).toEqual([
+      {
+        value: "2027-03",
+        label: `${formatYearMonth("2027-03")} (2 bulan s/d April 2027)`,
+      },
+      {
+        value: "2027-04",
+        label: `${formatYearMonth("2027-04")} (1 bulan s/d April 2027)`,
+      },
+    ]);
+  });
+
+  it("kosong bila tidak ada opsi", () => {
+    expect(toStartMonthSelectOptions([], "April 2027")).toEqual([]);
   });
 });

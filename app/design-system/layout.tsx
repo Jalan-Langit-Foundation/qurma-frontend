@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { SiteShell } from "@/components/layout";
+import { SiteShell } from "@/components/layout/server";
 import { env } from "@/config/env";
 
 export const metadata: Metadata = {

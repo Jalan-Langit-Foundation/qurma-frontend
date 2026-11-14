@@ -41,13 +41,10 @@ export async function registerRequest(
   );
 }
 
-/** Mencabut token di backend. Gagal pun tidak masalah: cookie tetap dihapus. */
 export async function logoutRequest(token: string): Promise<void> {
   try {
     await backendRequest<null>("/auth/logout", { method: "POST", token });
-  } catch {
-    // Token mungkin sudah tidak berlaku; tidak perlu ditampilkan ke pengguna
-  }
+  } catch {}
 }
 
 export async function fetchCurrentUser(): Promise<AuthUser> {

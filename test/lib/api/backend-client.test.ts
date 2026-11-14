@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/lib/api/api-error";
-import { backendRequest } from "@/lib/api/backend-client";
+import { backendFileRequest, backendRequest } from "@/lib/api/backend-client";
 
 function jsonResponse(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
@@ -154,5 +154,84 @@ describe("backendRequest", () => {
 
     const error = await catchError(backendRequest("/x"));
     expect(error.kind).toBe("timeout");
+  });
+});
+
+describe("backendRequest query", () => {
+  it("menambahkan query dan mengabaikan nilai kosong", async () => {
+    const fetchMock = mockFetch(async () =>
+      jsonResponse(200, { success: true, message: "ok", data: {} }),
+    );
+
+    await backendRequest("/transactions", {
+      query: { page: 2, per_page: 10, saving_id: undefined },
+    });
+
+    const [url] = fetchMock.mock.calls[0] as [string];
+    expect(url).toBe(
+      "http://localhost:8000/api/transactions?page=2&per_page=10",
+    );
+  });
+});
+
+describe("backendFileRequest", () => {
+  it("mengembalikan stream PDF dan nama file dari header", async () => {
+    mockFetch(
+      async () =>
+        new Response("%PDF-1.7", {
+          status: 200,
+          headers: {
+            "Content-Type": "application/pdf",
+            "Content-Disposition":
+              'attachment; filename="kwitansi-QRM-2026-000012.pdf"',
+          },
+        }),
+    );
+
+    const file = await backendFileRequest("/transactions/12/receipt", {
+      token: "1|abc",
+    });
+    expect(file.contentType).toBe("application/pdf");
+    expect(file.fileName).toBe("kwitansi-QRM-2026-000012.pdf");
+    expect(await new Response(file.body).text()).toBe("%PDF-1.7");
+  });
+
+  it("nama file dengan filename* (UTF-8) didahulukan", async () => {
+    mockFetch(
+      async () =>
+        new Response("%PDF", {
+          status: 200,
+          headers: {
+            "Content-Type": "application/pdf",
+            "Content-Disposition":
+              "attachment; filename=\"a.pdf\"; filename*=UTF-8''kwitansi%20budi.pdf",
+          },
+        }),
+    );
+    const file = await backendFileRequest("/x");
+    expect(file.fileName).toBe("kwitansi budi.pdf");
+  });
+
+  it("404 JSON standar → ApiError not_found", async () => {
+    mockFetch(async () =>
+      jsonResponse(404, {
+        success: false,
+        message: "Kwitansi tidak ditemukan",
+      }),
+    );
+    const error = await catchError(
+      backendFileRequest("/transactions/9/receipt"),
+    );
+    expect(error.kind).toBe("not_found");
+    expect(error.message).toBe("Kwitansi tidak ditemukan");
+  });
+
+  it("200 tapi isinya JSON (bukan file) → dianggap error server", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    mockFetch(async () =>
+      jsonResponse(200, { success: true, message: "ok", data: {} }),
+    );
+    const error = await catchError(backendFileRequest("/x"));
+    expect(error.kind).toBe("server");
   });
 });

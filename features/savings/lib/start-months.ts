@@ -50,3 +50,13 @@ export function resolveStartMonth(
   }
   return options[0]?.value ?? null;
 }
+
+export function toStartMonthSelectOptions(
+  options: readonly StartMonthOption[],
+  deadline: string,
+): { value: YearMonth; label: string }[] {
+  return options.map((option) => ({
+    value: option.value,
+    label: `${option.label} (${option.tenorMonths} bulan s/d ${deadline})`,
+  }));
+}

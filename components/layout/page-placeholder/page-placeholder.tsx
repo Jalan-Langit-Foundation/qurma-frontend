@@ -15,7 +15,7 @@ export interface PagePlaceholderAction {
 export interface PagePlaceholderProps {
   eyebrow: string;
   title: string;
-  /** Judul di dalam kartu (default "Segera Hadir") */
+
   heading?: string;
   description: string;
   icon?: React.ReactNode;
@@ -23,7 +23,6 @@ export interface PagePlaceholderProps {
   actions?: PagePlaceholderAction[];
 }
 
-/** Halaman informasi sederhana: fitur belum dibuka, data belum tersedia, dsb. */
 export function PagePlaceholder({
   eyebrow,
   title,

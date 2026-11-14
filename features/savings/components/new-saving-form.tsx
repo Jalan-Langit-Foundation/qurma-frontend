@@ -2,28 +2,24 @@
 
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import { CardTitle, Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { FormAlert } from "@/components/ui/form-alert";
-import { Select } from "@/components/ui/select";
 import { ROUTES } from "@/config/navigation";
 import {
   ALL_PACKAGES,
   formatWeightRange,
-  PackagePicker,
   resolvePackage,
   type QurbanPackage,
 } from "@/features/packages";
+import { useActionFeedback } from "@/hooks/use-action-feedback";
 import { formatRupiah } from "@/lib/format";
-import { createSavingAction, type CreateSavingActionError } from "../actions";
+import { createSavingAction } from "../actions";
 import { useSavingSimulation } from "../hooks/use-saving-simulation";
 import { SAVINGS_PROGRAM } from "../lib/program";
+import { toStartMonthSelectOptions } from "../lib/start-months";
 import { formatYearMonth } from "../lib/year-month";
-
-const PACKAGE_LABEL_ID = "new-saving-package-label";
-const START_MONTH_ID = "new-saving-start-month";
-const NETWORK_ERROR =
-  "Terjadi kendala jaringan. Silakan coba beberapa saat lagi.";
+import { PlanInputs } from "./plan-inputs";
 
 function SummaryRow({
   label,
@@ -54,13 +50,9 @@ function NewSavingFormView({
   const [selectedPackage, setSelectedPackage] = React.useState(initialPackage);
   const [requestedStartMonth, setRequestedStartMonth] =
     React.useState(initialStartMonth);
-  const [error, setError] = React.useState<CreateSavingActionError | null>(
-    null,
-  );
+  const { feedback, clearFeedback, run } = useActionFeedback();
   const [isPending, startTransition] = React.useTransition();
 
-  // Dipakai untuk daftar bulan mulai & tenor; nominal setoran tidak ditampilkan
-  // karena dihitung backend (aturan pembulatan masih menunggu konfirmasi).
   const simulation = useSavingSimulation({
     target: selectedPackage.target,
     requestedStartMonth,
@@ -75,27 +67,22 @@ function NewSavingFormView({
     : undefined;
 
   const monthOptions = hasOptions
-    ? simulation.startMonthOptions.map((option) => ({
-        value: option.value,
-        label: `${option.label} (${option.tenorMonths} bulan s/d ${deadline})`,
-      }))
+    ? toStartMonthSelectOptions(simulation.startMonthOptions, deadline)
     : [];
 
   const submit = () => {
     if (!startMonth) return;
-    setError(null);
-    startTransition(async () => {
-      try {
-        // Bila berhasil, action langsung mengarahkan ke dashboard
-        const result = await createSavingAction({
-          packageId: selectedPackage.id,
-          startMonth,
-        });
-        if (result) setError(result);
-      } catch {
-        setError({ ok: false, message: NETWORK_ERROR });
-      }
-    });
+    startTransition(() =>
+      run(
+        () => createSavingAction({ packageId: selectedPackage.id, startMonth }),
+        {
+          toFeedback: ({ message, hasActiveSaving }) => ({
+            variant: hasActiveSaving ? "info" : "error",
+            message,
+          }),
+        },
+      ),
+    );
   };
 
   if (simulation.status === "closed") {
@@ -110,13 +97,13 @@ function NewSavingFormView({
 
   return (
     <Card className="space-y-6 p-5 shadow-card hover:shadow-card sm:p-8">
-      {error && (
+      {feedback && (
         <FormAlert
-          variant={error.hasActiveSaving ? "info" : "error"}
-          message={error.message}
-          onDismiss={() => setError(null)}
+          variant={feedback.variant}
+          message={feedback.message}
+          onDismiss={clearFeedback}
         >
-          {error.hasActiveSaving && (
+          {feedback.variant === "info" && (
             <Button
               href={ROUTES.dashboard}
               variant="outline"
@@ -129,37 +116,16 @@ function NewSavingFormView({
         </FormAlert>
       )}
 
-      <div className="space-y-2.5">
-        <CardTitle as="p" size="base" id={PACKAGE_LABEL_ID}>
-          Paket Qurban
-        </CardTitle>
-        <PackagePicker
-          packages={ALL_PACKAGES}
-          selectedPackageId={selectedPackage.id}
-          onSelect={setSelectedPackage}
-          labelledBy={PACKAGE_LABEL_ID}
-          disabled={isPending}
-        />
-      </div>
-
-      <div className="space-y-2.5">
-        <CardTitle
-          as="label"
-          htmlFor={START_MONTH_ID}
-          size="base"
-          className="block cursor-pointer"
-        >
-          Mulai Menabung
-        </CardTitle>
-        <Select
-          id={START_MONTH_ID}
-          value={startMonth}
-          onChange={setRequestedStartMonth}
-          options={monthOptions}
-          placeholder="Memuat pilihan bulan…"
-          disabled={!hasOptions || isPending}
-        />
-      </div>
+      <PlanInputs
+        idPrefix="new-saving"
+        packages={ALL_PACKAGES}
+        selectedPackage={selectedPackage}
+        startMonth={startMonth}
+        monthOptions={monthOptions}
+        onSelectPackage={setSelectedPackage}
+        onSelectStartMonth={setRequestedStartMonth}
+        disabled={isPending}
+      />
 
       <dl className="space-y-2.5 rounded-xl border border-slate-100 bg-canvas p-4 font-body text-xs sm:text-sm">
         <SummaryRow label="Target dana">
@@ -205,10 +171,6 @@ function NewSavingFormWithParams() {
   );
 }
 
-/**
- * Form buat tabungan. Pilihan awal bisa dibawa dari kalkulator landing
- * lewat URL (?paket=plus&mulai=2026-12).
- */
 export function NewSavingForm() {
   return (
     <React.Suspense

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { SECTION_IDS } from "@/config/navigation";
+import { PROGRAM } from "@/config/program";
 import { HERO_CONTENT } from "../../lib/content/hero";
 import { HeroSlideshow } from "./hero-slideshow";
 
@@ -18,7 +19,7 @@ export function HeroSection() {
   return (
     <section
       id={SECTION_IDS.hero}
-      aria-label="Hero utama QURMA 2027"
+      aria-label={`Hero utama ${PROGRAM.name}`}
       className="relative flex min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] w-full items-center overflow-hidden bg-neutral-950 py-12 text-white sm:py-16 lg:py-20"
     >
       <HeroSlideshow

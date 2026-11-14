@@ -3,9 +3,8 @@ import { formatPersen, formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** 0–100 */
   value: number;
-  label?: string;
+  label: string;
   showLabel?: boolean;
   size?: "sm" | "md" | "lg";
   variant?: "brand" | "primary" | "success" | "warning";
@@ -28,7 +27,7 @@ const barVariants = {
 
 export function ProgressBar({
   value,
-  label = "Progres Tabungan",
+  label,
   showLabel = true,
   size = "md",
   variant = "brand",

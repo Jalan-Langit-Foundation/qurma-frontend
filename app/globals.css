@@ -6,6 +6,7 @@
 }
 
 @theme {
+  /* ---------- Brand ---------- */
   --color-brand: #2b7aa8;
   --color-brand-hover: #256a92;
   --color-brand-active: #1f5b7e;
@@ -14,13 +15,22 @@
   --color-brand-soft: #eaf5fb;
   --color-brand-soft-hover: #d5ecf8;
   --color-brand-mist: #f0f9fd;
+  /* Garis/border lembut bernuansa biru (pita badge) */
+  --color-brand-line: #c5e2f3;
+  /* Teks di atas latar brand-soft (judul & isi alert info) */
+  --color-brand-ink: #1f4d66;
+  --color-brand-ink-soft: #2f6585;
 
   /* ---------- Netral ---------- */
   --color-ink: #2c2c2c;
   --color-body: #555555;
   --color-muted: #6b6b6b;
   --color-canvas: #fafcfe;
+  --color-surface: #eef3f6;
+  --color-night: #22313b;
   --color-footer-text: #a0a0a0;
+  --color-placeholder: #8b9096;
+  --color-line: #d9e3ea;
 
   /* ---------- Pihak ketiga ---------- */
   --color-whatsapp: #25d366;
@@ -30,6 +40,25 @@
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.02);
   --shadow-brand-sm: 0 4px 16px rgba(60, 149, 200, 0.12);
   --shadow-brand: 0 8px 24px rgba(60, 149, 200, 0.12);
+  /* Navbar situs: diam & setelah halaman di-scroll */
+  --shadow-bar: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-bar-raised: 0 2px 8px rgba(0, 0, 0, 0.08);
+  /* Garis bawah tipis (trust bar) */
+  --shadow-hairline: 0 1px 3px rgba(0, 0, 0, 0.02);
+  /* Tab/segmen aktif (Masuk/Daftar) */
+  --shadow-tab: 0 1px 3px rgba(34, 49, 59, 0.12);
+  /* Kartu yang sedang terbuka (accordion FAQ) */
+  --shadow-raised: 0 12px 32px rgba(0, 0, 0, 0.07);
+  /* Pita badge */
+  --shadow-ribbon: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* Menu tarik-turun (menu akun) */
+  --shadow-pop: 0 16px 48px rgba(34, 49, 59, 0.18);
+  /* Elemen melayang: navigasi bawah area penabung */
+  --shadow-float: 0 6px 24px rgba(34, 49, 59, 0.14);
+  /* Tombol bulat melayang (WhatsApp) */
+  --shadow-fab: 0 4px 16px rgba(0, 0, 0, 0.18);
+  /* Bilah aksi yang menempel di bawah layar (bayangan ke atas) */
+  --shadow-dock: 0 -8px 24px rgba(0, 0, 0, 0.08);
 
   /* ---------- Fluid typography (text-fluid-*) ---------- */
   --text-fluid-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);
@@ -45,6 +74,18 @@
   --animate-slide-down: slide-down-fade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-slide-up: slide-up-fade 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-marquee: marquee 35s linear infinite;
+  --animate-pop-in: pop-in 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 
   @keyframes slide-down-fade {
     from {
@@ -87,6 +128,10 @@
   );
 }
 
+@utility focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand;
+}
+
 @utility scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -97,6 +142,11 @@
 }
 
 @layer base {
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;

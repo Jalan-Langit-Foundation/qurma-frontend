@@ -3,11 +3,12 @@
 import * as React from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-type ButtonVariant = "primary" | "outline" | "ghost" | "destructive" | "white";
-
-type ButtonSize = "sm" | "md" | "lg" | "icon";
+import { ExternalLink } from "./external-link";
+import {
+  buttonClassName,
+  type ButtonSize,
+  type ButtonVariant,
+} from "./button-styles";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -17,27 +18,9 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   rightIcon?: React.ReactNode;
   href?: string;
   external?: boolean;
+
+  srHint?: string;
 }
-
-const variantStyles: Record<ButtonVariant, string> = {
-  primary:
-    "border border-transparent bg-brand text-white shadow-sm hover:bg-brand-hover hover:shadow active:bg-brand-active",
-  outline:
-    "border-2 border-brand bg-transparent text-brand-strong hover:bg-brand-soft active:bg-brand-soft-hover",
-  ghost:
-    "border border-transparent bg-transparent text-body hover:bg-brand-soft hover:text-brand-strong active:bg-brand-soft-hover",
-  destructive:
-    "border border-transparent bg-red-600 text-white shadow-sm hover:bg-red-700 active:bg-red-800",
-  white:
-    "border border-slate-100 bg-white text-brand-strong shadow-sm hover:bg-[#f0f7fb] hover:shadow active:bg-[#e4eff6]",
-};
-
-const sizeStyles: Record<ButtonSize, string> = {
-  sm: "min-h-[34px] gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold",
-  md: "min-h-[42px] gap-2 rounded-full px-5 py-2.5 text-sm font-bold",
-  lg: "min-h-[50px] gap-2.5 rounded-full px-7 py-3.5 text-base font-bold",
-  icon: "h-10 w-10 items-center justify-center rounded-full p-0",
-};
 
 type ButtonOnlyAttributes =
   | "type"
@@ -61,6 +44,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       href,
       external = false,
+      srHint = "membuka tab baru",
       disabled,
       children,
       onClick,
@@ -71,15 +55,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const isDisabled = Boolean(disabled || isLoading);
 
-    const classes = cn(
-      "inline-flex cursor-pointer select-none items-center justify-center text-center font-heading leading-none tracking-normal transition-all duration-200",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2",
-      "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-      "aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50",
-      variantStyles[variant],
-      sizeStyles[size],
-      className,
-    );
+    const classes = buttonClassName({ variant, size, className });
 
     const content = (
       <>
@@ -122,15 +98,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       if (external) {
         return (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            {...linkProps}
-          >
+          <ExternalLink href={href} srHint={srHint} {...linkProps}>
             {content}
-            <span className="sr-only"> (membuka tab baru)</span>
-          </a>
+          </ExternalLink>
         );
       }
 

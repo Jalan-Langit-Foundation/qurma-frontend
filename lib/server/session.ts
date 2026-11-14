@@ -10,6 +10,14 @@ export async function getSessionToken(): Promise<string | null> {
   return store.get(SESSION_COOKIE)?.value || null;
 }
 
+/**
+ * Ada cookie sesi atau tidak (tanpa memeriksa ke backend).
+ * Cukup untuk tampilan, mis. navbar; keabsahan token tetap dicek backend.
+ */
+export async function hasSession(): Promise<boolean> {
+  return (await getSessionToken()) !== null;
+}
+
 export async function setSessionToken(
   token: string,
   { remember }: { remember: boolean },

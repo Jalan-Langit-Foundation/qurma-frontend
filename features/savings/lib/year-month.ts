@@ -55,3 +55,19 @@ export function maxYearMonth(a: YearMonth, b: YearMonth): YearMonth {
 export function formatYearMonth(value: YearMonth): string {
   return formatBulanTahun(value);
 }
+
+const SHORT_MONTH_FORMAT = new Intl.DateTimeFormat("id-ID", {
+  month: "short",
+  timeZone: "UTC",
+});
+
+/** "2026-10" → "Okt" (nama bulan singkat untuk grafik & label sempit) */
+function formatMonthShort(value: YearMonth): string {
+  const { year, month } = parse(value);
+  return SHORT_MONTH_FORMAT.format(new Date(Date.UTC(year, month - 1, 1)));
+}
+
+/** "2026-10" → "Okt 2026" */
+export function formatYearMonthShort(value: YearMonth): string {
+  return `${formatMonthShort(value)} ${parse(value).year}`;
+}

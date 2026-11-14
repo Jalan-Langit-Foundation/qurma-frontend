@@ -65,8 +65,8 @@ const variantConfig: Record<
         aria-hidden="true"
       />
     ),
-    title: "text-[#1F4D66]",
-    text: "text-[#2F6585]",
+    title: "text-brand-ink",
+    text: "text-brand-ink-soft",
   },
 };
 
@@ -141,7 +141,7 @@ export function FormAlert({
           type="button"
           onClick={onDismiss}
           aria-label="Tutup notifikasi"
-          className="cursor-pointer self-start rounded p-0.5 text-slate-500 transition-colors hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+          className="cursor-pointer self-start rounded p-0.5 text-slate-500 transition-colors hover:text-slate-800 focus-ring"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>

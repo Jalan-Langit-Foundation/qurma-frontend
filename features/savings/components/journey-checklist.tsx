@@ -3,7 +3,6 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { JourneyStep } from "../lib/journey";
 
-/** Satu langkah checklist. Dipakai perjalanan tabungan & tracking persiapan qurban. */
 export type ChecklistStep = Pick<
   JourneyStep,
   "id" | "title" | "description" | "completed" | "current"
@@ -11,7 +10,6 @@ export type ChecklistStep = Pick<
 
 export interface JourneyChecklistProps {
   steps: readonly ChecklistStep[];
-  /** Nama daftar untuk pembaca layar */
   label?: string;
   className?: string;
 }
