@@ -6,12 +6,12 @@ import { FaqSection } from "./sections/faq-section";
 import { FinalCtaSection } from "./sections/final-cta-section";
 import { HeroSection } from "./sections/hero-section";
 import { HowItWorksSection } from "./sections/how-it-works-section";
-import { ProblemSection } from "./sections/problem-section";
 import { ProgramChoiceSection } from "./sections/program-choice-section";
 import { TestimonialSection } from "./sections/testimonial-section";
 import { TrustBarSection } from "./sections/trust-bar-section";
 import { TunaikanSection } from "./sections/tunaikan-section";
 import { ValuePropSection } from "./sections/value-prop-section";
+import { WhyQurmaSection } from "./sections/why-qurma-section";
 
 export function LandingPage() {
   return (
@@ -21,7 +21,7 @@ export function LandingPage() {
       <TrustBarSection />
       <ProgramChoiceSection />
       <TunaikanSection />
-      <ProblemSection />
+      <WhyQurmaSection />
       <ValuePropSection />
       <HowItWorksSection />
       <SavingPlanner />

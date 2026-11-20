@@ -10,10 +10,10 @@ export interface FeatureCardItem {
   step?: number;
 }
 
-export const featureCardShellClass =
+const featureCardShellClass =
   "flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-card transition-colors hover:border-slate-300";
 
-export function CardHashtag({ children }: { children: React.ReactNode }) {
+function CardHashtag({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between border-t border-slate-100 pt-3 font-heading text-xs font-semibold text-brand-strong">
       <span>{children}</span>

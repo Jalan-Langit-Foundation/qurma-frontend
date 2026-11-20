@@ -33,7 +33,7 @@ export const SECTION_IDS = {
   hero: "hero",
   programChoice: "pilih-cara-berqurban",
   fullPayment: "tunaikan-qurbanmu",
-  problem: "problem",
+  whyQurma: "mengapa-qurma",
   valueProps: "nilai-tambah",
   howItWorks: "cara-kerja",
   packages: "paket",
