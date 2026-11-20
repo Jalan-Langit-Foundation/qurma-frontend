@@ -12,6 +12,12 @@ export interface SavingPlanMessageDetails {
   tenorMonths?: number;
 }
 
+export interface FullPaymentMessageDetails {
+  packageName: string;
+  weight: string;
+  price: string;
+}
+
 export interface MemberMessageDetails {
   name: string;
   email: string;
@@ -60,6 +66,17 @@ export const WHATSAPP_MESSAGES = {
       ...memberIdentity(details),
       "",
       "Pertanyaan: ",
+    ].join("\n"),
+
+  fullPayment: ({ packageName, weight, price }: FullPaymentMessageDetails) =>
+    [
+      `${GREETING} saya ingin menunaikan qurban melalui program ${SITE_CONFIG.programName} dengan pembayaran penuh.`,
+      "",
+      `Pilihan domba: ${packageName}`,
+      `Target bobot: ${weight}`,
+      `Harga paket: ${price}`,
+      "",
+      "Mohon info ketersediaan domba dan langkah pembayarannya. Terima kasih.",
     ].join("\n"),
 
   savingPlan: ({

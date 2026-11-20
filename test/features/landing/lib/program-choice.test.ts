@@ -14,7 +14,7 @@ describe("pilihan program (Brief V1.1 bagian B & C.2)", () => {
 
   it("tombol mengarah ke section yang ada di beranda", () => {
     expect(items.map((item) => [item.cta.label, item.cta.href])).toEqual([
-      ["Lihat Pilihan Domba", sectionHref(SECTION_IDS.packages)],
+      ["Lihat Pilihan Domba", sectionHref(SECTION_IDS.fullPayment)],
       ["Simulasi Tabungan", sectionHref(SECTION_IDS.simulation)],
     ]);
   });

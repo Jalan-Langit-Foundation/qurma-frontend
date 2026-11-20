@@ -32,6 +32,7 @@ export const GUEST_ONLY_ROUTES = [ROUTES.login, ROUTES.register] as const;
 export const SECTION_IDS = {
   hero: "hero",
   programChoice: "pilih-cara-berqurban",
+  fullPayment: "tunaikan-qurbanmu",
   problem: "problem",
   valueProps: "nilai-tambah",
   howItWorks: "cara-kerja",

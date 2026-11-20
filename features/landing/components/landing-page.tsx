@@ -10,6 +10,7 @@ import { ProblemSection } from "./sections/problem-section";
 import { ProgramChoiceSection } from "./sections/program-choice-section";
 import { TestimonialSection } from "./sections/testimonial-section";
 import { TrustBarSection } from "./sections/trust-bar-section";
+import { TunaikanSection } from "./sections/tunaikan-section";
 import { ValuePropSection } from "./sections/value-prop-section";
 
 export function LandingPage() {
@@ -19,6 +20,7 @@ export function LandingPage() {
       <HeroSection />
       <TrustBarSection />
       <ProgramChoiceSection />
+      <TunaikanSection />
       <ProblemSection />
       <ValuePropSection />
       <HowItWorksSection />

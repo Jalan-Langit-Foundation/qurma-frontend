@@ -46,7 +46,7 @@ export const PROGRAM_CHOICE_CONTENT = {
       ],
       cta: {
         label: "Lihat Pilihan Domba",
-        href: sectionHref(SECTION_IDS.packages),
+        href: sectionHref(SECTION_IDS.fullPayment),
       },
     },
     {
