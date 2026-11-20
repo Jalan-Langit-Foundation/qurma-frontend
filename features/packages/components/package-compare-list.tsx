@@ -26,7 +26,7 @@ export function PackageCompareList({
   return (
     <ul
       className={cn(
-        "grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4",
+        "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3",
         className,
       )}
     >
@@ -56,10 +56,6 @@ export function PackageCompareList({
                   <Check className="h-3 w-3" aria-hidden="true" />
                   Paket Anda
                 </span>
-              ) : pkg.loyaltyOnly ? (
-                <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
-                  {pkg.note}
-                </span>
               ) : pkg.recommended ? (
                 <span className="rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-semibold text-brand-strong">
                   Rekomendasi
@@ -82,7 +78,7 @@ export function PackageCompareList({
                 isCurrent ? "text-white/80" : "text-muted",
               )}
             >
-              Domba {formatWeightRange(pkg)} · {pkg.description}
+              Target bobot {formatWeightRange(pkg)} · {pkg.description}
             </p>
 
             {diff && (

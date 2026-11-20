@@ -13,8 +13,8 @@ const member = { name: "Budi Santoso", email: "budi@mail.com" };
 function makeSaving(overrides: Partial<Saving> = {}): Saving {
   return {
     id: 1,
-    packageId: "start",
-    packageName: "Start",
+    packageId: "standar",
+    packageName: "Standar",
     programYear: 2027,
     status: "active",
     targetAmount: 1_900_000,
@@ -90,8 +90,8 @@ describe("buildDashboardView", () => {
     expect(view.cta.href).toMatch(/^https:\/\/wa\.me\//);
   });
 
-  it("kartu paket: bobot dari katalog, ID, rincian setoran", () => {
-    expect(view.package.weightLabel).toBe("Domba 23–25 kg");
+  it("kartu paket: target bobot dari katalog, ID, rincian setoran", () => {
+    expect(view.package.weightLabel).toBe("Target bobot 20–25 kg");
     expect(view.package.idLabel).toBe("#0001");
     expect(view.package.deposits).toHaveLength(2);
   });

@@ -25,7 +25,7 @@ describe("toDashboardData", () => {
       user,
       saving: {
         id: 7,
-        package: { code: "start", name: "Start" },
+        package: { code: "standar", name: "Standar" },
         program_year: 2027,
         status: "active",
         target_amount: 1_900_000,
@@ -52,7 +52,7 @@ describe("toDashboardData", () => {
         {
           id: 1,
           saving_id: 7,
-          package: { code: "start", name: "Start" },
+          package: { code: "standar", name: "Standar" },
           amount: 271_500,
           paid_at: "2026-10-05",
           note: null,
@@ -62,7 +62,7 @@ describe("toDashboardData", () => {
       ],
     });
 
-    expect(data.saving?.packageName).toBe("Start");
+    expect(data.saving?.packageName).toBe("Standar");
     expect(data.saving?.startMonth).toBe("2026-10");
     expect(data.recentTransactions[0]).toMatchObject({
       savingId: 7,

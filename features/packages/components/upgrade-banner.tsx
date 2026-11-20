@@ -92,7 +92,7 @@ export function UpgradeBanner({
             <strong className="font-bold text-brand-strong">
               {formatRupiah(additionalTarget)}
             </strong>
-            , hewan qurban Anda bertambah bobot menjadi{" "}
+            , target bobot domba Anda naik menjadi{" "}
             <strong className="text-ink">
               {formatWeightRange(targetPackage)}
             </strong>{" "}

@@ -1,4 +1,9 @@
+import { ALL_PACKAGES } from "@/features/packages";
 import type { FeatureCardItem } from "../../components/feature-card";
+
+const PACKAGE_NAMES = new Intl.ListFormat("id-ID", {
+  type: "disjunction",
+}).format(ALL_PACKAGES.map((pkg) => pkg.name));
 
 export const HOW_IT_WORKS_CONTENT = {
   headline: {
@@ -12,8 +17,7 @@ export const HOW_IT_WORKS_CONTENT = {
       id: "pilih-target",
       step: 1,
       title: "Pilih Target Qurban",
-      description:
-        "Pilih paket domba yang sesuai (Standar, Medium, atau Premium).",
+      description: `Pilih paket domba yang sesuai (${PACKAGE_NAMES}).`,
       hashtag: "#PilihPaket",
     },
     {

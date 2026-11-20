@@ -3,6 +3,7 @@
 import * as React from "react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { SECTION_IDS } from "@/config/navigation";
+import { PROGRAM } from "@/config/program";
 import { PackageCard, type QurbanPackage } from "@/features/packages";
 import {
   formatYearMonth,
@@ -33,7 +34,7 @@ export function PackagesSection({
   return (
     <LandingSection
       id={SECTION_IDS.packages}
-      label="Pilihan paket qurban 2027"
+      label={`Pilihan paket qurban ${PROGRAM.year}`}
       tone="white"
     >
       <SectionHeader
@@ -46,7 +47,7 @@ export function PackagesSection({
       <div
         role="group"
         aria-label="Pilihan paket qurban"
-        className="mx-auto grid max-w-5xl grid-cols-1 items-stretch gap-6 md:grid-cols-3"
+        className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
         {packages.map((pkg) => (
           <PackageCard

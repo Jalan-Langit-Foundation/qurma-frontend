@@ -280,7 +280,7 @@ export function buildDashboardView(
     ],
     package: {
       name: saving.packageName,
-      weightLabel: pkg ? `Domba ${formatWeightRange(pkg)}` : null,
+      weightLabel: pkg ? `Target bobot ${formatWeightRange(pkg)}` : null,
       idLabel: formatSavingId(saving.id),
       target: saving.targetAmount,
       collected: saving.totalPaid,

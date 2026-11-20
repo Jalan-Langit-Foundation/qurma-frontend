@@ -4,23 +4,24 @@ import {
   toCreateSavingRequest,
   toInstallment,
   toSaving,
+  toUpgradeOptions,
 } from "@/features/savings/api/savings.mapper";
 
 const baseDto: SavingSummaryDto = {
   id: 7,
-  package: { code: "grade_a", name: "Standar" },
+  package: { code: "standar", name: "Standar" },
   program_year: 2027,
   status: "active",
-  target_amount: 1_600_000,
-  total_paid: 687_000,
-  remaining_amount: 913_000,
+  target_amount: 1_900_000,
+  total_paid: 814_500,
+  remaining_amount: 1_085_500,
   progress_percent: 43,
   tenor_months: 7,
   start_month: "2026-10",
   end_month: "2027-04",
-  monthly_amount: 229_000,
-  last_installment_amount: 226_000,
-  next_installment: { month: "2027-01", amount: 229_000 },
+  monthly_amount: 271_500,
+  last_installment_amount: 271_000,
+  next_installment: { month: "2027-01", amount: 271_500 },
   journey: {
     target_selected: true,
     saving_started: true,
@@ -39,37 +40,22 @@ describe("toSaving", () => {
       id: 7,
       packageId: "standar",
       startMonth: "2026-10",
-      nextInstallment: { month: "2027-01", amount: 229_000 },
+      nextInstallment: { month: "2027-01", amount: 271_500 },
     });
     expect(saving.journey.find((step) => step.current)?.id).toBe(3);
-  });
-
-  it("kode paket dari backend diterjemahkan ke ID publik", () => {
-    const codes = { grade_a: "standar", grade_b: "medium", grade_c: "premium" };
-    for (const [code, id] of Object.entries(codes)) {
-      const saving = toSaving({ ...baseDto, package: { code, name: id } });
-      expect(saving.packageId).toBe(id);
-    }
-  });
-
-  it("kode paket lama atau tidak dikenal → packageId null", () => {
-    for (const code of ["start", "loyalty", "standar", "gold"]) {
-      const saving = toSaving({ ...baseDto, package: { code, name: code } });
-      expect(saving.packageId).toBeNull();
-    }
   });
 
   it("persen dihitung ulang dengan aturan yang sama di seluruh aplikasi (dibulatkan ke bawah)", () => {
     expect(toSaving(baseDto).progressPercent).toBe(42);
   });
 
-  it("kode paket tidak dikenal → packageId null, nama tetap ditampilkan", () => {
+  it("kode paket lama/tidak dikenal → packageId null, nama tetap ditampilkan", () => {
     const saving = toSaving({
       ...baseDto,
-      package: { code: "grade-a", name: "Grade A" },
+      package: { code: "start", name: "Start" },
     });
     expect(saving.packageId).toBeNull();
-    expect(saving.packageName).toBe("Grade A");
+    expect(saving.packageName).toBe("Start");
   });
 
   it("menolak format bulan yang rusak dari backend", () => {
@@ -114,9 +100,67 @@ describe("toCreateSavingRequest", () => {
         tenorMonths: 5,
       }),
     ).toEqual({
-      package_code: "grade_b",
+      package_code: "medium",
       start_month: "2026-12",
       tenor_months: 5,
     });
+  });
+});
+
+describe("toUpgradeOptions", () => {
+  const option = {
+    package: { code: "premium", name: "Premium" },
+    target_amount: 2_990_000,
+    additional_amount: 790_000,
+    new_monthly_amount: 350_000,
+    remaining_months: 5,
+  };
+
+  it("memetakan pilihan upgrade", () => {
+    expect(
+      toUpgradeOptions({
+        saving_id: 7,
+        eligible: true,
+        reason: null,
+        options: [option],
+      }),
+    ).toEqual({
+      savingId: 7,
+      eligible: true,
+      reason: null,
+      options: [
+        {
+          packageId: "premium",
+          packageName: "Premium",
+          targetAmount: 2_990_000,
+          additionalAmount: 790_000,
+          newMonthlyAmount: 350_000,
+          remainingMonths: 5,
+        },
+      ],
+    });
+  });
+
+  it("tidak eligible → pilihan dikosongkan walau backend mengirim isi", () => {
+    const result = toUpgradeOptions({
+      saving_id: 7,
+      eligible: false,
+      reason: "Tabungan sudah lunas",
+      options: [option],
+    });
+    expect(result.eligible).toBe(false);
+    expect(result.options).toEqual([]);
+    expect(result.reason).toBe("Tabungan sudah lunas");
+  });
+
+  it("eligible tapi tanpa pilihan → dianggap tidak tersedia", () => {
+    expect(
+      toUpgradeOptions({
+        saving_id: 7,
+        eligible: true,
+        reason: null,
+        options: [],
+      }).eligible,
+    ).toBe(false);
   });
 });

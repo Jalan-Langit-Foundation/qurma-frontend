@@ -1,6 +1,5 @@
 import type { Installment } from "@/features/savings";
 
-/** Contoh jadwal Paket Standar (Rp1.600.000), Oktober 2026 – April 2027. */
 export const DEMO_INSTALLMENTS: Installment[] = [
   {
     installmentNo: 1,

@@ -25,7 +25,7 @@ export function PackagePicker({
     <div
       role="group"
       aria-labelledby={labelledBy}
-      className="grid grid-cols-3 gap-2.5"
+      className="grid grid-cols-3 gap-2 sm:gap-2.5"
     >
       {packages.map((pkg) => {
         const isSelected = pkg.id === selectedPackageId;
@@ -37,7 +37,7 @@ export function PackagePicker({
             disabled={disabled}
             onClick={() => onSelect?.(pkg)}
             className={cn(
-              "cursor-pointer rounded-xl border p-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60",
+              "min-w-0 cursor-pointer rounded-xl border px-2.5 py-3 text-left transition-all focus-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:p-3",
               isSelected
                 ? "border-brand bg-brand text-white shadow-sm"
                 : "border-slate-200/80 bg-white hover:border-slate-300",
@@ -53,7 +53,7 @@ export function PackagePicker({
             </span>
             <span
               className={cn(
-                "mt-0.5 block font-heading text-xs font-semibold",
+                "mt-0.5 block font-heading text-[11px] font-semibold sm:text-xs",
                 isSelected ? "text-white" : "text-body",
               )}
             >

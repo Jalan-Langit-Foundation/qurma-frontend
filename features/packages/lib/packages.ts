@@ -16,18 +16,6 @@ export function getPackageById(id: string): QurbanPackage | undefined {
   return ALL_PACKAGES.find((pkg) => pkg.id === id);
 }
 
-export function getPackageByBackendCode(
-  code: string,
-): QurbanPackage | undefined {
-  return ALL_PACKAGES.find((pkg) => pkg.backendCode === code);
-}
-
-export function toBackendPackageCode(id: PackageId): string {
-  const pkg = getPackageById(id);
-  if (!pkg) throw new Error(`Paket "${id}" tidak ada di katalog`);
-  return pkg.backendCode;
-}
-
 export function getDefaultPackage(): QurbanPackage {
   const pkg = getPackageById(DEFAULT_PACKAGE_ID);
   if (!pkg)

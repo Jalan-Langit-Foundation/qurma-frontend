@@ -4,13 +4,11 @@ import { getPackageFeatures } from "@/features/packages/lib/package-features";
 import {
   ALL_PACKAGES,
   DEFAULT_PACKAGE_ID,
-  getPackageByBackendCode,
   getPackageById,
   getUpgradeDifference,
   getUpgradeOptions,
   isPackageId,
   resolvePackage,
-  toBackendPackageCode,
 } from "@/features/packages/lib/packages";
 
 describe("katalog paket", () => {
@@ -20,7 +18,7 @@ describe("katalog paket", () => {
     );
   });
 
-  it("tiga paket QURMA 2027 sesuai Blueprint V1.1", () => {
+  it("tiga paket Brief V1.1: Standar, Medium, Premium (Grade A/B/C)", () => {
     expect(
       ALL_PACKAGES.map((pkg) => [
         pkg.name,
@@ -40,58 +38,35 @@ describe("katalog paket", () => {
     expect(getPackageById(DEFAULT_PACKAGE_ID)).toBeDefined();
   });
 
-  it("data paket masuk akal", () => {
+  it("data paket masuk akal dan berurutan dari harga terendah", () => {
     for (const pkg of ALL_PACKAGES) {
       expect(pkg.target).toBeGreaterThan(0);
       expect(pkg.weightMinKg).toBeLessThanOrEqual(pkg.weightMaxKg);
     }
+    const targets = ALL_PACKAGES.map((pkg) => pkg.target);
+    expect(targets).toEqual([...targets].sort((a, b) => a - b));
   });
 
-  it("grade dan kode backend tidak ada yang kembar", () => {
-    const grades = ALL_PACKAGES.map((pkg) => pkg.grade);
-    const codes = ALL_PACKAGES.map((pkg) => pkg.backendCode);
-    expect(new Set(grades).size).toBe(ALL_PACKAGES.length);
-    expect(new Set(codes).size).toBe(ALL_PACKAGES.length);
-  });
-
-  it("bobot ditulis sebagai target, bukan jaminan", () => {
-    for (const pkg of ALL_PACKAGES) {
-      expect(pkg.copy.weightLabel).toBe("Target bobot");
-      expect(pkg.perks.join(" ")).not.toMatch(/terjamin|dijamin|dashboard/i);
-    }
+  it("tidak menjanjikan dashboard (Brief V1.1 bagian G.2)", () => {
+    const perks = ALL_PACKAGES.flatMap((pkg) => pkg.perks).join(" ");
+    expect(perks.toLowerCase()).not.toContain("dashboard");
   });
 });
 
 describe("isPackageId & resolvePackage", () => {
-  it("mengenali ID valid saja", () => {
+  it("mengenali ID valid saja; kode lama tidak dikenali lagi", () => {
     expect(isPackageId("standar")).toBe(true);
-    expect(isPackageId("medium")).toBe(true);
     expect(isPackageId("premium")).toBe(true);
     expect(isPackageId("start")).toBe(false);
     expect(isPackageId("loyalty")).toBe(false);
     expect(isPackageId(undefined)).toBe(false);
   });
 
-  it("nilai tidak dikenal dari URL (termasuk ID paket lama) → paket default", () => {
+  it("nilai tidak dikenal dari URL → paket default", () => {
     expect(resolvePackage("medium").id).toBe("medium");
     expect(resolvePackage("plus").id).toBe(DEFAULT_PACKAGE_ID);
     expect(resolvePackage("<script>").id).toBe(DEFAULT_PACKAGE_ID);
     expect(resolvePackage(null).id).toBe(DEFAULT_PACKAGE_ID);
-  });
-});
-
-describe("kode paket backend", () => {
-  it("bolak-balik ID publik ↔ kode backend", () => {
-    for (const pkg of ALL_PACKAGES) {
-      expect(getPackageByBackendCode(toBackendPackageCode(pkg.id))?.id).toBe(
-        pkg.id,
-      );
-    }
-  });
-
-  it("kode tidak dikenal → undefined", () => {
-    expect(getPackageByBackendCode("start")).toBeUndefined();
-    expect(getPackageByBackendCode("standar")).toBeUndefined();
   });
 });
 
@@ -118,7 +93,7 @@ describe("upgrade", () => {
 describe("getPackageFeatures", () => {
   const standar = resolvePackage("standar");
 
-  it("baris bobot & setoran dihitung dari data", () => {
+  it("baris bobot ditulis sebagai target, baris setoran dari data", () => {
     expect(getPackageFeatures(standar, 229_000).slice(0, 2)).toEqual([
       "Target bobot 20–25 kg",
       "Setoran ringan ±Rp229 rb/bln",

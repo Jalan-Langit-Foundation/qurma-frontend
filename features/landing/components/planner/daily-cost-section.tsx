@@ -86,8 +86,8 @@ export function DailyCostSection({
               {formatRupiah(selectedPackage.target)}
             </p>
             <p className="font-body text-xs text-muted">
-              Target bobot {formatWeightRange(selectedPackage)} untuk
-              penyembelihan Idul Adha
+              Target bobot {formatWeightRange(selectedPackage)} untuk qurban
+              Idul Adha
             </p>
           </Card>
         </li>

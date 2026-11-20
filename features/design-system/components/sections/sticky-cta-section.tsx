@@ -1,13 +1,16 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getDefaultPackage } from "@/features/packages";
+import { estimateMonthlyAmount, SAVINGS_PROGRAM } from "@/features/savings";
+import { formatRupiahJuta, formatRupiahRibu } from "@/lib/format";
 import { DemoSection } from "../demo-section";
 
-/**
- * Mock statis: StickyCta asli memakai position: fixed & hanya tampil < md,
- * jadi tidak bisa dirender di dalam halaman demo.
- */
 export function StickyCtaSection() {
+  const pkg = getDefaultPackage();
+  const monthly =
+    estimateMonthlyAmount(pkg.target, SAVINGS_PROGRAM.openingMonth) ?? 0;
+
   return (
     <DemoSection
       id="sticky-cta"
@@ -26,10 +29,10 @@ export function StickyCtaSection() {
           <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-md backdrop-blur-md">
             <div className="flex min-w-0 flex-col">
               <span className="truncate font-heading text-xs font-bold text-ink">
-                Paket Standar (Rp1,6 Juta)
+                Paket {pkg.name} ({formatRupiahJuta(pkg.target)})
               </span>
               <span className="text-[11px] font-medium text-brand-strong">
-                ±Rp229 rb / bulan
+                {formatRupiahRibu(monthly, { unit: "rb" })} / bulan
               </span>
             </div>
             <Button variant="primary" size="sm" className="px-3 text-xs">
