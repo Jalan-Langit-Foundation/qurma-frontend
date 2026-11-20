@@ -1,4 +1,7 @@
-import { isPackageId } from "@/features/packages";
+import {
+  getPackageByBackendCode,
+  toBackendPackageCode,
+} from "@/features/packages";
 import { buildJourneySteps } from "../lib/journey";
 import { calculateProgress } from "../lib/progress";
 import type {
@@ -7,8 +10,6 @@ import type {
   Installment,
   Saving,
   SavingLedger,
-  UpgradeOption,
-  UpgradeOptions,
 } from "../lib/types";
 import { isYearMonth, type YearMonth } from "../lib/year-month";
 import type {
@@ -17,8 +18,6 @@ import type {
   SavingDepositsDto,
   SavingSummaryDto,
   ScheduleItemDto,
-  UpgradeOptionDto,
-  UpgradeOptionsDto,
 } from "./savings.dto";
 
 function toYearMonth(value: string, field: string): YearMonth {
@@ -35,7 +34,7 @@ export function toSaving(dto: SavingSummaryDto): Saving {
 
   return {
     id: dto.id,
-    packageId: isPackageId(dto.package.code) ? dto.package.code : null,
+    packageId: getPackageByBackendCode(dto.package.code)?.id ?? null,
     packageName: dto.package.name,
     programYear: dto.program_year,
     status: dto.status,
@@ -96,29 +95,8 @@ export function toCreateSavingRequest(
   input: CreateSavingInput,
 ): CreateSavingRequestDto {
   return {
-    package_code: input.packageId,
+    package_code: toBackendPackageCode(input.packageId),
     start_month: input.startMonth,
     tenor_months: input.tenorMonths,
-  };
-}
-
-function toUpgradeOption(dto: UpgradeOptionDto): UpgradeOption {
-  return {
-    packageId: isPackageId(dto.package.code) ? dto.package.code : null,
-    packageName: dto.package.name,
-    targetAmount: dto.target_amount,
-    additionalAmount: dto.additional_amount,
-    newMonthlyAmount: dto.new_monthly_amount,
-    remainingMonths: dto.remaining_months,
-  };
-}
-
-export function toUpgradeOptions(dto: UpgradeOptionsDto): UpgradeOptions {
-  const options = dto.eligible ? dto.options.map(toUpgradeOption) : [];
-  return {
-    savingId: dto.saving_id,
-    eligible: dto.eligible && options.length > 0,
-    reason: dto.reason,
-    options,
   };
 }

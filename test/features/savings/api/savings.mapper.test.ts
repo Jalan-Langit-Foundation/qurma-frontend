@@ -4,24 +4,23 @@ import {
   toCreateSavingRequest,
   toInstallment,
   toSaving,
-  toUpgradeOptions,
 } from "@/features/savings/api/savings.mapper";
 
 const baseDto: SavingSummaryDto = {
   id: 7,
-  package: { code: "start", name: "Start" },
+  package: { code: "grade_a", name: "Standar" },
   program_year: 2027,
   status: "active",
-  target_amount: 1_900_000,
-  total_paid: 814_500,
-  remaining_amount: 1_085_500,
+  target_amount: 1_600_000,
+  total_paid: 687_000,
+  remaining_amount: 913_000,
   progress_percent: 43,
   tenor_months: 7,
   start_month: "2026-10",
   end_month: "2027-04",
-  monthly_amount: 271_500,
-  last_installment_amount: 271_000,
-  next_installment: { month: "2027-01", amount: 271_500 },
+  monthly_amount: 229_000,
+  last_installment_amount: 226_000,
+  next_installment: { month: "2027-01", amount: 229_000 },
   journey: {
     target_selected: true,
     saving_started: true,
@@ -38,11 +37,26 @@ describe("toSaving", () => {
     const saving = toSaving(baseDto);
     expect(saving).toMatchObject({
       id: 7,
-      packageId: "start",
+      packageId: "standar",
       startMonth: "2026-10",
-      nextInstallment: { month: "2027-01", amount: 271_500 },
+      nextInstallment: { month: "2027-01", amount: 229_000 },
     });
     expect(saving.journey.find((step) => step.current)?.id).toBe(3);
+  });
+
+  it("kode paket dari backend diterjemahkan ke ID publik", () => {
+    const codes = { grade_a: "standar", grade_b: "medium", grade_c: "premium" };
+    for (const [code, id] of Object.entries(codes)) {
+      const saving = toSaving({ ...baseDto, package: { code, name: id } });
+      expect(saving.packageId).toBe(id);
+    }
+  });
+
+  it("kode paket lama atau tidak dikenal → packageId null", () => {
+    for (const code of ["start", "loyalty", "standar", "gold"]) {
+      const saving = toSaving({ ...baseDto, package: { code, name: code } });
+      expect(saving.packageId).toBeNull();
+    }
   });
 
   it("persen dihitung ulang dengan aturan yang sama di seluruh aplikasi (dibulatkan ke bawah)", () => {
@@ -95,72 +109,14 @@ describe("toCreateSavingRequest", () => {
   it("mengirim tenor, tapi tidak mengirim nominal setoran (backend yang menghitung)", () => {
     expect(
       toCreateSavingRequest({
-        packageId: "plus",
+        packageId: "medium",
         startMonth: "2026-12",
         tenorMonths: 5,
       }),
     ).toEqual({
-      package_code: "plus",
+      package_code: "grade_b",
       start_month: "2026-12",
       tenor_months: 5,
     });
-  });
-});
-
-describe("toUpgradeOptions", () => {
-  const option = {
-    package: { code: "plus", name: "Plus" },
-    target_amount: 2_500_000,
-    additional_amount: 600_000,
-    new_monthly_amount: 350_000,
-    remaining_months: 5,
-  };
-
-  it("memetakan pilihan upgrade", () => {
-    expect(
-      toUpgradeOptions({
-        saving_id: 7,
-        eligible: true,
-        reason: null,
-        options: [option],
-      }),
-    ).toEqual({
-      savingId: 7,
-      eligible: true,
-      reason: null,
-      options: [
-        {
-          packageId: "plus",
-          packageName: "Plus",
-          targetAmount: 2_500_000,
-          additionalAmount: 600_000,
-          newMonthlyAmount: 350_000,
-          remainingMonths: 5,
-        },
-      ],
-    });
-  });
-
-  it("tidak eligible → pilihan dikosongkan walau backend mengirim isi", () => {
-    const result = toUpgradeOptions({
-      saving_id: 7,
-      eligible: false,
-      reason: "Tabungan sudah lunas",
-      options: [option],
-    });
-    expect(result.eligible).toBe(false);
-    expect(result.options).toEqual([]);
-    expect(result.reason).toBe("Tabungan sudah lunas");
-  });
-
-  it("eligible tapi tanpa pilihan → dianggap tidak tersedia", () => {
-    expect(
-      toUpgradeOptions({
-        saving_id: 7,
-        eligible: true,
-        reason: null,
-        options: [],
-      }).eligible,
-    ).toBe(false);
   });
 });

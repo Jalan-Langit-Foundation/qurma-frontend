@@ -6,7 +6,7 @@ import {
 } from "@/features/savings/lib/installment-plan";
 
 describe("calculateInstallmentPlan", () => {
-  it("menghitung paket Start mulai Oktober 2026 (7 bulan) sesuai angka lama", () => {
+  it("menghitung target Rp1,9 jt mulai Oktober 2026 (7 bulan)", () => {
     const result = calculateInstallmentPlan({
       target: 1_900_000,
       startMonth: "2026-10",
@@ -32,7 +32,7 @@ describe("calculateInstallmentPlan", () => {
     expect(result.plan.lastAmount).toBe(315_000);
   });
 
-  it.each([1_500_000, 1_900_000, 2_500_000, 2_990_000])(
+  it.each([1_600_000, 2_200_000, 2_990_000])(
     "total semua angsuran selalu tepat sama dengan target (%i)",
     (target) => {
       for (const startMonth of ["2026-10", "2026-12", "2027-02", "2027-04"]) {

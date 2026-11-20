@@ -13,7 +13,7 @@ export const HOW_IT_WORKS_CONTENT = {
       step: 1,
       title: "Pilih Target Qurban",
       description:
-        "Pilih paket domba yang sesuai (Loyalty, Start, Plus, atau Premium).",
+        "Pilih paket domba yang sesuai (Standar, Medium, atau Premium).",
       hashtag: "#PilihPaket",
     },
     {

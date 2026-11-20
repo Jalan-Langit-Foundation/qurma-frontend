@@ -55,13 +55,14 @@ describe("toShohibulReport", () => {
     saving_id: 1,
     program_year: 2027,
     shohibul_name: "Budi Santoso",
-    package: { code: "start", name: "Start" },
+    package: { code: "grade_a", name: "Standar" },
     animal_weight: 24,
     location: "Karawang",
     slaughter_date: "2027-05-17",
     notes: "Alhamdulillah qurban telah ditunaikan.",
     published_at: "2027-05-19T10:00:00+07:00",
     photos: {
+      // Contoh di contract memuat spasi di akhir URL
       animal: [{ id: 1, url: "https://api.example.id/storage/reports/1.jpg " }],
       slaughter: [],
       distribution: [{ id: 3, url: "   " }],
@@ -80,7 +81,7 @@ describe("toShohibulReport", () => {
   it("memetakan data laporan", () => {
     expect(toShohibulReport(dto)).toMatchObject({
       shohibulName: "Budi Santoso",
-      packageName: "Start",
+      packageName: "Standar",
       animalWeightKg: 24,
       slaughterDate: "2027-05-17",
     });

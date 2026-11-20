@@ -22,7 +22,7 @@ export function TypographySection() {
             Pilihan Paket Qurban 2027
           </p>
           <p className="font-heading text-lg font-bold text-brand">
-            Paket Start (Rp1.900.000)
+            Paket Standar (Rp1.600.000)
           </p>
         </Card>
         <Card className="space-y-3 p-6 text-sm leading-relaxed">

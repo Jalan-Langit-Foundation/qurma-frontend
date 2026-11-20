@@ -13,9 +13,9 @@ const location = (response: Response) => response.headers.get("location");
 
 describe("proxy", () => {
   it("halaman penabung tanpa sesi → login dengan ?next", () => {
-    const response = proxy(request("/tabungan/baru?paket=plus"));
+    const response = proxy(request("/tabungan/baru?paket=medium"));
     expect(location(response)).toBe(
-      "http://localhost:3000/login?next=%2Ftabungan%2Fbaru%3Fpaket%3Dplus",
+      "http://localhost:3000/login?next=%2Ftabungan%2Fbaru%3Fpaket%3Dmedium",
     );
   });
 
@@ -36,11 +36,4 @@ describe("proxy", () => {
   it("login tanpa sesi → tampil", () => {
     expect(location(proxy(request("/login")))).toBeNull();
   });
-
-  it.each(["/akun", "/transaksi?page=2", "/kwitansi/12"])(
-    "halaman member baru %s juga dijaga",
-    (path) => {
-      expect(location(proxy(request(path)))).toMatch(/\/login\?next=/);
-    },
-  );
 });

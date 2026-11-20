@@ -27,7 +27,7 @@ export function PackageCardSection({
       description="Data dari katalog tunggal features/packages/lib/catalog.ts. Klik untuk memilih."
       controls={<Badge size="sm">Terpilih: {selectedId.toUpperCase()}</Badge>}
     >
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {ALL_PACKAGES.map((pkg) => (
           <PackageCard
             key={pkg.id}

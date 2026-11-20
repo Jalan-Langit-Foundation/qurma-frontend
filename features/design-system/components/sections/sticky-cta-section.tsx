@@ -3,6 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DemoSection } from "../demo-section";
 
+/**
+ * Mock statis: StickyCta asli memakai position: fixed & hanya tampil < md,
+ * jadi tidak bisa dirender di dalam halaman demo.
+ */
 export function StickyCtaSection() {
   return (
     <DemoSection
@@ -22,10 +26,10 @@ export function StickyCtaSection() {
           <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-md backdrop-blur-md">
             <div className="flex min-w-0 flex-col">
               <span className="truncate font-heading text-xs font-bold text-ink">
-                Paket Start (Rp1,9 Juta)
+                Paket Standar (Rp1,6 Juta)
               </span>
               <span className="text-[11px] font-medium text-brand-strong">
-                ±Rp317 rb / bulan
+                ±Rp229 rb / bulan
               </span>
             </div>
             <Button variant="primary" size="sm" className="px-3 text-xs">
