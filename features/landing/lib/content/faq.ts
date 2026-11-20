@@ -32,9 +32,9 @@ export const FAQ_CONTENT = {
     {
       id: "faq-4",
       question:
-        "Apakah kesehatan, bobot timbangan, dan syarat syar'i hewan qurban terjamin?",
+        "Bagaimana QURMA memastikan kesehatan, bobot, dan syarat syar'i hewan qurban?",
       answer:
-        "Insya Allah, seluruh hewan qurban diseleksi secara ketat dari peternak mitra terpercaya, memenuhi kriteria syariat Islam (sehat, cukup umur, dan tidak cacat), serta bobotnya diverifikasi langsung sebelum hari penyembelihan.",
+        "Insya Allah, seluruh hewan qurban diseleksi dari peternak mitra, memenuhi kriteria syariat Islam (sehat, cukup umur, dan tidak cacat), dan bobotnya diperiksa sebelum hari penyembelihan. Bobot pada setiap paket adalah target spesifikasi, bukan jaminan angka yang tepat.",
     },
     {
       id: "faq-5",
@@ -49,17 +49,15 @@ export const FAQ_CONTENT = {
     },
     {
       id: "faq-6",
-      question:
-        "Bagaimana cara mudhohi memantau progres tabungan dan kesiapan hewan qurban?",
+      question: "Bagaimana cara mengecek saldo tabungan qurban saya?",
       answer:
-        "Setiap mudhohi memiliki akses ke dashboard pribadi di website QURMA. Anda dapat melihat perkembangan status dana, alokasi hewan, jadwal pelaksanaan, hingga laporan foto dokumentasi penyembelihan dan distribusi (Shohibul Report).",
+        "Untuk tahap awal, informasi saldo dan status tabungan diberikan oleh CS QURMA melalui WhatsApp setelah setoran Anda diverifikasi. Laporan dokumentasi penyembelihan dan penyaluran (Shohibul Report) dikirimkan setelah qurban terlaksana.",
     },
     {
       id: "faq-7",
-      question:
-        "Apakah saya bisa mengajukan upgrade ke tipe paket domba qurban yang lebih tinggi?",
+      question: "Apakah saya bisa mengganti pilihan paket domba?",
       answer:
-        "Tentu saja. Anda dapat mengajukan peningkatan (upgrade) paket qurban ke bobot yang lebih besar langsung melalui menu dashboard sebelum periode pelunasan berakhir.",
+        "Perubahan paket dapat dikonsultasikan dengan CS QURMA melalui WhatsApp sebelum batas pelunasan. CS akan menjelaskan ketentuan dan sisa setoran yang berlaku.",
     },
     {
       id: "faq-8",

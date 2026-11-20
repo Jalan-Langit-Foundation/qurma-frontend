@@ -45,7 +45,7 @@ export const TERMS: TermsDocument = {
           text: "adalah petugas Penyelenggara yang mencatat setoran dan melayani mudhohi melalui WhatsApp resmi.",
         },
         {
-          text: `Website ${PROGRAM.name} berfungsi sebagai sarana informasi, pencatatan, dan pemantauan. Website ini bukan alat pembayaran, dan setoran tidak dilakukan di dalam website.`,
+          text: `Website ${PROGRAM.name} berfungsi sebagai sarana informasi dan simulasi. Website ini bukan alat pembayaran, dan setoran tidak dilakukan di dalam website.`,
         },
         {
           text: `Ketentuan ini berlaku selama periode program ${PROGRAM.name}, sejak pembukaan pendaftaran hingga laporan pelaksanaan qurban diterbitkan.`,
@@ -117,10 +117,10 @@ export const TERMS: TermsDocument = {
           text: "Setiap setoran wajib dikonfirmasi ke Admin melalui WhatsApp resmi beserta bukti setoran.",
         },
         {
-          text: "Admin mencatat setoran di sistem setelah bukti diterima dan diperiksa. Progres di dashboard berubah setelah pencatatan, bukan seketika saat transfer.",
+          text: "Admin mencatat setoran setelah bukti diterima dan diperiksa. Informasi saldo dan status tabungan disampaikan Admin melalui WhatsApp resmi setelah setoran diverifikasi.",
         },
         {
-          text: "Nominal setoran per bulan yang ditampilkan adalah estimasi pembagian sisa target. Mudhohi boleh menyetor lebih besar atau melunasi lebih cepat.",
+          text: "Nominal pada simulasi setoran di website hanya perkiraan, bukan jadwal tagihan. Mudhohi boleh menyetor lebih besar atau melunasi lebih cepat.",
         },
         {
           text: "Tabungan ini adalah titipan dana untuk ibadah qurban, bukan pinjaman atau investasi. Tidak ada bunga, imbal hasil, maupun denda keterlambatan.",
@@ -182,10 +182,10 @@ export const TERMS: TermsDocument = {
           text: "Daging qurban disalurkan kepada masyarakat dhuafa, santri, dan komunitas binaan di wilayah yang membutuhkan.",
         },
         {
-          text: "Penyelenggara menerbitkan Shohibul Report berisi foto hewan, proses penyembelihan, dan penyaluran. Laporan tampil di dashboard mudhohi setelah tersedia, bukan secara langsung saat kegiatan berlangsung.",
+          text: "Penyelenggara menerbitkan Shohibul Report berisi foto hewan, proses penyembelihan, dan penyaluran. Laporan dikirimkan kepada mudhohi melalui Admin setelah tersedia, bukan secara langsung saat kegiatan berlangsung.",
         },
         {
-          text: "Lokasi dan jadwal pasti penyembelihan diinformasikan melalui dashboard atau WhatsApp menjelang hari pelaksanaan.",
+          text: "Lokasi dan jadwal pasti penyembelihan diinformasikan melalui WhatsApp menjelang hari pelaksanaan.",
         },
       ],
     },

@@ -20,18 +20,18 @@ export const VALUE_PROPS_CONTENT = {
       hashtag: "#SetoranRingan",
     },
     {
-      id: "progress-terpantau",
-      title: "Progress Terpantau Nyata",
+      id: "info-saldo",
+      title: "Info Saldo dari CS",
       description:
-        "Pantau akumulasi saldo tabungan dan perkembangan kesiapan hewan qurban Anda secara transparan dan akurat kapan pun melalui dashboard akun pribadi.",
-      hashtag: "#DashboardTransparan",
+        "Setiap setoran diverifikasi terlebih dahulu, lalu informasi saldo dan status tabungan Anda disampaikan oleh CS QURMA melalui WhatsApp.",
+      hashtag: "#SaldoTerverifikasi",
     },
     {
-      id: "bisa-upgrade",
-      title: "Bisa Upgrade Kapan Saja",
+      id: "didampingi-cs",
+      title: "Didampingi CS QURMA",
       description:
-        "Ketika rezeki Anda bertambah, Anda dapat dengan leluasa meningkatkan kelas paket domba ke bobot yang lebih besar kapan saja tanpa prosedur yang rumit.",
-      hashtag: "#FleksibelUpgrade",
+        "Pertanyaan seputar paket, setoran, hingga pelaksanaan qurban dijawab langsung oleh CS QURMA melalui WhatsApp resmi.",
+      hashtag: "#DidampingiCS",
     },
     {
       id: "domba-terawat",

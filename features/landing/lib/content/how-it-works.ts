@@ -11,7 +11,7 @@ export const HOW_IT_WORKS_CONTENT = {
     line2: "Ibadah Qurban Sempurna",
   },
   description:
-    "Alur terstruktur dari awal pendaftaran hingga laporan penyembelihan yang transparan dan dapat dipantau setiap saat.",
+    "Alur terstruktur dari pemilihan paket hingga laporan dokumentasi pelaksanaan qurban.",
   steps: [
     {
       id: "pilih-target",
@@ -31,9 +31,9 @@ export const HOW_IT_WORKS_CONTENT = {
     {
       id: "pendaftaran",
       step: 3,
-      title: "Pendaftaran Cepat",
+      title: "Konsultasi & Daftar",
       description:
-        "Isi data diri shohibul qurban dan konfirmasi komitmen awal secara aman.",
+        "Hubungi CS QURMA untuk konfirmasi paket, pendaftaran, dan instruksi setoran resmi.",
       hashtag: "#PendaftaranMudah",
     },
     {
@@ -41,7 +41,7 @@ export const HOW_IT_WORKS_CONTENT = {
       step: 4,
       title: "Setor Bertahap",
       description:
-        "Kumpulkan tabungan tiap bulan dengan reminder ramah via WhatsApp.",
+        "Setor sesuai rencanamu. Saldo dikonfirmasi CS melalui WhatsApp setelah setoran diverifikasi.",
       hashtag: "#SetoranFleksibel",
     },
     {
