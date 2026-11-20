@@ -2,14 +2,15 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getDefaultPackage } from "@/features/packages";
-import { estimateMonthlyAmount, SAVINGS_PROGRAM } from "@/features/savings";
+import { calculateDepositPlan, SAVINGS_PROGRAM } from "@/features/savings";
 import { formatRupiahJuta, formatRupiahRibu } from "@/lib/format";
 import { DemoSection } from "../demo-section";
 
 export function StickyCtaSection() {
   const pkg = getDefaultPackage();
-  const monthly =
-    estimateMonthlyAmount(pkg.target, SAVINGS_PROGRAM.openingMonth) ?? 0;
+  const depositCount = SAVINGS_PROGRAM.defaultDepositCount;
+  const depositAmount =
+    calculateDepositPlan(pkg.target, depositCount)?.depositAmount ?? 0;
 
   return (
     <DemoSection
@@ -32,7 +33,8 @@ export function StickyCtaSection() {
                 Paket {pkg.name} ({formatRupiahJuta(pkg.target)})
               </span>
               <span className="text-[11px] font-medium text-brand-strong">
-                {formatRupiahRibu(monthly, { unit: "rb" })} / bulan
+                {depositCount}× setoran ·{" "}
+                {formatRupiahRibu(depositAmount, { unit: "rb" })}
               </span>
             </div>
             <Button variant="primary" size="sm" className="px-3 text-xs">

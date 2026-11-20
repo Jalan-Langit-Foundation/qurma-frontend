@@ -4,14 +4,14 @@ import * as React from "react";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { QurbanPackage } from "@/features/packages";
-import type { InstallmentPlan } from "@/features/savings";
+import type { DepositPlan } from "@/features/savings";
 import { formatRupiah, formatRupiahRibu } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { SavingCta } from "../../lib/saving-cta";
 
 interface StickyCtaProps {
   selectedPackage: QurbanPackage;
-  plan: InstallmentPlan | null;
+  plan: DepositPlan | null;
   cta: SavingCta;
   className?: string;
 }
@@ -44,7 +44,7 @@ export function StickyCta({
           </div>
           <span className="truncate text-[11px] font-medium text-body">
             {plan
-              ? `Mulai ${formatRupiahRibu(plan.monthlyAmount)} / bln`
+              ? `${plan.depositCount}× setoran · ${formatRupiahRibu(plan.depositAmount, { unit: "rb" })}`
               : "Hitung simulasi tabungan"}
           </span>
         </div>

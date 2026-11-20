@@ -3,14 +3,17 @@ import { ALL_PACKAGES } from "@/features/packages";
 import {
   calculateInstallmentPlan,
   estimateDailySaving,
-  estimateMonthlyAmount,
 } from "@/features/savings/lib/installment-plan";
+
+/** Batas pelunasan tetap untuk test, terlepas dari tanggal Iduladha di config */
+const END = "2027-04";
 
 describe("calculateInstallmentPlan", () => {
   it("target Rp1.900.000 mulai Oktober 2026 (7 bulan)", () => {
     const result = calculateInstallmentPlan({
       target: 1_900_000,
       startMonth: "2026-10",
+      endMonth: END,
     });
 
     expect(result.ok).toBe(true);
@@ -24,6 +27,7 @@ describe("calculateInstallmentPlan", () => {
     const result = calculateInstallmentPlan({
       target: 1_900_000,
       startMonth: "2026-11",
+      endMonth: END,
     });
 
     expect(result.ok).toBe(true);
@@ -37,7 +41,11 @@ describe("calculateInstallmentPlan", () => {
     "total semua angsuran selalu tepat sama dengan target (%i)",
     (target) => {
       for (const startMonth of ["2026-10", "2026-12", "2027-02", "2027-04"]) {
-        const result = calculateInstallmentPlan({ target, startMonth });
+        const result = calculateInstallmentPlan({
+          target,
+          startMonth,
+          endMonth: END,
+        });
         expect(result.ok).toBe(true);
         if (!result.ok) continue;
 
@@ -62,6 +70,7 @@ describe("calculateInstallmentPlan", () => {
     const result = calculateInstallmentPlan({
       target: 1_900_000,
       startMonth: "2026-11",
+      endMonth: END,
     });
     if (!result.ok) throw new Error(result.message);
 
@@ -79,6 +88,7 @@ describe("calculateInstallmentPlan", () => {
     const result = calculateInstallmentPlan({
       target: 1_900_000,
       startMonth: "2027-04",
+      endMonth: END,
     });
     if (!result.ok) throw new Error(result.message);
 
@@ -91,6 +101,7 @@ describe("calculateInstallmentPlan", () => {
     const result = calculateInstallmentPlan({
       target: 1_900_000,
       startMonth: "2027-05",
+      endMonth: END,
     });
     expect(result).toMatchObject({ ok: false, error: "start_after_deadline" });
   });
@@ -99,6 +110,7 @@ describe("calculateInstallmentPlan", () => {
     const result = calculateInstallmentPlan({
       target: 1_900_000,
       startMonth: "2026-01",
+      endMonth: END,
     });
     expect(result).toMatchObject({ ok: false, error: "tenor_too_long" });
   });
@@ -107,7 +119,11 @@ describe("calculateInstallmentPlan", () => {
     "menolak format bulan tidak valid (%s)",
     (startMonth) => {
       expect(
-        calculateInstallmentPlan({ target: 1_900_000, startMonth }),
+        calculateInstallmentPlan({
+          target: 1_900_000,
+          startMonth,
+          endMonth: END,
+        }),
       ).toMatchObject({
         ok: false,
         error: "invalid_month",
@@ -119,7 +135,11 @@ describe("calculateInstallmentPlan", () => {
     "menolak target tidak valid (%s)",
     (target) => {
       expect(
-        calculateInstallmentPlan({ target, startMonth: "2026-11" }),
+        calculateInstallmentPlan({
+          target,
+          startMonth: "2026-11",
+          endMonth: END,
+        }),
       ).toMatchObject({
         ok: false,
         error: "invalid_target",
@@ -131,19 +151,9 @@ describe("calculateInstallmentPlan", () => {
     const result = calculateInstallmentPlan({
       target: 10_000,
       startMonth: "2026-05",
-      endMonth: "2027-04",
+      endMonth: END,
     });
     expect(result).toMatchObject({ ok: false, error: "target_too_small" });
-  });
-});
-
-describe("estimateMonthlyAmount", () => {
-  it("mengembalikan null bila bulan mulai tidak ada", () => {
-    expect(estimateMonthlyAmount(1_900_000, null)).toBeNull();
-  });
-
-  it("mengembalikan setoran per bulan", () => {
-    expect(estimateMonthlyAmount(2_990_000, "2026-10")).toBe(427_500);
   });
 });
 

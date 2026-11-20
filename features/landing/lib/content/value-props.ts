@@ -16,7 +16,7 @@ export const VALUE_PROPS_CONTENT = {
       id: "menabung-bertahap",
       title: "Menabung Bertahap",
       description:
-        "Alokasi setoran bulanan yang teratur, terjangkau, dan fleksibel, efektif membebaskan arus kas keluarga dari pengeluaran mendadak jutaan rupiah menjelang hari raya.",
+        "Setoran bertahap dengan nominal dan waktu yang fleksibel, sehingga dana qurban tidak harus keluar sekaligus menjelang hari raya.",
       hashtag: "#SetoranRingan",
     },
     {

@@ -1,10 +1,14 @@
 import { PROGRAM } from "@/config/program";
 import { SITE_CONFIG } from "@/config/site";
-import { formatYearMonth, SAVINGS_PROGRAM } from "@/features/savings";
+import {
+  formatYearMonth,
+  PAYMENT_DEADLINE,
+  SAVINGS_PROGRAM,
+} from "@/features/savings";
 import type { TermsDocument } from "./types";
 
 const OPENING = formatYearMonth(SAVINGS_PROGRAM.openingMonth);
-const DEADLINE = formatYearMonth(SAVINGS_PROGRAM.finalPaymentMonth);
+const DEADLINE = PAYMENT_DEADLINE.label;
 const { legalName, name, contact, legal } = SITE_CONFIG;
 
 export const TERMS: TermsDocument = {
@@ -85,14 +89,14 @@ export const TERMS: TermsDocument = {
         {
           text: "Harga paket yang tercatat pada tabungan mudhohi tidak berubah selama periode program, kecuali mudhohi sendiri yang mengajukan perubahan paket.",
         },
-        // PERLU UPDATE: toleransi selisih bobot
+        // PERLU KEPUTUSAN: toleransi selisih bobot
         {
           text: "Bobot yang tercantum adalah bobot target. Selisih bobot sampai 1 kg di bawah rentang paket masih dianggap sesuai. Bila selisihnya lebih besar, Penyelenggara mengganti hewan dengan yang sesuai.",
         },
         {
           text: "Hewan dipilihkan oleh Penyelenggara. Mudhohi tidak memilih ekor tertentu, kecuali ada layanan khusus yang diumumkan.",
         },
-        // PERLU UPDATE: penggantian hewan sakit/mati
+        // PERLU KEPUTUSAN: penggantian hewan sakit/mati
         {
           text: "Bila hewan sakit, cacat, atau mati sebelum hari penyembelihan, Penyelenggara mengganti dengan hewan setara tanpa biaya tambahan.",
         },
@@ -103,9 +107,9 @@ export const TERMS: TermsDocument = {
       title: "Setoran, Pencatatan, dan Pelunasan",
       items: [
         {
-          text: `Tabungan dapat dimulai paling awal ${OPENING}. Batas akhir pelunasan adalah ${DEADLINE}, sekitar satu sampai dua bulan sebelum Idul Adha.`,
+          text: `Tabungan dapat dimulai paling awal ${OPENING}. Batas akhir pelunasan adalah ${DEADLINE}.${PAYMENT_DEADLINE.note ? ` ${PAYMENT_DEADLINE.note}` : ""}`,
         },
-        // PERLU UPDATE: cantumkan nomor rekening resmi bila sudah ditetapkan
+        // PERLU KEPUTUSAN: cantumkan nomor rekening resmi bila sudah ditetapkan
         {
           text: "Setoran dilakukan langsung ke Admin atau ke rekening resmi yayasan yang diinformasikan Admin. Penyelenggara tidak bertanggung jawab atas setoran ke rekening atau pihak lain.",
         },
@@ -138,7 +142,7 @@ export const TERMS: TermsDocument = {
           term: "Keterlambatan setoran",
           text: "tidak dikenai denda. Kekurangan dapat dilunasi pada bulan berikutnya, selama sebelum batas pelunasan.",
         },
-        // PERLU UPDATE: perlakuan tabungan yang belum lunas
+        // PERLU KEPUTUSAN: perlakuan tabungan yang belum lunas
         {
           term: "Belum lunas saat batas pelunasan.",
           text: "Admin menghubungi mudhohi untuk memilih salah satu opsi berikut:",
@@ -149,7 +153,7 @@ export const TERMS: TermsDocument = {
             "Meminta pengembalian dana sesuai ketentuan pembatalan di bawah ini.",
           ],
         },
-        // PERLU UPDATE: kebijakan & batas waktu pengembalian dana
+        // PERLU KEPUTUSAN: kebijakan & batas waktu pengembalian dana
         {
           term: "Pembatalan oleh mudhohi",
           text: "dapat diajukan melalui Admin sebelum batas pelunasan. Dana yang sudah tercatat dikembalikan paling lambat 14 hari kerja ke rekening atas nama mudhohi, dikurangi biaya transfer bila ada.",
@@ -173,7 +177,7 @@ export const TERMS: TermsDocument = {
         {
           text: "Mudhohi mewakilkan (taukil) penyembelihan dan pembagian daging kepada Penyelenggara. Penyelenggara mengucapkan nama shohibul qurban sesuai data akun.",
         },
-        // PERLU UPDATE: apakah mudhohi boleh meminta bagian daging
+        // PERLU KEPUTUSAN: apakah mudhohi boleh meminta bagian daging
         {
           text: "Daging qurban disalurkan kepada masyarakat dhuafa, santri, dan komunitas binaan di wilayah yang membutuhkan.",
         },

@@ -96,7 +96,7 @@ describe("getPackageFeatures", () => {
   it("baris bobot ditulis sebagai target, baris setoran dari data", () => {
     expect(getPackageFeatures(standar, 229_000).slice(0, 2)).toEqual([
       "Target bobot 20–25 kg",
-      "Setoran ringan ±Rp229 rb/bln",
+      "Setoran ringan ±Rp229 rb/setoran",
     ]);
   });
 

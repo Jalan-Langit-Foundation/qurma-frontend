@@ -6,92 +6,77 @@ import {
   getDefaultPackage,
   type QurbanPackage,
 } from "@/features/packages";
-import { estimateMonthlyAmount, useSavingSimulation } from "@/features/savings";
+import {
+  calculateDepositPlan,
+  SAVINGS_PROGRAM,
+  useSavingWindow,
+  type DepositCount,
+} from "@/features/savings";
+import { formatRupiah } from "@/lib/format";
 import { useSavingPlanParams } from "../../hooks/use-saving-plan-params";
 import { getSavingCta } from "../../lib/saving-cta";
 import { CalculatorSection } from "./calculator-section";
-import { DailyCostSection } from "./daily-cost-section";
 import { PackagesSection } from "./packages-section";
 import { StickyCta } from "./sticky-cta";
 
 interface SavingPlannerViewProps {
   selectedPackage: QurbanPackage;
-  requestedStartMonth: string | null;
+  depositCount: DepositCount;
   onSelectPackage?: (pkg: QurbanPackage) => void;
-  onSelectStartMonth?: (month: string) => void;
+  onSelectDepositCount?: (count: DepositCount) => void;
 }
 
 function SavingPlannerView({
   selectedPackage,
-  requestedStartMonth,
+  depositCount,
   onSelectPackage,
-  onSelectStartMonth,
+  onSelectDepositCount,
 }: SavingPlannerViewProps) {
-  const simulation = useSavingSimulation({
-    target: selectedPackage.target,
-    requestedStartMonth,
-  });
+  const savingWindow = useSavingWindow();
+  const plan = calculateDepositPlan(selectedPackage.target, depositCount);
 
-  const startMonth =
-    simulation.status === "ready" || simulation.status === "error"
-      ? simulation.startMonth
-      : null;
-  const activeStartMonth =
-    simulation.status === "ready" || simulation.status === "error"
-      ? (simulation.startMonthOptions.find(
-          (option) => option.value === startMonth,
-        ) ?? null)
-      : null;
-  const plan = simulation.status === "ready" ? simulation.plan : null;
-
-  const monthlyEstimates = React.useMemo(
+  const depositEstimates = React.useMemo(
     () =>
       Object.fromEntries(
         ALL_PACKAGES.map((pkg) => [
           pkg.id,
-          estimateMonthlyAmount(pkg.target, startMonth),
+          calculateDepositPlan(pkg.target, depositCount)?.depositAmount ?? null,
         ]),
       ),
-    [startMonth],
+    [depositCount],
   );
 
-  const cta = getSavingCta(selectedPackage, startMonth, plan);
+  const cta = getSavingCta(selectedPackage, plan);
 
   return (
     <>
       <p className="sr-only" aria-live="polite">
-        {`Paket ${selectedPackage.name} dipilih.`}
+        {`Paket ${selectedPackage.name}, ${depositCount} kali setoran.`}
         {plan
-          ? ` Estimasi setoran ${plan.monthlyAmount.toLocaleString("id-ID")} rupiah per bulan.`
+          ? ` Estimasi ${formatRupiah(plan.depositAmount)} per setoran, setoran terakhir ${formatRupiah(plan.lastAmount)}.`
           : ""}
       </p>
 
       <PackagesSection
         packages={ALL_PACKAGES}
         selectedPackageId={selectedPackage.id}
-        monthlyEstimates={monthlyEstimates}
-        activeStartMonth={activeStartMonth}
+        depositEstimates={depositEstimates}
+        depositCount={depositCount}
         onSelectPackage={onSelectPackage}
       />
 
       <CalculatorSection
         packages={ALL_PACKAGES}
         selectedPackage={selectedPackage}
-        simulation={simulation}
+        depositCount={depositCount}
+        plan={plan}
+        closed={savingWindow === "closed"}
         cta={cta}
         onSelectPackage={onSelectPackage}
-        onSelectStartMonth={onSelectStartMonth}
+        onSelectDepositCount={onSelectDepositCount}
       />
 
-      {simulation.status === "ready" && (
-        <DailyCostSection
-          selectedPackage={selectedPackage}
-          plan={simulation.plan}
-          dailyEstimate={simulation.dailyEstimate}
-        />
-      )}
-
-      {simulation.status !== "closed" && (
+      {savingWindow !== "closed" && (
         <StickyCta selectedPackage={selectedPackage} plan={plan} cta={cta} />
       )}
     </>
@@ -99,19 +84,15 @@ function SavingPlannerView({
 }
 
 function SavingPlannerWithUrlState() {
-  const {
-    selectedPackage,
-    requestedStartMonth,
-    selectPackage,
-    selectStartMonth,
-  } = useSavingPlanParams();
+  const { selectedPackage, depositCount, selectPackage, selectDepositCount } =
+    useSavingPlanParams();
 
   return (
     <SavingPlannerView
       selectedPackage={selectedPackage}
-      requestedStartMonth={requestedStartMonth}
+      depositCount={depositCount}
       onSelectPackage={selectPackage}
-      onSelectStartMonth={selectStartMonth}
+      onSelectDepositCount={selectDepositCount}
     />
   );
 }
@@ -122,7 +103,7 @@ export function SavingPlanner() {
       fallback={
         <SavingPlannerView
           selectedPackage={getDefaultPackage()}
-          requestedStartMonth={null}
+          depositCount={SAVINGS_PROGRAM.defaultDepositCount}
         />
       }
     >

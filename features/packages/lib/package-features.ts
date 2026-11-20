@@ -7,13 +7,13 @@ export function formatWeightRange(pkg: QurbanPackage): string {
 
 export function getPackageFeatures(
   pkg: QurbanPackage,
-  monthlyAmount: number | null,
+  depositAmount: number | null,
 ): string[] {
   const features = [`${pkg.copy.weightLabel} ${formatWeightRange(pkg)}`];
 
-  if (monthlyAmount !== null && monthlyAmount > 0) {
+  if (depositAmount !== null && depositAmount > 0) {
     features.push(
-      `${pkg.copy.depositLabel} ${formatRupiahRibu(monthlyAmount, { unit: "rb" })}/bln`,
+      `${pkg.copy.depositLabel} ${formatRupiahRibu(depositAmount, { unit: "rb" })}/setoran`,
     );
   }
 

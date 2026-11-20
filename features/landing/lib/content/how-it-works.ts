@@ -25,7 +25,7 @@ export const HOW_IT_WORKS_CONTENT = {
       step: 2,
       title: "Simulasi & Rencana",
       description:
-        "Lihat rincian setoran bulanan yang terjangkau sesuai batas waktu pelunasan.",
+        "Atur rencana jumlah setoran dan lihat perkiraan nominalnya hingga batas pelunasan.",
       hashtag: "#SimulasiTerjangkau",
     },
     {

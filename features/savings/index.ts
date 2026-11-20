@@ -1,21 +1,24 @@
+// Aturan program
 export { isSavingRegistrationOpen, SAVINGS_PROGRAM } from "./lib/program";
+export { PAYMENT_DEADLINE } from "./lib/payment-deadline";
+
+// Bulan
+export { formatYearMonth, formatYearMonthShort } from "./lib/year-month";
+
+// Perhitungan
 export {
-  formatYearMonth,
-  formatYearMonthShort,
-  type YearMonth,
-} from "./lib/year-month";
-export {
-  toStartMonthSelectOptions,
-  type StartMonthOption,
-} from "./lib/start-months";
-export {
-  estimateMonthlyAmount,
-  type InstallmentPlan,
-} from "./lib/installment-plan";
+  calculateDepositPlan,
+  resolveDepositCount,
+  type DepositCount,
+  type DepositPlan,
+} from "./lib/deposit-plan";
+
+// Status & perjalanan
 export type { InstallmentStatus } from "./lib/installment-status";
 export { getSavingStatus, type SavingStatusTone } from "./lib/saving-status";
 export { buildJourneyStepsFromStage, type JourneyStep } from "./lib/journey";
 
+// Model domain
 export type {
   CreateSavingInput,
   DepositRecord,
@@ -27,11 +30,10 @@ export type {
   UpgradeOptions,
 } from "./lib/types";
 
-export {
-  useSavingSimulation,
-  type SavingSimulationState,
-} from "./hooks/use-saving-simulation";
+// Hooks
+export { useSavingWindow } from "./hooks/use-saving-window";
 
+// Komponen
 export {
   DepositTable,
   type DepositTableProps,
@@ -46,4 +48,3 @@ export {
   type JourneyChecklistProps,
 } from "./components/journey-checklist";
 export { DepositRecords } from "./components/deposit-records";
-export { PlanInputs } from "./components/plan-inputs";

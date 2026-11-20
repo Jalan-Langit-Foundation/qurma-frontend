@@ -38,7 +38,6 @@ export const SECTION_IDS = {
   howItWorks: "cara-kerja",
   packages: "paket",
   simulation: "simulasi",
-  dailyCost: "sehari-cuma",
   testimonials: "testimoni",
   faq: "faq",
   contact: "kontak",

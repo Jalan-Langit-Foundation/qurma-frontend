@@ -104,15 +104,6 @@ export function calculateInstallmentPlan({
   };
 }
 
-export function estimateMonthlyAmount(
-  target: number,
-  startMonth: YearMonth | null,
-): number | null {
-  if (!startMonth) return null;
-  const result = calculateInstallmentPlan({ target, startMonth });
-  return result.ok ? result.plan.monthlyAmount : null;
-}
-
 export function estimateDailySaving(
   monthlyAmount: number,
   daysPerMonth: number = SAVINGS_PROGRAM.daysPerMonth,

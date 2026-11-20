@@ -1,4 +1,8 @@
 import { PROGRAM } from "@/config/program";
+import { PAYMENT_DEADLINE, SAVINGS_PROGRAM } from "@/features/savings";
+import { formatRupiah } from "@/lib/format";
+
+const deadline = PAYMENT_DEADLINE.label;
 
 export const PLANNER_CONTENT = {
   packages: {
@@ -7,20 +11,23 @@ export const PLANNER_CONTENT = {
       line2: "Kemampuan Finansial Anda",
     },
     description:
-      "Seluruh paket domba dipelihara sehat dan sesuai kriteria syar'i. Pilih paket untuk melihat simulasi tabungan per bulannya.",
+      "Seluruh paket domba dipelihara sehat dan sesuai kriteria syar'i. Pilih paket untuk melihat estimasi setorannya.",
   },
   calculator: {
+    label: "Rencanakan Qurbanmu",
     headline: {
-      line1: "Hitung Rencana Tabungan",
-      line2: "Qurban Terbaik Anda",
+      line1: "Simulasikan",
+      line2: "setoran qurbanmu.",
     },
-    description:
-      "Sesuaikan pilihan paket dan bulan mulai menabung untuk melihat estimasi setoran bulanan yang paling nyaman bagi Anda.",
-    encouragement:
-      "Kamu tidak harus menyiapkan semuanya hari ini. Mulai sedikit demi sedikit.",
-  },
-  dailyCost: {
-    headlineSuffix: "Untuk Qurban Terbaik Anda",
+    description: `Pilih domba dan rencana jumlah setoran. Lihat perkiraan nominal tiap setoran hingga lunas paling lambat ${deadline}.`,
+    packageLegend: "Pilih domba",
+    countLegend: "Jumlah setoran",
+    countUnit: "kali",
+    roundingHint: `Nominal dibulatkan ke atas per ${formatRupiah(SAVINGS_PROGRAM.depositRoundingUnit)}; setoran terakhir menyesuaikan sisa harga paket.`,
+    resultLabel: "Estimasi per setoran",
+    disclaimer: `Hanya simulasi perencanaan, bukan jadwal tagihan. Nominal dan waktu setoran tetap fleksibel, minimal ${formatRupiah(SAVINGS_PROGRAM.minDepositAmount)} per setoran.${PAYMENT_DEADLINE.note ? ` ${PAYMENT_DEADLINE.note}` : ""}`,
+    deadline: PAYMENT_DEADLINE.relativeLabel,
+    deadlineDate: `${PAYMENT_DEADLINE.isEstimate ? "±" : ""}${PAYMENT_DEADLINE.dateLabel}`,
   },
   closed: {
     title: `Pendaftaran Tabungan Qurban ${PROGRAM.year} Telah Ditutup`,

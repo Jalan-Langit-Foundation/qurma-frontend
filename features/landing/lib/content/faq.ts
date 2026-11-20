@@ -1,6 +1,6 @@
 import type { AccordionItem } from "@/components/ui/accordion";
 import { PROGRAM } from "@/config/program";
-import { formatYearMonth, SAVINGS_PROGRAM } from "@/features/savings";
+import { PAYMENT_DEADLINE } from "@/features/savings";
 
 export const FAQ_CONTENT = {
   headline: {
@@ -39,7 +39,13 @@ export const FAQ_CONTENT = {
     {
       id: "faq-5",
       question: `Kapan batas akhir waktu pelunasan tabungan qurban untuk periode ${PROGRAM.periodLabel}?`,
-      answer: `Batas akhir pelunasan dana qurban adalah ${formatYearMonth(SAVINGS_PROGRAM.finalPaymentMonth)} (1–2 bulan sebelum Idul Adha). Batas waktu ini diperlukan agar tim logistik dan peternak dapat mengalokasikan dan memelihara hewan qurban Anda dalam kondisi terbaik.`,
+      answer: [
+        `Batas akhir pelunasan dana qurban adalah ${PAYMENT_DEADLINE.label}.`,
+        PAYMENT_DEADLINE.note,
+        "Batas waktu ini diperlukan agar tim logistik dan peternak dapat mengalokasikan dan memelihara hewan qurban Anda dalam kondisi terbaik.",
+      ]
+        .filter(Boolean)
+        .join(" "),
     },
     {
       id: "faq-6",

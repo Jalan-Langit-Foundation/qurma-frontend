@@ -18,4 +18,15 @@ describe("config/program", () => {
     );
     expect(PROGRAM.openingMonth < PROGRAM.finalPaymentMonth).toBe(true);
   });
+
+  it("batas pelunasan = H-10 Iduladha, bulan terakhir mengikutinya", () => {
+    const eid = new Date(`${PROGRAM.eidAlAdhaDate}T00:00:00Z`);
+    const deadline = new Date(`${PROGRAM.paymentDeadlineDate}T00:00:00Z`);
+    const days = (eid.getTime() - deadline.getTime()) / 86_400_000;
+
+    expect(days).toBe(PROGRAM.paymentDeadlineDaysBefore);
+    expect(PROGRAM.finalPaymentMonth).toBe(
+      PROGRAM.paymentDeadlineDate.slice(0, 7),
+    );
+  });
 });

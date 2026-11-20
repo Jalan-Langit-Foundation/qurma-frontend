@@ -1,13 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { MessageCircle } from "lucide-react";
+import { ArrowRight, Info, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CardTitle } from "@/components/ui/card";
-import { FormAlert } from "@/components/ui/form-alert";
 import { SECTION_IDS } from "@/config/navigation";
 import type { QurbanPackage } from "@/features/packages";
-import type { InstallmentPlan } from "@/features/savings";
+import type { DepositPlan } from "@/features/savings";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { PLANNER_CONTENT } from "../../lib/content/planner";
@@ -15,134 +13,142 @@ import type { SavingCta } from "../../lib/saving-cta";
 
 interface CalculatorResultProps {
   selectedPackage: QurbanPackage;
-  plan: InstallmentPlan | null;
-  errorMessage: string | null;
-  deadline: string;
+  plan: DepositPlan | null;
   cta: SavingCta;
 }
 
-function NumberSkeleton({ className }: { className?: string }) {
+function scheduleSummary(plan: DepositPlan) {
+  return plan.depositAmount === plan.lastAmount
+    ? `${plan.depositCount} × ${formatRupiah(plan.depositAmount)}`
+    : `${plan.depositCount - 1} × ${formatRupiah(plan.depositAmount)} + ${formatRupiah(plan.lastAmount)}`;
+}
+
+/** Label ringkas di bawah batang: 270rb, 1jt, 1,495jt (nominal persis untuk pembaca layar). */
+function shortAmount(amount: number) {
+  if (amount >= 1_000_000) {
+    const juta = (amount / 1_000_000).toLocaleString("id-ID", {
+      maximumFractionDigits: 3,
+    });
+    return `${juta}jt`;
+  }
+  return `${Math.round(amount / 1000)}rb`;
+}
+
+/** Urutan setoran sebagai batang bernomor; setoran terakhir diberi warna lain. */
+function DepositBars({ plan }: { plan: DepositPlan }) {
   return (
-    <span
-      className={cn(
-        "inline-block animate-pulse rounded-md bg-slate-200",
-        className,
-      )}
-      aria-hidden="true"
-    />
+    <ol aria-label="Rincian setoran" className="flex gap-1.5 sm:gap-2">
+      {plan.deposits.map((amount, index) => {
+        const isLast = index === plan.deposits.length - 1;
+        return (
+          <li key={index} className="min-w-0 flex-1">
+            <span
+              aria-hidden="true"
+              className={cn(
+                "block h-1.5 rounded-full",
+                isLast ? "bg-brand-sky" : "bg-white",
+              )}
+            />
+            <span className="mt-2 block font-body text-[10px] text-white/60 sm:text-xs">
+              <span className="sr-only">Setoran </span>
+              {index + 1}
+            </span>
+            <span className="block truncate font-heading text-[11px] font-semibold text-white sm:text-sm">
+              <span className="sr-only">{formatRupiah(amount)}</span>
+              <span aria-hidden="true">{shortAmount(amount)}</span>
+            </span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
-function SummaryRow({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-center justify-between">
-      <dt className="text-body">{label}</dt>
-      <dd className="font-heading font-semibold text-ink">{children}</dd>
-    </div>
-  );
-}
-
-/** Kolom kanan kalkulator: hasil simulasi dan tombol aksi. */
+/** Hasil simulasi: panel gelap sebagai fokus utama section. */
 export function CalculatorResult({
   selectedPackage,
   plan,
-  errorMessage,
-  deadline,
   cta,
 }: CalculatorResultProps) {
-  return (
-    <div className="relative z-10 flex flex-col justify-between rounded-b-2xl bg-canvas p-5 sm:p-6 lg:col-span-5 lg:rounded-r-2xl lg:rounded-bl-none lg:p-8">
-      <div className="space-y-4">
-        {errorMessage ? (
-          <FormAlert
-            variant="warning"
-            title="Simulasi belum bisa dihitung"
-            message={errorMessage}
-          />
-        ) : (
-          <div
-            aria-live="polite"
-            className="space-y-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6"
-          >
-            <div>
-              <CardTitle as="h3" size="base">
-                Estimasi Setoran per Bulan
-              </CardTitle>
-              <div className="mt-2 flex flex-wrap items-baseline gap-1.5">
-                {plan ? (
-                  <span className="font-heading text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
-                    {formatRupiah(plan.monthlyAmount)}
-                  </span>
-                ) : (
-                  <NumberSkeleton className="h-8 w-40" />
-                )}
-                <span className="font-body text-xs font-medium text-muted sm:text-sm">
-                  / bulan
-                </span>
-              </div>
-              <p className="mt-1 font-heading text-xs font-semibold text-brand-strong">
-                {plan
-                  ? `Periode ${plan.tenorMonths} bulan (s/d ${deadline})`
-                  : `s/d ${deadline}`}
-              </p>
-            </div>
+  const content = PLANNER_CONTENT.calculator;
 
-            <dl className="space-y-2 border-t border-slate-100 pt-3.5 font-body text-xs sm:text-sm">
-              <SummaryRow label="Target Total:">
-                <span className="font-bold">
-                  {formatRupiah(selectedPackage.target)}
-                </span>
-              </SummaryRow>
-              <SummaryRow label="Setoran Terakhir:">
-                {plan ? (
-                  formatRupiah(plan.lastAmount)
-                ) : (
-                  <NumberSkeleton className="h-4 w-20" />
-                )}
-              </SummaryRow>
-            </dl>
+  return (
+    <div className="flex flex-col justify-between gap-10 rounded-[28px] bg-brand-ink p-6 text-white sm:p-8 lg:p-10">
+      <div aria-live="polite">
+        <p className="font-heading text-xs font-semibold tracking-[0.14em] text-white/70 uppercase">
+          {content.resultLabel}
+        </p>
+        <p className="mt-3 font-heading text-[44px] leading-none font-extrabold tracking-tight tabular-nums sm:text-6xl">
+          {plan ? formatRupiah(plan.depositAmount) : "–"}
+        </p>
+        {plan && (
+          <p className="mt-3 font-body text-sm text-white/80 sm:text-base">
+            {scheduleSummary(plan)}
+          </p>
+        )}
+
+        {plan && (
+          <div className="mt-8">
+            <DepositBars plan={plan} />
           </div>
         )}
 
-        <p className="text-center font-body text-xs leading-relaxed text-body italic sm:text-sm">
-          &ldquo;{PLANNER_CONTENT.calculator.encouragement}&rdquo;
+        <dl className="mt-8 divide-y divide-white/15 border-y border-white/15 font-body text-sm">
+          <div className="flex items-baseline justify-between gap-4 py-3">
+            <dt className="text-white/70">Paket {selectedPackage.name}</dt>
+            <dd className="font-heading font-semibold">
+              {formatRupiah(selectedPackage.target)}
+            </dd>
+          </div>
+          <div className="flex items-baseline justify-between gap-4 py-3">
+            <dt className="text-white/70">Lunas paling lambat</dt>
+            <dd className="text-right">
+              <span className="block font-heading font-semibold">
+                {content.deadline}
+              </span>
+              <span className="block font-body text-xs text-white/60">
+                {content.deadlineDate}
+              </span>
+            </dd>
+          </div>
+        </dl>
+
+        <p className="mt-5 flex gap-2.5 font-body text-xs leading-relaxed text-white/80 sm:text-sm">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          {content.disclaimer}
         </p>
       </div>
 
-      <div className="space-y-2 pt-6">
-        <div className="flex flex-wrap items-center justify-center gap-3">
+      <div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <Button
-            variant="primary"
-            size="md"
+            variant="white"
+            size="lg"
             href={cta.href}
             external={cta.external}
+            srHint={cta.external ? "WhatsApp, tab baru" : undefined}
             leftIcon={
               cta.external ? (
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
               ) : undefined
             }
-            className="px-6 font-bold hover:shadow-md"
+            rightIcon={
+              cta.external ? undefined : (
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              )
+            }
+            className="w-full sm:w-auto"
           >
             {cta.label}
           </Button>
-          <Button
-            variant="outline"
-            size="md"
+          <a
             href={`#${SECTION_IDS.faq}`}
-            className="px-6 font-bold"
+            className="rounded-full px-2 py-2 text-center font-heading text-sm font-semibold text-white/80 underline-offset-4 transition-colors focus-ring hover:text-white hover:underline"
           >
             Pelajari FAQ
-          </Button>
+          </a>
         </div>
-        <p className="text-center font-body text-[11px] text-muted sm:text-xs">
-          {cta.note}
-        </p>
+        <p className="mt-3 font-body text-xs text-white/60">{cta.note}</p>
       </div>
     </div>
   );

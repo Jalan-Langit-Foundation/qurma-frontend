@@ -1,12 +1,7 @@
 import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
 import { ROUTES } from "@/config/navigation";
 import type { QurbanPackage } from "@/features/packages";
-import {
-  formatYearMonth,
-  isSavingRegistrationOpen,
-  type InstallmentPlan,
-  type YearMonth,
-} from "@/features/savings";
+import { isSavingRegistrationOpen, type DepositPlan } from "@/features/savings";
 import { formatRupiah } from "@/lib/format";
 
 export interface SavingCta {
@@ -19,33 +14,32 @@ export interface SavingCta {
 
 export function getSavingCta(
   pkg: QurbanPackage,
-  startMonth: YearMonth | null,
-  plan: InstallmentPlan | null,
+  plan: DepositPlan | null,
 ): SavingCta {
-  if (isSavingRegistrationOpen && startMonth) {
-    const next = `${ROUTES.newSaving}?paket=${pkg.id}&mulai=${startMonth}`;
+  if (isSavingRegistrationOpen) {
+    const next = `${ROUTES.newSaving}?paket=${pkg.id}`;
     return {
       href: `${ROUTES.register}?next=${encodeURIComponent(next)}`,
       external: false,
       label: "Mulai Tabungan",
       shortLabel: "Mulai Tabungan",
-      note: "Buat akun gratis, lalu pantau progres tabungan di dashboard.",
+      note: "Buat akun gratis, lalu lanjutkan pendaftaran tabungan.",
     };
   }
 
   const message = WHATSAPP_MESSAGES.savingPlan({
     packageName: pkg.name,
     target: formatRupiah(pkg.target),
-    startMonth: startMonth ? formatYearMonth(startMonth) : undefined,
-    monthlyAmount: plan ? formatRupiah(plan.monthlyAmount) : undefined,
-    tenorMonths: plan?.tenorMonths,
+    depositCount: plan?.depositCount,
+    depositAmount: plan ? formatRupiah(plan.depositAmount) : undefined,
+    lastAmount: plan ? formatRupiah(plan.lastAmount) : undefined,
   });
 
   return {
     href: buildWhatsappUrl(message),
     external: true,
-    label: "Daftar via WhatsApp",
-    shortLabel: "Daftar via WA",
-    note: "Pendaftaran dibantu langsung oleh admin QURMA melalui WhatsApp.",
+    label: "Konsultasi via WhatsApp",
+    shortLabel: "Konsultasi",
+    note: "Pendaftaran dan instruksi setoran dibantu langsung oleh CS QURMA.",
   };
 }

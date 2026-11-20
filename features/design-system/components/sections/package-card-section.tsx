@@ -33,7 +33,7 @@ export function PackageCardSection({
             key={pkg.id}
             pkg={pkg}
             selected={selectedId === pkg.id}
-            monthlyEstimate={null}
+            depositEstimate={null}
             onSelect={(p) => setSelectedId(p.id)}
             onContinue={(p) => onAction(`Lanjut ke simulasi Paket ${p.name}`)}
           />

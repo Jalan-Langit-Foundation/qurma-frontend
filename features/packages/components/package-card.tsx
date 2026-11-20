@@ -11,7 +11,8 @@ import type { QurbanPackage } from "../lib/types";
 export interface PackageCardProps {
   pkg: QurbanPackage;
   selected?: boolean;
-  monthlyEstimate: number | null;
+  /** Estimasi nominal per setoran sesuai simulasi aktif */
+  depositEstimate: number | null;
   onSelect?: (pkg: QurbanPackage) => void;
   onContinue?: (pkg: QurbanPackage) => void;
   continueLabel?: string;
@@ -20,19 +21,19 @@ export interface PackageCardProps {
 }
 
 const buttonBase =
-  "flex min-h-[42px] w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-heading text-sm leading-none font-bold tracking-normal transition-all duration-200 focus-ring focus-visible:ring-offset-2";
+  "flex min-h-[42px] w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-heading text-sm leading-none font-bold tracking-normal transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2";
 
 export function PackageCard({
   pkg,
   selected = false,
-  monthlyEstimate,
+  depositEstimate,
   onSelect,
   onContinue,
   continueLabel = "Lihat Simulasi",
   disabled = false,
   className,
 }: PackageCardProps) {
-  const features = getPackageFeatures(pkg, monthlyEstimate);
+  const features = getPackageFeatures(pkg, depositEstimate);
 
   const select = () => {
     if (!disabled) onSelect?.(pkg);
@@ -74,11 +75,11 @@ export function PackageCard({
               </span>
             </div>
             <p className="mt-0.5 min-h-[18px] font-heading text-xs font-semibold text-brand-strong">
-              {monthlyEstimate !== null && (
+              {depositEstimate !== null && (
                 <>
-                  Estimasi {formatRupiahRibu(monthlyEstimate, { unit: "rb" })}{" "}
+                  Estimasi {formatRupiahRibu(depositEstimate, { unit: "rb" })}{" "}
                   <span className="font-body font-normal text-muted">
-                    / bulan
+                    / setoran
                   </span>
                 </>
               )}

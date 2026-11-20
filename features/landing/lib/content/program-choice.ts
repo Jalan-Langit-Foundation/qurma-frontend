@@ -1,6 +1,6 @@
 import { SECTION_IDS, sectionHref } from "@/config/navigation";
 import { ALL_PACKAGES } from "@/features/packages";
-import { formatYearMonth, SAVINGS_PROGRAM } from "@/features/savings";
+import { PAYMENT_DEADLINE, SAVINGS_PROGRAM } from "@/features/savings";
 import { formatRupiah } from "@/lib/format";
 
 export interface ProgramFact {
@@ -64,7 +64,7 @@ export const PROGRAM_CHOICE_CONTENT = {
         },
         {
           label: "Lunas paling lambat",
-          value: formatYearMonth(SAVINGS_PROGRAM.finalPaymentMonth),
+          value: PAYMENT_DEADLINE.relativeLabel,
         },
       ],
       cta: {

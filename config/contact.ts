@@ -7,9 +7,9 @@ const PROGRAM = `program ${SITE_CONFIG.programFullName}`;
 export interface SavingPlanMessageDetails {
   packageName: string;
   target: string;
-  startMonth?: string;
-  monthlyAmount?: string;
-  tenorMonths?: number;
+  depositCount?: number;
+  depositAmount?: string;
+  lastAmount?: string;
 }
 
 export interface FullPaymentMessageDetails {
@@ -82,19 +82,22 @@ export const WHATSAPP_MESSAGES = {
   savingPlan: ({
     packageName,
     target,
-    startMonth,
-    monthlyAmount,
-    tenorMonths,
+    depositCount,
+    depositAmount,
+    lastAmount,
   }: SavingPlanMessageDetails) => {
     const lines = [
       `${GREETING} saya ingin mendaftar ${SITE_CONFIG.programFullName}.`,
       "",
       `Paket: ${packageName} (${target})`,
     ];
-    if (startMonth) lines.push(`Mulai menabung: ${startMonth}`);
-    if (monthlyAmount && tenorMonths) {
+    if (depositCount && depositAmount && lastAmount) {
+      const schedule =
+        depositAmount === lastAmount
+          ? `${depositCount} × ${depositAmount}`
+          : `${depositCount - 1} × ${depositAmount} + ${lastAmount}`;
       lines.push(
-        `Estimasi setoran: ${monthlyAmount}/bulan selama ${tenorMonths} bulan`,
+        `Rencana setoran (simulasi): ${depositCount} kali, ${schedule}`,
       );
     }
     lines.push("", "Mohon info langkah pendaftarannya. Terima kasih.");
