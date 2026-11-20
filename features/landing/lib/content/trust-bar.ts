@@ -4,9 +4,9 @@ import {
   HeartHandshake,
   Scale,
   ShieldCheck,
-  Sparkles,
   Target,
   TrendingUp,
+  Weight,
   type LucideIcon,
 } from "lucide-react";
 
@@ -24,5 +24,5 @@ export const TRUST_ITEMS: TrustItem[] = [
   { id: "amanah", label: "Amanah Yayasan", icon: Building2 },
   { id: "tanpa-bunga", label: "Tanpa Bunga & Denda", icon: Scale },
   { id: "pendampingan", label: "Pendampingan Rutin", icon: HeartHandshake },
-  { id: "bobot", label: "Bobot Terjamin", icon: Sparkles },
+  { id: "bobot", label: "Bobot Terjamin", icon: Weight },
 ];

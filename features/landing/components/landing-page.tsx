@@ -7,6 +7,7 @@ import { FinalCtaSection } from "./sections/final-cta-section";
 import { HeroSection } from "./sections/hero-section";
 import { HowItWorksSection } from "./sections/how-it-works-section";
 import { ProblemSection } from "./sections/problem-section";
+import { ProgramChoiceSection } from "./sections/program-choice-section";
 import { TestimonialSection } from "./sections/testimonial-section";
 import { TrustBarSection } from "./sections/trust-bar-section";
 import { ValuePropSection } from "./sections/value-prop-section";
@@ -17,6 +18,7 @@ export function LandingPage() {
       <StructuredData />
       <HeroSection />
       <TrustBarSection />
+      <ProgramChoiceSection />
       <ProblemSection />
       <ValuePropSection />
       <HowItWorksSection />

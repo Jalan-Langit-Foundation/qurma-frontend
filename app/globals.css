@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-heading: var(--font-poppins), "Poppins", system-ui, sans-serif;
-  --font-body: var(--font-lato), "Lato", system-ui, sans-serif;
+  --font-heading:
+    var(--font-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body: var(--font-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
 @theme {
@@ -73,7 +74,8 @@
   /* ---------- Animasi (animate-*) ---------- */
   --animate-slide-down: slide-down-fade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-slide-up: slide-up-fade 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-marquee: marquee 35s linear infinite;
+  /* Trust bar: ±44 px/detik di desktop, ±37 px/detik di ponsel (pelan & terbaca) */
+  --animate-marquee: marquee 90s linear infinite;
   --animate-pop-in: pop-in 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
 
   @keyframes pop-in {

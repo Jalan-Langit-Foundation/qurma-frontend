@@ -1,22 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Lato } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { ScrollToTopOnRefresh } from "@/components/layout";
 import { PageLoader } from "@/components/ui/page-loader";
 import { SITE_CONFIG } from "@/config/site";
 
 import "./globals.css";
 
-const poppins = Poppins({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-poppins",
-  display: "swap",
-});
-
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  variable: "--font-lato",
+  variable: "--font-jakarta",
   display: "swap",
 });
 
@@ -89,7 +81,7 @@ export default function RootLayout({
     <html
       lang="id"
       data-scroll-behavior="smooth"
-      className={`${poppins.variable} ${lato.variable}`}
+      className={jakarta.variable}
       suppressHydrationWarning
     >
       <body className="flex min-h-screen flex-col" suppressHydrationWarning>
