@@ -46,6 +46,7 @@ function readWhatsappNumber(raw: string | undefined): string {
   return number;
 }
 
+/** "true" | "false" | kosong. Nilai lain dianggap salah ketik dan ditolak. */
 function readFlag(name: string, value: string | undefined): boolean {
   if (value === undefined || value === "") return false;
   if (value === "true") return true;
@@ -55,6 +56,7 @@ function readFlag(name: string, value: string | undefined): boolean {
   );
 }
 
+// process.env.NEXT_PUBLIC_* harus ditulis lengkap agar diganti nilainya saat build
 const enableDesignSystemFlag = readFlag(
   "NEXT_PUBLIC_ENABLE_DESIGN_SYSTEM",
   process.env.NEXT_PUBLIC_ENABLE_DESIGN_SYSTEM,
@@ -62,6 +64,10 @@ const enableDesignSystemFlag = readFlag(
 const savingRegistrationOpenFlag = readFlag(
   "NEXT_PUBLIC_SAVING_REGISTRATION_OPEN",
   process.env.NEXT_PUBLIC_SAVING_REGISTRATION_OPEN,
+);
+const showTestimonialsFlag = readFlag(
+  "NEXT_PUBLIC_SHOW_TESTIMONIALS",
+  process.env.NEXT_PUBLIC_SHOW_TESTIMONIALS,
 );
 
 /**
@@ -111,6 +117,9 @@ export const env = {
 
   /** Pendaftaran tabungan online (default tertutup sesuai blueprint) */
   savingRegistrationOpen: savingRegistrationOpenFlag,
+
+  /** Section testimoni (Brief M): nyalakan setelah kutipan asli & izin publikasi lengkap */
+  showTestimonials: showTestimonialsFlag,
 
   features,
 } as const;

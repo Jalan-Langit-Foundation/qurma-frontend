@@ -1,38 +1,56 @@
+import type { StaticImageData } from "next/image";
+import { PROGRAM } from "@/config/program";
+
 export interface Testimonial {
-  id: string;
-  name: string;
-  context: string;
-  quote: string;
+  id: "penerima-manfaat" | "mudhohi";
+  /** Label peran yang tampil, mis. "Penerima Manfaat QURMA 2026" */
+  label: string;
+  /**
+   * Kutipan ASLI (±35–50 kata), tanpa disunting maknanya.
+   * null = belum ada, kartu tampil sebagai placeholder (hanya saat flag aktif).
+   */
+  quote: string | null;
+  /** Nama depan atau inisial sesuai izin */
+  name: string | null;
+  /** Lokasi umum (penerima manfaat) atau tahun partisipasi (mudhohi) */
+  detail: string | null;
+  /** Foto hanya bila benar-benar terkait dan diizinkan */
+  photo: StaticImageData | null;
+  /**
+   * Catatan internal bukti izin publikasi (rekaman/formulir/pesan tertulis).
+   * Tidak ditampilkan; wajib terisi sebelum kutipan dipakai.
+   */
+  consentRef: string | null;
 }
 
+/**
+ * Testimoni (Brief Revisi V1.1, bagian M). Dua kartu statis, tanpa carousel.
+ * Section hanya tampil bila NEXT_PUBLIC_SHOW_TESTIMONIALS=true.
+ * DILARANG mengarang kutipan atau mengubah maknanya (Brief M.3).
+ */
 export const TESTIMONIALS_CONTENT = {
-  headline: {
-    line1: "Pengalaman Nyata Mudhohi",
-    line2: "QURMA Periode Sebelumnya",
-  },
-  description:
-    "Inilah pengalaman nyata dari para mudhohi yang telah merasakan kemudahan dan ketenangan mempersiapkan ibadah qurban bersama kami.",
+  label: "Testimoni",
+  headline: "Cerita Kebaikan yang Sampai",
+  description: `Pengalaman nyata dari penerima manfaat dan mudhohi ${PROGRAM.previousName}, disampaikan dengan izin mereka.`,
+  placeholder: "Menunggu kutipan asli dan izin publikasi.",
   items: [
     {
-      id: "testi-1",
-      name: "dr. Hendra Pratama",
-      context: "Mudhohi QURMA 2026 — Paket Start",
-      quote:
-        "Tahun lalu biasanya saya pusing cari hewan qurban H-3 Idul Adha dengan harga yang sudah melambung tinggi. Dengan program tabungan QURMA, saya bisa persiapkan dari jauh hari dengan nominal yang sangat ringan per bulannya. Laporannya pun sangat rapi dan transparan.",
+      id: "penerima-manfaat",
+      label: `Penerima Manfaat ${PROGRAM.previousName}`,
+      quote: null,
+      name: null,
+      detail: null,
+      photo: null,
+      consentRef: null,
     },
     {
-      id: "testi-2",
-      name: "Ibu Rahmawati & Keluarga",
-      context: "Mudhohi QURMA 2026 — Paket Plus",
-      quote:
-        "Alhamdulillah, kami sekeluarga merasa sangat terbantu. Dashboard-nya jelas, ada notifikasi WhatsApp yang mengingatkan dengan santun, dan pas hari H kami menerima foto domba serta pembagian dagingnya kepada warga yang benar-benar membutuhkan.",
-    },
-    {
-      id: "testi-3",
-      name: "Bpk. Budi Santoso",
-      context: "Mudhohi QURMA 2026 — Paket Premium",
-      quote:
-        "Ibadah qurban jadi jauh lebih tenang. Tanpa terasa dana sudah terkumpul penuh saat mendekati bulan Dzulhijjah. Bobot dombanya pun sesuai janji bahkan melebihi ekspektasi kami. Sangat recommended bagi yang ingin disiplin berqurban.",
+      id: "mudhohi",
+      label: `Mudhohi ${PROGRAM.previousName}`,
+      quote: null,
+      name: null,
+      detail: null,
+      photo: null,
+      consentRef: null,
     },
   ] satisfies Testimonial[],
 } as const;

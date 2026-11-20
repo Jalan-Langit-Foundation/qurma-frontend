@@ -1,69 +1,120 @@
 import * as React from "react";
-import { Quote, Star } from "lucide-react";
-import { SectionHeader } from "@/components/ui/section-header";
+import Image from "next/image";
+import { env } from "@/config/env";
 import { SECTION_IDS } from "@/config/navigation";
-import { TESTIMONIALS_CONTENT } from "../../lib/content/testimonials";
+import { cn } from "@/lib/utils";
+import {
+  TESTIMONIALS_CONTENT,
+  type Testimonial,
+} from "../../lib/content/testimonials";
 import { LandingSection } from "../landing-section";
 
-const RATING = 5;
+function TestimonialCard({
+  item,
+  tone,
+}: {
+  item: Testimonial;
+  tone: "light" | "dark";
+}) {
+  const dark = tone === "dark";
 
-export function TestimonialSection() {
-  const { items } = TESTIMONIALS_CONTENT;
-
-  if (items.length === 0) return null;
+  // Placeholder hanya untuk pratinjau staging; produksi menunggu flag dinyalakan
+  if (!item.quote) {
+    return (
+      <figure className="flex w-full flex-col justify-between rounded-[28px] border-2 border-dashed border-line p-6 sm:p-8 lg:p-10">
+        <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
+          {item.label}
+        </p>
+        <p className="mt-10 font-body text-sm text-muted">
+          {TESTIMONIALS_CONTENT.placeholder}
+        </p>
+      </figure>
+    );
+  }
 
   return (
-    <LandingSection
-      id={SECTION_IDS.testimonials}
-      label="Pengalaman mudhohi QURMA 2026"
-      tone="soft"
-      glow={{ size: "lg", intensity: "soft" }}
-      className="py-14 sm:py-20 lg:py-24"
+    <figure
+      className={cn(
+        "flex w-full flex-col justify-between rounded-[28px] p-6 sm:p-8 lg:p-10",
+        dark ? "bg-brand-ink text-white" : "bg-surface text-ink",
+      )}
     >
-      <SectionHeader
-        headline={TESTIMONIALS_CONTENT.headline}
-        description={TESTIMONIALS_CONTENT.description}
-        align="center"
-        className="mb-12 sm:mb-16"
-      />
+      <div>
+        <span
+          aria-hidden="true"
+          className={cn(
+            "block font-heading text-7xl leading-[0.6] font-extrabold",
+            dark ? "text-brand-sky" : "text-brand",
+          )}
+        >
+          &ldquo;
+        </span>
+        <blockquote className="mt-6 font-heading text-lg leading-snug font-medium tracking-tight text-balance sm:text-xl lg:text-2xl">
+          {item.quote}
+        </blockquote>
+      </div>
 
-      <ul className="grid w-full grid-cols-1 items-stretch gap-6 md:grid-cols-3 lg:gap-8">
-        {items.map((testimonial) => (
-          <li key={testimonial.id} className="flex">
-            <figure className="flex w-full flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-6 shadow-xs transition-shadow hover:shadow-md sm:p-7">
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
-                    <Quote className="h-5 w-5 fill-brand" aria-hidden="true" />
-                  </div>
-                  <div
-                    className="flex items-center gap-1"
-                    role="img"
-                    aria-label={`Rating ${RATING} dari 5`}
-                  >
-                    {Array.from({ length: RATING }, (_, i) => (
-                      <Star
-                        key={i}
-                        className="h-4 w-4 fill-amber-400 text-amber-400"
-                        aria-hidden="true"
-                      />
-                    ))}
-                  </div>
-                </div>
-                <blockquote className="font-body text-sm leading-relaxed text-body italic">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </blockquote>
-              </div>
+      <figcaption
+        className={cn(
+          "mt-10 flex items-center gap-4 border-t pt-6",
+          dark ? "border-white/15" : "border-line",
+        )}
+      >
+        {item.photo && (
+          <Image
+            src={item.photo}
+            alt=""
+            sizes="48px"
+            className="h-12 w-12 shrink-0 rounded-full object-cover"
+          />
+        )}
+        <div className="min-w-0">
+          {item.name && (
+            <p className="font-heading text-base font-bold">{item.name}</p>
+          )}
+          <p
+            className={cn(
+              "mt-0.5 font-body text-sm",
+              dark ? "text-white/70" : "text-muted",
+            )}
+          >
+            {[item.label, item.detail].filter(Boolean).join(" · ")}
+          </p>
+        </div>
+      </figcaption>
+    </figure>
+  );
+}
 
-              <figcaption className="mt-6 border-t border-slate-100 pt-6">
-                <p className="font-heading text-sm font-bold text-ink sm:text-base">
-                  {testimonial.name}
-                </p>
-                <p className="mt-0.5 font-body text-xs font-medium text-brand-strong">
-                  {testimonial.context}
-                </p>
-              </figcaption>
-            </figure>
+/** "Cerita Kebaikan yang Sampai": 2 kartu statis, tersembunyi sampai flag aktif. */
+export function TestimonialSection() {
+  if (!env.showTestimonials) return null;
+
+  const { label, headline, description, items } = TESTIMONIALS_CONTENT;
+
+  return (
+    <LandingSection id={SECTION_IDS.testimonials} label={headline} tone="white">
+      <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr] lg:items-end lg:gap-16">
+        <div>
+          <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
+            {label}
+          </p>
+          <h2 className="mt-3 font-heading text-[34px] leading-[1.05] font-bold tracking-tight text-balance text-ink sm:text-5xl lg:text-[54px]">
+            {headline}
+          </h2>
+        </div>
+        <p className="max-w-md font-body text-base leading-relaxed text-body lg:pb-2">
+          {description}
+        </p>
+      </div>
+
+      <ul className="mt-10 grid grid-cols-1 gap-4 sm:mt-14 md:grid-cols-2 lg:gap-6">
+        {items.map((item, index) => (
+          <li key={item.id} className="flex">
+            <TestimonialCard
+              item={item}
+              tone={index % 2 === 0 ? "light" : "dark"}
+            />
           </li>
         ))}
       </ul>

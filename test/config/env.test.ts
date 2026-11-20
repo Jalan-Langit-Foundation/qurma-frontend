@@ -45,6 +45,17 @@ describe("config/env", () => {
     expect(Object.values(env.features).every((on) => on === false)).toBe(true);
   });
 
+  it("testimoni default disembunyikan, bisa dinyalakan lewat flag", async () => {
+    const hidden = await loadEnv({ NEXT_PUBLIC_SITE_URL: "https://qurma.id" });
+    expect(hidden.showTestimonials).toBe(false);
+
+    const shown = await loadEnv({
+      NEXT_PUBLIC_SITE_URL: "https://qurma.id",
+      NEXT_PUBLIC_SHOW_TESTIMONIALS: "true",
+    });
+    expect(shown.showTestimonials).toBe(true);
+  });
+
   it("fitur bisa dinyalakan satu per satu", async () => {
     const env = await loadEnv({
       NEXT_PUBLIC_SITE_URL: "https://qurma.id",

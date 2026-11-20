@@ -22,10 +22,10 @@ export function LandingPage() {
       <ProgramChoiceSection />
       <TunaikanSection />
       <WhyQurmaSection />
+      <TestimonialSection />
       <ValuePropSection />
       <HowItWorksSection />
       <SavingPlanner />
-      <TestimonialSection />
       <FaqSection />
       <FinalCtaSection />
       <StickyCtaSpacer />
