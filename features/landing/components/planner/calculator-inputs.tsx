@@ -10,6 +10,7 @@ import {
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { PLANNER_CONTENT } from "../../lib/content/planner";
+import { IndexNumber } from "../section-intro";
 
 interface CalculatorInputsProps {
   packages: readonly QurbanPackage[];
@@ -23,7 +24,6 @@ const COUNT_OPTIONS = SAVINGS_PROGRAM.depositCountOptions;
 const minCount = COUNT_OPTIONS[0];
 const maxCount = COUNT_OPTIONS[COUNT_OPTIONS.length - 1] ?? minCount;
 
-/** Judul grup input bernomor, gaya editorial (01 / 02). */
 function Legend({
   index,
   children,
@@ -35,18 +35,12 @@ function Legend({
 }) {
   return (
     <Tag className="flex items-baseline gap-3 font-heading text-base font-bold text-ink">
-      <span
-        aria-hidden="true"
-        className="text-xs font-semibold text-brand tabular-nums"
-      >
-        {String(index).padStart(2, "0")}
-      </span>
+      <IndexNumber value={index} />
       {children}
     </Tag>
   );
 }
 
-/** Kartu radio: input asli tetap ada (keyboard & pembaca layar), tampil lewat label. */
 const optionClass =
   "relative flex cursor-pointer rounded-2xl border bg-white transition-colors duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2";
 

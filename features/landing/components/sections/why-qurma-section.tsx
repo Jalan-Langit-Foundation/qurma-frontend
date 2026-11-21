@@ -4,18 +4,19 @@ import { Plus } from "lucide-react";
 import { SECTION_IDS } from "@/config/navigation";
 import { WHY_QURMA_CONTENT } from "../../lib/content/why-qurma";
 import { LandingSection } from "../landing-section";
-import { Eyebrow, SectionIntro } from "../section-intro";
+import { Eyebrow, IndexNumber, SectionIntro } from "../section-intro";
 
 const numberFormat = new Intl.NumberFormat("id-ID");
 const pad = (n: number) => String(n).padStart(2, "0");
 
+/** Angka dampak + wilayah, sejajar tinggi foto di desktop. */
 function ImpactPanel() {
   const { impact } = WHY_QURMA_CONTENT;
 
   return (
     <div className="flex flex-col justify-between gap-10 rounded-[28px] bg-surface p-6 sm:p-8 lg:p-10">
       <div>
-        <p className="font-heading text-[88px] leading-[0.85] font-extrabold tracking-tighter text-brand tabular-nums sm:text-[120px] lg:text-[136px]">
+        <p className="font-heading text-[88px] leading-[0.85] font-extrabold tracking-tighter text-brand-hover tabular-nums sm:text-[120px] lg:text-[136px]">
           {numberFormat.format(impact.value)}
         </p>
         <p className="mt-4 font-heading text-lg font-bold text-ink sm:text-xl">
@@ -49,6 +50,7 @@ function ImpactPanel() {
   );
 }
 
+/** Cerita lengkap: panel buka-tutup selebar konten, isi 4 bab berdampingan. */
 function FullStory() {
   const { toggleLabel, chapters } = WHY_QURMA_CONTENT.story;
 
@@ -69,12 +71,7 @@ function FullStory() {
       <ol className="grid gap-8 pt-4 pb-10 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4">
         {chapters.map((chapter, index) => (
           <li key={chapter.title} className="border-t border-line pt-5">
-            <span
-              aria-hidden="true"
-              className="font-heading text-xs font-semibold text-brand tabular-nums"
-            >
-              {pad(index + 1)}
-            </span>
+            <IndexNumber value={index + 1} />
             <h3 className="mt-2 font-heading text-base font-bold text-ink">
               {chapter.title}
             </h3>
@@ -88,6 +85,7 @@ function FullStory() {
   );
 }
 
+/** "Mengapa QURMA Hadir?": foto, angka dampak 2026, narasi singkat (Brief L). */
 export function WhyQurmaSection() {
   const { label, headline, description, photo } = WHY_QURMA_CONTENT;
 

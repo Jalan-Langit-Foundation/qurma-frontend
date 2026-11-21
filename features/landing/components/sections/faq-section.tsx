@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
 import { FAQ_CONTENT } from "../../lib/content/faq";
 import { LandingSection } from "../landing-section";
-import { SectionIntro } from "../section-intro";
+import { IndexNumber, SectionIntro } from "../section-intro";
 
 const groupAnchor = (id: string) => `faq-${id}`;
 
@@ -78,12 +78,7 @@ export function FaqSection() {
                   id={headingId}
                   className="mb-4 flex items-baseline gap-3 font-heading text-lg font-bold text-ink sm:text-xl"
                 >
-                  <span
-                    aria-hidden="true"
-                    className="font-heading text-xs font-semibold text-brand tabular-nums"
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
+                  <IndexNumber value={index + 1} />
                   {group.label}
                 </h3>
                 <Accordion items={group.items} headingAs="h4" />

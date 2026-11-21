@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/container";
 import { sectionHref, SECTION_IDS } from "@/config/navigation";
 import { TUNAIKAN_CONTENT } from "../lib/content/tunaikan";
 import { DombaCard } from "./domba-card";
-import { Eyebrow } from "./section-intro";
+import { Eyebrow, IndexNumber } from "./section-intro";
 
 export function TunaikanPage() {
   const {
@@ -84,13 +84,11 @@ export function TunaikanPage() {
             <Eyebrow as="h2">{stepsLabel}</Eyebrow>
             <ol className="mt-4 divide-y divide-line border-y border-line">
               {steps.map((step, index) => (
-                <li key={step.title} className="flex gap-5 py-4">
-                  <span
-                    aria-hidden="true"
-                    className="pt-0.5 font-heading text-sm font-bold text-brand tabular-nums"
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
+                <li key={step.title} className="flex items-baseline gap-5 py-4">
+                  <IndexNumber
+                    value={index + 1}
+                    className="text-sm font-bold"
+                  />
                   <div>
                     <p className="font-heading text-base font-bold text-ink">
                       {step.title}

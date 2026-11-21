@@ -76,6 +76,17 @@
   --animate-slide-up: slide-up-fade 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-marquee: marquee 35s linear infinite;
   --animate-pop-in: pop-in 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* Masuk halus tanpa menyembunyikan konten (aman untuk LCP) */
+  --animate-rise-in: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes rise-in {
+    from {
+      transform: translateY(24px);
+    }
+    to {
+      transform: none;
+    }
+  }
 
   @keyframes pop-in {
     from {

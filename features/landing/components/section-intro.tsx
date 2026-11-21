@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+/** Judul satu baris, atau dua baris dengan baris kedua berwarna brand. */
 export type Headline = string | { line1: string; line2?: string };
 
 interface EyebrowProps {
@@ -26,6 +27,26 @@ export function Eyebrow({
     >
       {children}
     </Tag>
+  );
+}
+
+interface IndexNumberProps {
+  /** Urutan mulai dari 1; ditampilkan dua digit: 01, 02, … */
+  value: number;
+  className?: string;
+}
+
+export function IndexNumber({ value, className }: IndexNumberProps) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "shrink-0 font-heading text-xs font-semibold text-brand-strong tabular-nums",
+        className,
+      )}
+    >
+      {String(value).padStart(2, "0")}
+    </span>
   );
 }
 

@@ -38,7 +38,7 @@ function DepositBars({ plan }: { plan: DepositPlan }) {
                 isLast ? "bg-brand-sky" : "bg-white",
               )}
             />
-            <span className="mt-2 block font-body text-[10px] text-white/60 sm:text-xs">
+            <span className="mt-2 block font-body text-[10px] text-white/70 sm:text-xs">
               <span className="sr-only">Setoran </span>
               {index + 1}
             </span>
@@ -94,7 +94,7 @@ export function CalculatorResult({
               <span className="block font-heading font-semibold">
                 {content.deadline}
               </span>
-              <span className="block font-body text-xs text-white/60">
+              <span className="block font-body text-xs text-white/70">
                 {content.deadlineDate}
               </span>
             </dd>
@@ -136,7 +136,7 @@ export function CalculatorResult({
             Pelajari FAQ
           </a>
         </div>
-        <p className="mt-3 font-body text-xs text-white/60">{cta.note}</p>
+        <p className="mt-3 font-body text-xs text-white/70">{cta.note}</p>
       </div>
     </div>
   );

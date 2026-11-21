@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
 import { TERMS_SUMMARY_CONTENT } from "../../lib/content/terms-summary";
 import { LandingSection } from "../landing-section";
-import { SectionIntro } from "../section-intro";
+import { IndexNumber, SectionIntro } from "../section-intro";
 
 export function TermsSummarySection() {
   const { label, headline, status, points, link } = TERMS_SUMMARY_CONTENT;
@@ -32,13 +32,11 @@ export function TermsSummarySection() {
         <div>
           <ol className="divide-y divide-line border-y border-line">
             {points.map((point, index) => (
-              <li key={point} className="flex gap-5 py-4 sm:py-5">
-                <span
-                  aria-hidden="true"
-                  className="pt-0.5 font-heading text-xs font-semibold text-brand tabular-nums"
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
+              <li
+                key={point}
+                className="flex items-baseline gap-5 py-4 sm:py-5"
+              >
+                <IndexNumber value={index + 1} />
                 <p className="font-body text-sm leading-relaxed text-ink sm:text-base">
                   {point}
                 </p>
