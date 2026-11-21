@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SECTION_IDS, sectionHref } from "@/config/navigation";
+import { ROUTES, SECTION_IDS, sectionHref } from "@/config/navigation";
 import { PROGRAM_CHOICE_CONTENT } from "@/features/landing/lib/content/program-choice";
 
 describe("pilihan program (Brief V1.1 bagian B & C.2)", () => {
@@ -14,7 +14,7 @@ describe("pilihan program (Brief V1.1 bagian B & C.2)", () => {
 
   it("tombol mengarah ke section yang ada di beranda", () => {
     expect(items.map((item) => [item.cta.label, item.cta.href])).toEqual([
-      ["Lihat Pilihan Domba", sectionHref(SECTION_IDS.fullPayment)],
+      ["Lihat Pilihan Domba", ROUTES.fullPayment],
       ["Simulasi Tabungan", sectionHref(SECTION_IDS.simulation)],
     ]);
   });

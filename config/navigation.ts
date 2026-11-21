@@ -1,5 +1,6 @@
 import type { FeatureName } from "./env";
 import type { NavLink } from "@/types/navigation";
+import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "./contact";
 import { SITE_CONFIG } from "./site";
 
 export const ROUTES = {
@@ -13,6 +14,7 @@ export const ROUTES = {
   report: (id: number | string) => `/report/${id}`,
   account: "/akun",
   terms: "/syarat-ketentuan",
+  fullPayment: "/tunaikan-qurbanmu",
   transactions: "/transaksi",
   receipt: (transactionId: number | string) => `/kwitansi/${transactionId}`,
 } as const;
@@ -32,13 +34,13 @@ export const GUEST_ONLY_ROUTES = [ROUTES.login, ROUTES.register] as const;
 export const SECTION_IDS = {
   hero: "hero",
   programChoice: "pilih-cara-berqurban",
-  fullPayment: "tunaikan-qurbanmu",
   whyQurma: "mengapa-qurma",
-  valueProps: "nilai-tambah",
-  howItWorks: "cara-kerja",
+  testimonials: "testimoni",
   packages: "paket",
   simulation: "simulasi",
-  testimonials: "testimoni",
+  registrationFlow: "alur-pendaftaran",
+  documentation: "dokumentasi",
+  termsSummary: "ringkasan-ketentuan",
   faq: "faq",
   contact: "kontak",
   legal: "legalitas",
@@ -49,15 +51,17 @@ export type SectionId = (typeof SECTION_IDS)[keyof typeof SECTION_IDS];
 export const sectionHref = (id: SectionId) => `/#${id}`;
 
 export const NAVBAR_LINKS: NavLink[] = [
-  { label: "Cara Kerja", href: sectionHref(SECTION_IDS.howItWorks) },
-  { label: "Paket Qurban", href: sectionHref(SECTION_IDS.packages) },
+  { label: "Mengapa QURMA", href: sectionHref(SECTION_IDS.whyQurma) },
+  { label: "Paket", href: sectionHref(SECTION_IDS.packages) },
   { label: "Simulasi", href: sectionHref(SECTION_IDS.simulation) },
+  { label: "Alur Daftar", href: sectionHref(SECTION_IDS.registrationFlow) },
   { label: "FAQ", href: sectionHref(SECTION_IDS.faq) },
 ];
 
 export const NAVBAR_CTA: NavLink = {
-  label: "Mulai Menabung",
-  href: sectionHref(SECTION_IDS.packages),
+  label: "Konsultasi",
+  href: buildWhatsappUrl(WHATSAPP_MESSAGES.consultation),
+  external: true,
 };
 
 export const NAVBAR_MEMBER_CTA: NavLink = {

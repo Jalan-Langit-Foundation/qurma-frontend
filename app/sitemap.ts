@@ -10,6 +10,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${SITE_CONFIG.url}${ROUTES.fullPayment}`,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${SITE_CONFIG.url}${ROUTES.terms}`,
       changeFrequency: "monthly",
       priority: 0.3,

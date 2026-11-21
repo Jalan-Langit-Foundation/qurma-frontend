@@ -1,4 +1,4 @@
-import { SECTION_IDS, sectionHref } from "@/config/navigation";
+import { ROUTES, SECTION_IDS, sectionHref } from "@/config/navigation";
 import { ALL_PACKAGES } from "@/features/packages";
 import { PAYMENT_DEADLINE, SAVINGS_PROGRAM } from "@/features/savings";
 import { formatRupiah } from "@/lib/format";
@@ -46,7 +46,7 @@ export const PROGRAM_CHOICE_CONTENT = {
       ],
       cta: {
         label: "Lihat Pilihan Domba",
-        href: sectionHref(SECTION_IDS.fullPayment),
+        href: ROUTES.fullPayment,
       },
     },
     {

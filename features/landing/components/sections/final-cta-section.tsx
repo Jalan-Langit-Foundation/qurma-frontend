@@ -12,7 +12,7 @@ export function FinalCtaSection() {
   return (
     <LandingSection
       id={SECTION_IDS.contact}
-      label="Ajakan memulai tabungan qurban"
+      label="Konsultasi dengan CS QURMA"
       tone="soft"
       glow={{ layout: "center", intensity: "accent", size: "xl" }}
       className="py-14 sm:py-20 lg:py-24"
@@ -45,8 +45,10 @@ export function FinalCtaSection() {
             variant="white"
             size="lg"
             href={primaryCta.href}
-            rightIcon={
-              <ArrowRight
+            external
+            srHint="WhatsApp, tab baru"
+            leftIcon={
+              <MessageCircle
                 className="h-4 w-4 text-brand-strong"
                 aria-hidden="true"
               />
@@ -60,8 +62,7 @@ export function FinalCtaSection() {
             variant="outline"
             size="lg"
             href={secondaryCta.href}
-            external
-            leftIcon={<MessageCircle className="h-4 w-4" aria-hidden="true" />}
+            rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
             className="w-full border-white/40 text-white hover:border-white hover:bg-white/15 sm:w-auto"
           >
             {secondaryCta.label}

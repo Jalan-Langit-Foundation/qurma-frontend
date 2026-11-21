@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Coins, LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   NAVBAR_CTA,
@@ -19,9 +19,9 @@ type NavClickHandler = (
 
 const variantStyles = {
   desktop: {
-    list: "m-0 hidden h-full list-none items-center gap-4 p-0 md:flex lg:gap-6 xl:gap-7",
+    list: "m-0 hidden h-full list-none items-center gap-3 p-0 md:flex lg:gap-6 xl:gap-7",
     item: "flex h-full items-center",
-    link: "inline-flex items-center rounded-md px-1 py-2 leading-none",
+    link: "inline-flex items-center rounded-md px-1 py-2 leading-none whitespace-nowrap",
   },
   mobile: {
     list: "m-0 flex list-none flex-col gap-1 p-0",
@@ -58,7 +58,7 @@ export function NavLinks({
               className={cn(
                 styles.link,
                 "font-heading text-sm font-medium transition-colors duration-200",
-                "hover:text-brand-strong focus-ring",
+                "hover:text-brand-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
                 active ? "text-brand-strong" : "text-body",
               )}
             >
@@ -85,7 +85,7 @@ export function NavbarCta({
   buttonClassName,
 }: NavbarCtaProps) {
   const cta = isLoggedIn ? NAVBAR_MEMBER_CTA : NAVBAR_CTA;
-  const Icon = isLoggedIn ? LayoutDashboard : Coins;
+  const Icon = isLoggedIn ? LayoutDashboard : MessageCircle;
 
   return (
     <div
@@ -96,12 +96,9 @@ export function NavbarCta({
         variant="primary"
         size="md"
         href={cta.href}
-        leftIcon={
-          <Icon
-            className={cn("h-4 w-4 text-white", !isLoggedIn && "fill-white")}
-            aria-hidden="true"
-          />
-        }
+        external={cta.external}
+        srHint={cta.external ? "WhatsApp, tab baru" : undefined}
+        leftIcon={<Icon className="h-4 w-4 text-white" aria-hidden="true" />}
         className={cn(
           "font-semibold shadow-sm transition-all hover:shadow-md",
           buttonClassName,
