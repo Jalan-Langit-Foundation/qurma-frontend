@@ -37,7 +37,6 @@ function TermsItemContent({ item }: { item: TermsItem }) {
   );
 }
 
-/** Halaman Syarat & Ketentuan: judul besar di tengah, lalu bagian bernomor. */
 export function TermsPage({ terms }: { terms: TermsDocument }) {
   return (
     <div className="bg-white">
@@ -50,6 +49,12 @@ export function TermsPage({ terms }: { terms: TermsDocument }) {
           <p className="font-heading text-sm font-medium text-body sm:text-base">
             Terakhir diperbarui: {formatTanggal(terms.updatedAt)}
           </p>
+
+          {terms.draftNote && (
+            <p className="max-w-xl rounded-2xl border border-line bg-surface px-4 py-3 font-body text-sm leading-relaxed text-body">
+              {terms.draftNote}
+            </p>
+          )}
         </header>
 
         <div className="mx-auto mt-14 max-w-3xl space-y-14 sm:mt-16 sm:space-y-16">
@@ -94,7 +99,7 @@ export function TermsPage({ terms }: { terms: TermsDocument }) {
             <p className="font-heading text-lg font-medium text-ink">
               Ada yang belum jelas?
               <span className="block text-base font-normal text-muted">
-                Tanyakan langsung ke admin QURMA.
+                Tanyakan langsung ke CS QURMA.
               </span>
             </p>
             <WhatsappLink
@@ -105,7 +110,7 @@ export function TermsPage({ terms }: { terms: TermsDocument }) {
               })}
             >
               <MessageCircle className="h-4 w-4" aria-hidden="true" />
-              Tanya admin
+              Tanya CS QURMA
             </WhatsappLink>
           </div>
         </div>

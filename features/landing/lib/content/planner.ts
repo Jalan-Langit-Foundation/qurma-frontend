@@ -32,6 +32,6 @@ export const PLANNER_CONTENT = {
   closed: {
     title: `Pendaftaran Tabungan Qurban ${PROGRAM.year} Telah Ditutup`,
     description:
-      "Batas pelunasan program sudah terlewati. Hubungi admin QURMA via WhatsApp untuk informasi program berikutnya.",
+      "Batas pelunasan program sudah terlewati. Hubungi CS QURMA via WhatsApp untuk informasi program berikutnya.",
   },
 } as const;

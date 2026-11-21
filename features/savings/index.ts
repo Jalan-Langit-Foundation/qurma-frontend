@@ -1,6 +1,7 @@
 // Aturan program
 export { isSavingRegistrationOpen, SAVINGS_PROGRAM } from "./lib/program";
 export { PAYMENT_DEADLINE } from "./lib/payment-deadline";
+export { SAVINGS_POLICY } from "./lib/policy";
 
 // Bulan
 export { formatYearMonth, formatYearMonthShort } from "./lib/year-month";

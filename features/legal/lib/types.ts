@@ -16,6 +16,7 @@ export interface TermsDocument {
   title: string;
   updatedAt: string;
   isDraft: boolean;
+  draftNote?: string | null;
   intro: string;
   sections: TermsSection[];
 }

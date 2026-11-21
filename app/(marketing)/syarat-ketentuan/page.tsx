@@ -5,7 +5,7 @@ import { TERMS, TermsPage } from "@/features/legal";
 
 export const metadata: Metadata = {
   title: TERMS.title,
-  description: `Syarat & Ketentuan program ${PROGRAM.fullName}: akun, setoran, pelunasan, pembatalan, pelaksanaan qurban, dan privasi data.`,
+  description: `Syarat & Ketentuan program ${PROGRAM.name}: pendaftaran, pembayaran, setoran, pembatalan, pelaksanaan qurban, dan privasi data.`,
   alternates: { canonical: ROUTES.terms },
 };
 

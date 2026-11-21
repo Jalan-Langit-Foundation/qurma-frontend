@@ -22,10 +22,12 @@ export const SITE_CONFIG = {
   tagline: "#BergandenganLangitkanKebaikan",
   url: env.siteUrl,
   foundationUrl: "https://www.jalanlangitfoundation.id",
-  description: `Qurban Nggak Harus Menunggu. Bisa Dipersiapkan dari Sekarang. Program pendampingan tabungan qurban ${PROGRAM.periodLabel} yang terencana, transparan, dan terpercaya bersama Yayasan Jalan Langit.`,
+  description: `${PROGRAM.name} bersama Jalan Langit Foundation: Tunaikan Qurbanmu dengan bayar penuh, atau Rencanakan Qurbanmu lewat tabungan bertahap menuju Iduladha ${PROGRAM.year}.`,
   foundationSummary:
     "Menggerakkan kebaikan menjadi manfaat nyata bagi masyarakat melalui program sosial, pendidikan, kemanusiaan, dan pemberdayaan.",
   keywords: [
+    "Tunaikan Qurbanmu",
+    "Rencanakan Qurbanmu",
     "Tabungan Qurban",
     PROGRAM.name,
     `Qurban ${PROGRAM.hijriLabel}`,
