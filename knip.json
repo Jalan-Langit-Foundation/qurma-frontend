@@ -5,5 +5,10 @@
     "test/**/*.test.ts"
   ],
   "project": ["**/*.{ts,tsx}"],
-  "ignoreDependencies": ["tailwindcss", "@tailwindcss/turbopack"]
+  "ignore": ["next-env.d.ts"],
+  "ignoreDependencies": ["tailwindcss", "@tailwindcss/turbopack"],
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  }
 }

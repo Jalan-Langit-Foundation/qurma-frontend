@@ -1,9 +1,9 @@
+import { PROGRAM_TIME_ZONE } from "@/lib/clock";
 import { formatBulanTahun } from "@/lib/format";
 
 export type YearMonth = `${number}-${string}`;
 
 const YEAR_MONTH_PATTERN = /^(\d{4})-(0[1-9]|1[0-2])$/;
-const PROGRAM_TIME_ZONE = "Asia/Jakarta";
 
 export function isYearMonth(value: unknown): value is YearMonth {
   return typeof value === "string" && YEAR_MONTH_PATTERN.test(value);
@@ -61,13 +61,11 @@ const SHORT_MONTH_FORMAT = new Intl.DateTimeFormat("id-ID", {
   timeZone: "UTC",
 });
 
-/** "2026-10" → "Okt" (nama bulan singkat untuk grafik & label sempit) */
 function formatMonthShort(value: YearMonth): string {
   const { year, month } = parse(value);
   return SHORT_MONTH_FORMAT.format(new Date(Date.UTC(year, month - 1, 1)));
 }
 
-/** "2026-10" → "Okt 2026" */
 export function formatYearMonthShort(value: YearMonth): string {
   return `${formatMonthShort(value)} ${parse(value).year}`;
 }

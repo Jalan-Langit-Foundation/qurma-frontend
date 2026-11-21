@@ -8,6 +8,7 @@ import {
   type Testimonial,
 } from "../../lib/content/testimonials";
 import { LandingSection } from "../landing-section";
+import { Eyebrow, SectionIntro } from "../section-intro";
 
 function TestimonialCard({
   item,
@@ -18,13 +19,10 @@ function TestimonialCard({
 }) {
   const dark = tone === "dark";
 
-  // Placeholder hanya untuk pratinjau staging; produksi menunggu flag dinyalakan
   if (!item.quote) {
     return (
       <figure className="flex w-full flex-col justify-between rounded-[28px] border-2 border-dashed border-line p-6 sm:p-8 lg:p-10">
-        <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-          {item.label}
-        </p>
+        <Eyebrow>{item.label}</Eyebrow>
         <p className="mt-10 font-body text-sm text-muted">
           {TESTIMONIALS_CONTENT.placeholder}
         </p>
@@ -86,7 +84,6 @@ function TestimonialCard({
   );
 }
 
-/** "Cerita Kebaikan yang Sampai": 2 kartu statis, tersembunyi sampai flag aktif. */
 export function TestimonialSection() {
   if (!env.showTestimonials) return null;
 
@@ -94,19 +91,11 @@ export function TestimonialSection() {
 
   return (
     <LandingSection id={SECTION_IDS.testimonials} label={headline} tone="white">
-      <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr] lg:items-end lg:gap-16">
-        <div>
-          <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-            {label}
-          </p>
-          <h2 className="mt-3 font-heading text-[34px] leading-[1.05] font-bold tracking-tight text-balance text-ink sm:text-5xl lg:text-[54px]">
-            {headline}
-          </h2>
-        </div>
-        <p className="max-w-md font-body text-base leading-relaxed text-body lg:pb-2">
-          {description}
-        </p>
-      </div>
+      <SectionIntro
+        label={label}
+        headline={headline}
+        description={description}
+      />
 
       <ul className="mt-10 grid grid-cols-1 gap-4 sm:mt-14 md:grid-cols-2 lg:gap-6">
         {items.map((item, index) => (

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
 import { REGISTRATION_FLOW_CONTENT } from "../../lib/content/registration-flow";
 import { LandingSection } from "../landing-section";
+import { SectionIntro } from "../section-intro";
 
 export function RegistrationFlowSection() {
   const { label, headline, description, steps, cta, note } =
@@ -11,20 +12,11 @@ export function RegistrationFlowSection() {
 
   return (
     <LandingSection id={SECTION_IDS.registrationFlow} label={label} tone="soft">
-      <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr] lg:items-end lg:gap-16">
-        <div>
-          <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-            {label}
-          </p>
-          <h2 className="mt-3 font-heading text-[34px] leading-[1.05] font-bold tracking-tight text-ink sm:text-5xl lg:text-[54px]">
-            <span className="block">{headline.line1}</span>
-            <span className="block text-brand">{headline.line2}</span>
-          </h2>
-        </div>
-        <p className="max-w-md font-body text-base leading-relaxed text-body lg:pb-2">
-          {description}
-        </p>
-      </div>
+      <SectionIntro
+        label={label}
+        headline={headline}
+        description={description}
+      />
 
       <ol className="mt-10 grid gap-x-8 gap-y-8 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-12">
         {steps.map((step, index) => (

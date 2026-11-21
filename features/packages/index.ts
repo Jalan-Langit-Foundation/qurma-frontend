@@ -7,10 +7,7 @@ export {
   resolvePackage,
 } from "./lib/packages";
 export { formatWeightRange } from "./lib/package-features";
-export { PackageCard, type PackageCardProps } from "./components/package-card";
+export { PackageCard } from "./components/package-card";
 export { PackagePicker } from "./components/package-picker";
-export {
-  UpgradeBanner,
-  type UpgradeBannerProps,
-} from "./components/upgrade-banner";
+export { UpgradeBanner } from "./components/upgrade-banner";
 export { PackageCompareList } from "./components/package-compare-list";

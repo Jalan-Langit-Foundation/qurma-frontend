@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
 import { FAQ_CONTENT } from "../../lib/content/faq";
 import { LandingSection } from "../landing-section";
+import { SectionIntro } from "../section-intro";
 
 const groupAnchor = (id: string) => `faq-${id}`;
 
@@ -19,15 +20,12 @@ export function FaqSection() {
     >
       <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-            {label}
-          </p>
-          <h2 className="mt-3 font-heading text-[30px] leading-[1.1] font-bold tracking-tight text-balance text-ink sm:text-[42px]">
-            {headline}
-          </h2>
-          <p className="mt-4 max-w-md font-body text-base leading-relaxed text-body">
-            {description}
-          </p>
+          <SectionIntro
+            layout="stacked"
+            label={label}
+            headline={headline}
+            description={description}
+          />
 
           <nav aria-label="Topik FAQ" className="mt-8">
             <ul className="flex flex-wrap gap-2 lg:flex-col lg:gap-0 lg:divide-y lg:divide-line lg:border-y lg:border-line">

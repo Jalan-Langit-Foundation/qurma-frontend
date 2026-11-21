@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getDefaultPackage } from "@/features/packages";
 import { calculateDepositPlan, SAVINGS_PROGRAM } from "@/features/savings";
-import { formatRupiahJuta, formatRupiahRibu } from "@/lib/format";
+import { formatRupiahSingkat } from "@/lib/format";
 import { DemoSection } from "../demo-section";
 
 export function StickyCtaSection() {
@@ -30,11 +30,11 @@ export function StickyCtaSection() {
           <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-md backdrop-blur-md">
             <div className="flex min-w-0 flex-col">
               <span className="truncate font-heading text-xs font-bold text-ink">
-                Paket {pkg.name} ({formatRupiahJuta(pkg.target)})
+                Paket {pkg.name} ({formatRupiahSingkat(pkg.target)})
               </span>
               <span className="text-[11px] font-medium text-brand-strong">
                 {depositCount}× setoran ·{" "}
-                {formatRupiahRibu(depositAmount, { unit: "rb" })}
+                {formatRupiahSingkat(depositAmount, { approx: true })}
               </span>
             </div>
             <Button variant="primary" size="sm" className="px-3 text-xs">

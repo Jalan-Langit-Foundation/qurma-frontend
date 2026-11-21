@@ -5,9 +5,9 @@ export type DepositCount = (typeof SAVINGS_PROGRAM.depositCountOptions)[number];
 export interface DepositPlan {
   target: number;
   depositCount: number;
-  /** Nominal setoran ke-1 s/d ke-(n-1), dibulatkan ke atas */
+
   depositAmount: number;
-  /** Setoran terakhir = sisa harga paket */
+
   lastAmount: number;
   deposits: number[];
 }
@@ -50,4 +50,16 @@ export function calculateDepositPlan(
       index === depositCount - 1 ? lastAmount : depositAmount,
     ),
   };
+}
+
+export function estimateDepositAmounts(
+  packages: readonly { id: string; target: number }[],
+  depositCount: number,
+): Record<string, number | null> {
+  return Object.fromEntries(
+    packages.map((pkg) => [
+      pkg.id,
+      calculateDepositPlan(pkg.target, depositCount)?.depositAmount ?? null,
+    ]),
+  );
 }

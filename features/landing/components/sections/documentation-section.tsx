@@ -4,6 +4,7 @@ import { SECTION_IDS } from "@/config/navigation";
 import { cn } from "@/lib/utils";
 import { DOCUMENTATION_CONTENT } from "../../lib/content/documentation";
 import { LandingSection } from "../landing-section";
+import { SectionIntro } from "../section-intro";
 
 const TILE_CLASSES = [
   "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto",
@@ -19,19 +20,11 @@ export function DocumentationSection() {
 
   return (
     <LandingSection id={SECTION_IDS.documentation} label={label} tone="white">
-      <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr] lg:items-end lg:gap-16">
-        <div>
-          <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-            {label}
-          </p>
-          <h2 className="mt-3 font-heading text-[34px] leading-[1.05] font-bold tracking-tight text-balance text-ink sm:text-5xl lg:text-[54px]">
-            {headline}
-          </h2>
-        </div>
-        <p className="max-w-md font-body text-base leading-relaxed text-body lg:pb-2">
-          {description}
-        </p>
-      </div>
+      <SectionIntro
+        label={label}
+        headline={headline}
+        description={description}
+      />
 
       <figure className="mt-10 sm:mt-14">
         <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:h-[560px] lg:grid-cols-4 lg:grid-rows-2">

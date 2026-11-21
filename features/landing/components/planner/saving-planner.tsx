@@ -8,6 +8,7 @@ import {
 } from "@/features/packages";
 import {
   calculateDepositPlan,
+  estimateDepositAmounts,
   SAVINGS_PROGRAM,
   useSavingWindow,
   type DepositCount,
@@ -36,13 +37,7 @@ function SavingPlannerView({
   const plan = calculateDepositPlan(selectedPackage.target, depositCount);
 
   const depositEstimates = React.useMemo(
-    () =>
-      Object.fromEntries(
-        ALL_PACKAGES.map((pkg) => [
-          pkg.id,
-          calculateDepositPlan(pkg.target, depositCount)?.depositAmount ?? null,
-        ]),
-      ),
+    () => estimateDepositAmounts(ALL_PACKAGES, depositCount),
     [depositCount],
   );
 

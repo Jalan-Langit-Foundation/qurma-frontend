@@ -1,3 +1,5 @@
+import { PROGRAM_TIME_ZONE } from "./clock";
+
 const LOCALE = "id-ID";
 
 export function formatRupiah(amount: number): string {
@@ -9,26 +11,36 @@ export function formatRupiah(amount: number): string {
   return `${sign}Rp${formatted}`;
 }
 
-export function formatRupiahRibu(
-  amount: number,
-  options: { prefix?: string; unit?: "ribu" | "rb" } = {},
-): string {
-  const { prefix = "±", unit = "ribu" } = options;
-  if (!Number.isFinite(amount) || amount <= 0) return `${prefix}Rp0`;
-  return `${prefix}Rp${Math.floor(amount / 1000)} ${unit}`;
+const SHORT_NUMBER = new Intl.NumberFormat(LOCALE, {
+  maximumFractionDigits: 3,
+});
+
+interface RupiahSingkatOptions {
+  approx?: boolean;
+  compact?: boolean;
 }
 
-export function formatRupiahJuta(amount: number): string {
-  if (!Number.isFinite(amount) || amount === 0) return "Rp 0";
-  const juta = Number((amount / 1_000_000).toFixed(2));
-  return `Rp ${juta.toString().replace(".", ",")} Jt`;
+export function formatRupiahSingkat(
+  amount: number,
+  { approx = false, compact = false }: RupiahSingkatOptions = {},
+): string {
+  const value = Number.isFinite(amount) ? Math.max(0, amount) : 0;
+  const [number, unit] =
+    value >= 1_000_000
+      ? [value / 1_000_000, "jt"]
+      : value >= 1_000
+        ? [value / 1_000, "rb"]
+        : [value, ""];
+
+  const digits = SHORT_NUMBER.format(number);
+  const prefix = approx ? "±" : "";
+  if (compact) return `${prefix}${digits}${unit}`;
+  return `${prefix}Rp${digits}${unit ? ` ${unit}` : ""}`;
 }
 
 export function formatPersen(persen: number): string {
   return `${Math.round(Number.isFinite(persen) ? persen : 0)}%`;
 }
-
-const PROGRAM_TIME_ZONE = "Asia/Jakarta";
 
 function toDisplayDate(date: Date | string | number): {
   date: Date;

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ArrowDown, Check } from "lucide-react";
 import { CardTitle } from "@/components/ui/card";
-import { formatRupiahJuta, formatRupiahRibu } from "@/lib/format";
+import { formatRupiahSingkat } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { getPackageFeatures } from "../lib/package-features";
 import type { QurbanPackage } from "../lib/types";
@@ -68,7 +68,7 @@ export function PackageCard({
           <div className="mb-4">
             <div className="flex flex-wrap items-baseline gap-1.5">
               <span className="font-heading text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
-                {formatRupiahJuta(pkg.target)}
+                {formatRupiahSingkat(pkg.target)}
               </span>
               <span className="font-body text-xs font-medium text-muted sm:text-sm">
                 / ekor
@@ -77,7 +77,8 @@ export function PackageCard({
             <p className="mt-0.5 min-h-[18px] font-heading text-xs font-semibold text-brand-strong">
               {depositEstimate !== null && (
                 <>
-                  Estimasi {formatRupiahRibu(depositEstimate, { unit: "rb" })}{" "}
+                  Estimasi{" "}
+                  {formatRupiahSingkat(depositEstimate, { approx: true })}{" "}
                   <span className="font-body font-normal text-muted">
                     / setoran
                   </span>

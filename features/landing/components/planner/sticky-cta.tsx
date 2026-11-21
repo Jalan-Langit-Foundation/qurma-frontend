@@ -5,7 +5,7 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { QurbanPackage } from "@/features/packages";
 import type { DepositPlan } from "@/features/savings";
-import { formatRupiah, formatRupiahRibu } from "@/lib/format";
+import { formatRupiah, formatRupiahSingkat } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { SavingCta } from "../../lib/saving-cta";
 
@@ -44,7 +44,7 @@ export function StickyCta({
           </div>
           <span className="truncate text-[11px] font-medium text-body">
             {plan
-              ? `${plan.depositCount}× setoran · ${formatRupiahRibu(plan.depositAmount, { unit: "rb" })}`
+              ? `${plan.depositCount}× setoran · ${formatRupiahSingkat(plan.depositAmount, { approx: true })}`
               : "Hitung simulasi tabungan"}
           </span>
         </div>

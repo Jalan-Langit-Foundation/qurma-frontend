@@ -1,4 +1,4 @@
-import { formatRupiahRibu } from "@/lib/format";
+import { formatRupiahSingkat } from "@/lib/format";
 import type { QurbanPackage } from "./types";
 
 export function formatWeightRange(pkg: QurbanPackage): string {
@@ -13,7 +13,7 @@ export function getPackageFeatures(
 
   if (depositAmount !== null && depositAmount > 0) {
     features.push(
-      `${pkg.copy.depositLabel} ${formatRupiahRibu(depositAmount, { unit: "rb" })}/setoran`,
+      `${pkg.copy.depositLabel} ${formatRupiahSingkat(depositAmount, { approx: true })}/setoran`,
     );
   }
 

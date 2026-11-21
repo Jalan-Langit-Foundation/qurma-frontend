@@ -6,9 +6,10 @@ const deadline = PAYMENT_DEADLINE.label;
 
 export const PLANNER_CONTENT = {
   packages: {
+    label: "Pilihan paket",
     headline: {
-      line1: "Pilih Paket Qurban Sesuai",
-      line2: "Kemampuan Finansial Anda",
+      line1: "Pilih paket domba",
+      line2: "sesuai kemampuanmu.",
     },
     description:
       "Seluruh paket domba dipelihara sehat dan sesuai kriteria syar'i. Pilih paket untuk melihat estimasi setorannya.",

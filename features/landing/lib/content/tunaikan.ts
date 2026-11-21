@@ -73,7 +73,6 @@ export const TUNAIKAN_CONTENT = {
   priceUnit: "/ ekor",
   photoNote: "Foto ilustrasi",
   ctaLabel: "Konsultasi",
-  ctaShortLabel: "Konsultasi",
   footnote:
     "Foto merupakan ilustrasi dari dokumentasi JLF. Harga dan ketersediaan domba dikonfirmasi oleh CS QURMA sebelum pembayaran. Bobot merupakan target spesifikasi, bukan jaminan angka tepat.",
   aboutLabel: "Tentang Tunaikan Qurbanmu",

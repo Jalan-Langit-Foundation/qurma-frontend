@@ -9,6 +9,7 @@ import type { DepositCount, DepositPlan } from "@/features/savings";
 import { PLANNER_CONTENT } from "../../lib/content/planner";
 import type { SavingCta } from "../../lib/saving-cta";
 import { LandingSection } from "../landing-section";
+import { SectionIntro } from "../section-intro";
 import { CalculatorInputs } from "./calculator-inputs";
 import { CalculatorResult } from "./calculator-result";
 
@@ -23,7 +24,6 @@ interface CalculatorSectionProps {
   onSelectDepositCount?: (count: DepositCount) => void;
 }
 
-/** Kalkulator "Rencanakan Qurbanmu": paket + jumlah setoran (Brief H.2). */
 export function CalculatorSection({
   packages,
   selectedPackage,
@@ -42,20 +42,11 @@ export function CalculatorSection({
       label="Kalkulator simulasi tabungan qurban"
       tone="white"
     >
-      <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr] lg:items-end lg:gap-16">
-        <div>
-          <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-            {content.label}
-          </p>
-          <h2 className="mt-3 font-heading text-[34px] leading-[1.05] font-bold tracking-tight text-ink sm:text-5xl lg:text-[54px]">
-            <span className="block">{content.headline.line1}</span>
-            <span className="block text-brand">{content.headline.line2}</span>
-          </h2>
-        </div>
-        <p className="max-w-md font-body text-base leading-relaxed text-body lg:pb-2">
-          {content.description}
-        </p>
-      </div>
+      <SectionIntro
+        label={content.label}
+        headline={content.headline}
+        description={content.description}
+      />
 
       {closed ? (
         <div className="mt-10 rounded-[28px] bg-surface p-8 sm:mt-14 sm:p-10">
@@ -73,7 +64,7 @@ export function CalculatorSection({
             leftIcon={<MessageCircle className="h-4 w-4" aria-hidden="true" />}
             className="mt-6"
           >
-            Hubungi Admin
+            Hubungi CS QURMA
           </Button>
         </div>
       ) : (

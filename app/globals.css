@@ -8,9 +8,9 @@
 
 @theme {
   /* ---------- Brand ---------- */
-  --color-brand: #2b7aa8;
-  --color-brand-hover: #256a92;
-  --color-brand-active: #1f5b7e;
+  --color-brand: #3c95c8;
+  --color-brand-hover: #3387b7;
+  --color-brand-active: #2e78a2;
   --color-brand-strong: #2c6f96;
   --color-brand-sky: #6eb6d6;
   --color-brand-soft: #eaf5fb;
@@ -74,8 +74,7 @@
   /* ---------- Animasi (animate-*) ---------- */
   --animate-slide-down: slide-down-fade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-slide-up: slide-up-fade 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-  /* Trust bar: ±44 px/detik di desktop, ±37 px/detik di ponsel (pelan & terbaca) */
-  --animate-marquee: marquee 90s linear infinite;
+  --animate-marquee: marquee 35s linear infinite;
   --animate-pop-in: pop-in 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
 
   @keyframes pop-in {

@@ -33,7 +33,7 @@ export const SITE_CONFIG = {
     `Qurban ${PROGRAM.hijriLabel}`,
     "Jalan Langit Foundation",
     "Yayasan Jalan Langit",
-    "Qurban Sukabumi",
+    "Qurban Bandung",
     "Simulasi Tabungan Qurban",
     `Domba Qurban ${PROGRAM.year}`,
   ],

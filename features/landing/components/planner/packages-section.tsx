@@ -1,13 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { SectionHeader } from "@/components/ui/section-header";
 import { SECTION_IDS } from "@/config/navigation";
 import { PROGRAM } from "@/config/program";
 import { PackageCard, type QurbanPackage } from "@/features/packages";
 import { scrollToSection } from "@/lib/scroll";
 import { PLANNER_CONTENT } from "../../lib/content/planner";
 import { LandingSection } from "../landing-section";
+import { SectionIntro } from "../section-intro";
 
 interface PackagesSectionProps {
   packages: readonly QurbanPackage[];
@@ -30,11 +30,11 @@ export function PackagesSection({
       label={`Pilihan paket qurban ${PROGRAM.year}`}
       tone="white"
     >
-      <SectionHeader
+      <SectionIntro
+        label={PLANNER_CONTENT.packages.label}
         headline={PLANNER_CONTENT.packages.headline}
         description={PLANNER_CONTENT.packages.description}
-        align="center"
-        className="mb-8 sm:mb-12"
+        className="mb-10 sm:mb-14"
       />
 
       <div

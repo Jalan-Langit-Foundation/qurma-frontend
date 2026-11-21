@@ -3,8 +3,7 @@ import {
   formatBulanTahun,
   formatPersen,
   formatRupiah,
-  formatRupiahJuta,
-  formatRupiahRibu,
+  formatRupiahSingkat,
   formatTanggal,
 } from "@/lib/format";
 
@@ -15,15 +14,24 @@ describe("format", () => {
     expect(formatRupiah(Number.NaN)).toBe("Rp0");
   });
 
-  it("formatRupiahRibu dibulatkan ke bawah", () => {
-    expect(formatRupiahRibu(271_500)).toBe("±Rp271 ribu");
-    expect(formatRupiahRibu(271_500, { unit: "rb" })).toBe("±Rp271 rb");
-    expect(formatRupiahRibu(0)).toBe("±Rp0");
+  it("formatRupiahSingkat: satu gaya rb/jt", () => {
+    expect(formatRupiahSingkat(270_000)).toBe("Rp270 rb");
+    expect(formatRupiahSingkat(271_500)).toBe("Rp271,5 rb");
+    expect(formatRupiahSingkat(1_600_000)).toBe("Rp1,6 jt");
+    expect(formatRupiahSingkat(1_495_000)).toBe("Rp1,495 jt");
+    expect(formatRupiahSingkat(2_990_000)).toBe("Rp2,99 jt");
+    expect(formatRupiahSingkat(500)).toBe("Rp500");
   });
 
-  it("formatRupiahJuta", () => {
-    expect(formatRupiahJuta(1_900_000)).toBe("Rp 1,9 Jt");
-    expect(formatRupiahJuta(2_990_000)).toBe("Rp 2,99 Jt");
+  it("formatRupiahSingkat: approx & compact", () => {
+    expect(formatRupiahSingkat(270_000, { approx: true })).toBe("±Rp270 rb");
+    expect(formatRupiahSingkat(270_000, { compact: true })).toBe("270rb");
+    expect(formatRupiahSingkat(1_600_000, { compact: true })).toBe("1,6jt");
+  });
+
+  it("formatRupiahSingkat: nilai tidak valid jadi Rp0", () => {
+    expect(formatRupiahSingkat(Number.NaN)).toBe("Rp0");
+    expect(formatRupiahSingkat(-5_000)).toBe("Rp0");
   });
 
   it("formatPersen", () => {

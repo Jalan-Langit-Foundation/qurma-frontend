@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { SECTION_IDS } from "@/config/navigation";
 import { WHY_QURMA_CONTENT } from "../../lib/content/why-qurma";
 import { LandingSection } from "../landing-section";
+import { Eyebrow, SectionIntro } from "../section-intro";
 
 const numberFormat = new Intl.NumberFormat("id-ID");
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -23,9 +24,7 @@ function ImpactPanel() {
       </div>
 
       <div>
-        <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-          {impact.locationsLabel}
-        </p>
+        <Eyebrow>{impact.locationsLabel}</Eyebrow>
         <ul className="mt-3 divide-y divide-line border-y border-line">
           {impact.locations.map((location, index) => (
             <li
@@ -89,25 +88,16 @@ function FullStory() {
   );
 }
 
-/** "Mengapa QURMA Hadir?": foto, angka dampak 2026, narasi singkat (Brief L). */
 export function WhyQurmaSection() {
   const { label, headline, description, photo } = WHY_QURMA_CONTENT;
 
   return (
     <LandingSection id={SECTION_IDS.whyQurma} label={label} tone="white">
-      <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr] lg:items-end lg:gap-16">
-        <div>
-          <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-            {label}
-          </p>
-          <h2 className="mt-3 font-heading text-[32px] leading-[1.05] font-bold tracking-tight text-balance text-ink sm:text-5xl lg:text-[54px]">
-            {headline}
-          </h2>
-        </div>
-        <p className="max-w-md font-body text-base leading-relaxed text-body lg:pb-2">
-          {description}
-        </p>
-      </div>
+      <SectionIntro
+        label={label}
+        headline={headline}
+        description={description}
+      />
 
       <div className="mt-10 grid gap-4 sm:mt-14 lg:grid-cols-[1.5fr_1fr] lg:gap-6">
         <figure>

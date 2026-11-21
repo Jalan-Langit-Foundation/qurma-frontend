@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   calculateDepositPlan,
+  estimateDepositAmounts,
   resolveDepositCount,
 } from "@/features/savings/lib/deposit-plan";
 import { SAVINGS_PROGRAM } from "@/features/savings/lib/program";
@@ -65,5 +66,20 @@ describe("resolveDepositCount", () => {
         SAVINGS_PROGRAM.defaultDepositCount,
       );
     }
+  });
+});
+
+describe("estimateDepositAmounts", () => {
+  it("menghitung estimasi per paket dengan jumlah setoran yang sama", () => {
+    const packages = [
+      { id: "standar", target: 1_600_000 },
+      { id: "premium", target: 2_990_000 },
+      { id: "kosong", target: 0 },
+    ];
+    expect(estimateDepositAmounts(packages, 6)).toEqual({
+      standar: 270_000,
+      premium: 500_000,
+      kosong: null,
+    });
   });
 });

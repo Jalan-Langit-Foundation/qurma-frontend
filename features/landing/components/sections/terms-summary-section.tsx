@@ -4,21 +4,15 @@ import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
 import { TERMS_SUMMARY_CONTENT } from "../../lib/content/terms-summary";
 import { LandingSection } from "../landing-section";
+import { SectionIntro } from "../section-intro";
 
-/** Ringkasan S&K + tautan ke halaman lengkap. */
 export function TermsSummarySection() {
   const { label, headline, status, points, link } = TERMS_SUMMARY_CONTENT;
 
   return (
     <LandingSection id={SECTION_IDS.termsSummary} label={label} tone="soft">
       <div className="grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
-        <div className="flex flex-col items-start">
-          <p className="font-heading text-xs font-semibold tracking-[0.14em] text-brand-strong uppercase">
-            {label}
-          </p>
-          <h2 className="mt-3 font-heading text-[30px] leading-[1.1] font-bold tracking-tight text-balance text-ink sm:text-[42px]">
-            {headline}
-          </h2>
+        <SectionIntro layout="stacked" label={label} headline={headline}>
           {status && (
             <p className="mt-4 rounded-full border border-line bg-white px-3 py-1 font-heading text-xs font-semibold text-muted">
               {status}
@@ -33,7 +27,7 @@ export function TermsSummarySection() {
           >
             {link.label}
           </Button>
-        </div>
+        </SectionIntro>
 
         <div>
           <ol className="divide-y divide-line border-y border-line">

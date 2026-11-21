@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
 import type { QurbanPackage } from "@/features/packages";
 import type { DepositPlan } from "@/features/savings";
-import { formatRupiah } from "@/lib/format";
+import { formatRupiah, formatRupiahSingkat } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { PLANNER_CONTENT } from "../../lib/content/planner";
 import type { SavingCta } from "../../lib/saving-cta";
+import { Eyebrow } from "../section-intro";
 
 interface CalculatorResultProps {
   selectedPackage: QurbanPackage;
@@ -23,18 +24,6 @@ function scheduleSummary(plan: DepositPlan) {
     : `${plan.depositCount - 1} × ${formatRupiah(plan.depositAmount)} + ${formatRupiah(plan.lastAmount)}`;
 }
 
-/** Label ringkas di bawah batang: 270rb, 1jt, 1,495jt (nominal persis untuk pembaca layar). */
-function shortAmount(amount: number) {
-  if (amount >= 1_000_000) {
-    const juta = (amount / 1_000_000).toLocaleString("id-ID", {
-      maximumFractionDigits: 3,
-    });
-    return `${juta}jt`;
-  }
-  return `${Math.round(amount / 1000)}rb`;
-}
-
-/** Urutan setoran sebagai batang bernomor; setoran terakhir diberi warna lain. */
 function DepositBars({ plan }: { plan: DepositPlan }) {
   return (
     <ol aria-label="Rincian setoran" className="flex gap-1.5 sm:gap-2">
@@ -55,7 +44,9 @@ function DepositBars({ plan }: { plan: DepositPlan }) {
             </span>
             <span className="block truncate font-heading text-[11px] font-semibold text-white sm:text-sm">
               <span className="sr-only">{formatRupiah(amount)}</span>
-              <span aria-hidden="true">{shortAmount(amount)}</span>
+              <span aria-hidden="true">
+                {formatRupiahSingkat(amount, { compact: true })}
+              </span>
             </span>
           </li>
         );
@@ -64,7 +55,6 @@ function DepositBars({ plan }: { plan: DepositPlan }) {
   );
 }
 
-/** Hasil simulasi: panel gelap sebagai fokus utama section. */
 export function CalculatorResult({
   selectedPackage,
   plan,
@@ -75,9 +65,7 @@ export function CalculatorResult({
   return (
     <div className="flex flex-col justify-between gap-10 rounded-[28px] bg-brand-ink p-6 text-white sm:p-8 lg:p-10">
       <div aria-live="polite">
-        <p className="font-heading text-xs font-semibold tracking-[0.14em] text-white/70 uppercase">
-          {content.resultLabel}
-        </p>
+        <Eyebrow className="text-white/70">{content.resultLabel}</Eyebrow>
         <p className="mt-3 font-heading text-[44px] leading-none font-extrabold tracking-tight tabular-nums sm:text-6xl">
           {plan ? formatRupiah(plan.depositAmount) : "–"}
         </p>
