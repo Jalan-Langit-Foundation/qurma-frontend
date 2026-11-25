@@ -109,7 +109,6 @@ export const env = {
   isProduction,
   siteUrl: readSiteUrl(),
 
-  /** Nomor WhatsApp admin, kosong hanya di development */
   whatsappNumber: readWhatsappNumber(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER),
 
   /** Halaman /design-system: selalu aktif di dev, opsional di production */

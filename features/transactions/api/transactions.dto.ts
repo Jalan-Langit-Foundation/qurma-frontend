@@ -3,7 +3,6 @@
  * Bila backend memakai bentuk lain, cukup ubah file ini dan mapper-nya.
  */
 
-/** Satu setoran yang sudah dicatat admin. */
 export interface TransactionDto {
   id: number;
   saving_id: number;
@@ -14,7 +13,6 @@ export interface TransactionDto {
   note: string | null;
   /** Nomor kwitansi; null = kwitansi belum diterbitkan */
   receipt_number: string | null;
-  /** Waktu dicatat admin (ISO 8601) */
   created_at: string;
 }
 

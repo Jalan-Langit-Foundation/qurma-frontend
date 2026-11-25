@@ -27,7 +27,7 @@ export function ErrorView({ error, reset, secondaryAction }: ErrorViewProps) {
         </h1>
         <p className="mt-3 text-sm text-body sm:text-base">
           Halaman gagal dimuat. Silakan coba lagi. Jika masih berlanjut, hubungi
-          admin QURMA melalui WhatsApp.
+          CS QURMA melalui WhatsApp.
         </p>
         {error.digest && (
           <p className="mt-2 text-xs text-muted">

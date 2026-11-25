@@ -41,7 +41,7 @@ export function buildSavingCta(
       };
     case "cancelled":
       return {
-        label: "Chat Admin",
+        label: "Chat CS QURMA",
         href: buildWhatsappUrl(WHATSAPP_MESSAGES.memberQuestion(details)),
         external: true,
         icon: "chat",

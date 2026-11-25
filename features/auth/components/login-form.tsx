@@ -106,7 +106,7 @@ function LoginFormView({ next, expired }: LoginFormViewProps) {
           {/* Reset kata sandi belum tersedia di API → dibantu admin via WhatsApp */}
           <WhatsappLink
             message={WHATSAPP_MESSAGES.forgotPassword}
-            srHint="hubungi admin via WhatsApp, tab baru"
+            srHint="hubungi CS QURMA via WhatsApp, tab baru"
             className="rounded text-sm font-semibold text-brand-strong hover:underline focus-ring"
           >
             Lupa kata sandi?

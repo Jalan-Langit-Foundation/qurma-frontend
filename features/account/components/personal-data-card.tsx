@@ -3,10 +3,9 @@ import { WHATSAPP_MESSAGES } from "@/config/contact";
 import { ACCOUNT_SECTION_IDS } from "@/config/navigation";
 import type { AuthUser } from "@/features/auth";
 import { AccountDetailList } from "./account-detail-list";
-import { AdminHelp } from "./admin-help";
+import { CsHelp } from "./cs-help";
 import { ProfileForm } from "./profile-form";
 
-/** Kartu Data Pribadi: form ubah data, atau data hanya-baca + bantuan admin. */
 export function PersonalDataCard({
   user,
   canEdit,
@@ -42,8 +41,8 @@ export function PersonalDataCard({
               { label: "Nomor WhatsApp", value: user.phone },
             ]}
           />
-          <AdminHelp
-            text="Perubahan data pribadi saat ini dibantu admin."
+          <CsHelp
+            text="Perubahan data pribadi saat ini dibantu CS QURMA."
             label="Ajukan perubahan"
             message={WHATSAPP_MESSAGES.profileChange({
               name: user.name,

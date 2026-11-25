@@ -13,7 +13,7 @@ const BACK_TO_DASHBOARD = {
   label: "Kembali ke Dashboard",
 };
 
-/** Halaman /report/[id]: Shohibul Report setelah dipublikasikan admin. */
+/** Halaman /report/[id]: Shohibul Report setelah dipublikasikan CS QURMA. */
 export async function ReportPage({
   params,
 }: {
@@ -31,7 +31,7 @@ export async function ReportPage({
         title="Laporan Qurban"
         heading="Laporan Belum Tersedia"
         icon={<FileClock className="h-6 w-6" aria-hidden="true" />}
-        description="Shohibul Report akan tampil di sini setelah qurban dilaksanakan dan laporan dipublikasikan oleh admin QURMA."
+        description="Shohibul Report akan tampil di sini setelah qurban dilaksanakan dan laporan dipublikasikan oleh CS QURMA."
         backLink={BACK_TO_DASHBOARD}
         actions={[
           {

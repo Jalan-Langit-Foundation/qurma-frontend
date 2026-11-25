@@ -2,7 +2,7 @@ import { MessageCircle } from "lucide-react";
 import { WhatsappLink } from "@/components/layout";
 import { buttonClassName } from "@/components/ui/button-styles";
 
-export function AdminHelp({
+export function CsHelp({
   text,
   message,
   label,

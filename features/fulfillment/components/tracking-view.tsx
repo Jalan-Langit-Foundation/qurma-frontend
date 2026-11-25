@@ -20,7 +20,6 @@ function toChecklistSteps(tracking: Tracking): ChecklistStep[] {
   }));
 }
 
-/** Tahap persiapan hewan qurban. Datanya diisi admin, pengguna hanya melihat. */
 export function TrackingView({ tracking }: { tracking: Tracking }) {
   if (!tracking.available) {
     return (

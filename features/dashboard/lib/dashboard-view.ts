@@ -95,11 +95,11 @@ function buildSubtitle(saving: Saving): string {
         ? `Setoran berikutnya ${formatYearMonth(saving.nextInstallment.month)} sebesar ${formatRupiah(saving.nextInstallment.amount)}.`
         : "Tabungan Anda berjalan sesuai rencana.";
     case "overdue":
-      return "Ada setoran yang terlambat. Konfirmasikan ke admin agar progres tetap aman.";
+      return "Ada setoran yang terlambat. Konfirmasikan ke CS QURMA agar progres tetap aman.";
     case "completed":
       return "Alhamdulillah, tabungan Anda sudah lunas. Pantau persiapan domba di sini.";
     case "cancelled":
-      return "Tabungan ini dibatalkan. Hubungi admin bila ada pertanyaan.";
+      return "Tabungan ini dibatalkan. Hubungi CS QURMA bila ada pertanyaan.";
   }
 }
 

@@ -164,13 +164,13 @@ describe("buildDashboardView", () => {
     expect(done.plan.bars.map((bar) => bar.key)).toEqual(["paid", "remaining"]);
   });
 
-  it("dibatalkan → CTA chat admin; tanpa ledger → setoran terakhir null", () => {
+  it("dibatalkan → CTA chat CS QURMA; tanpa ledger → setoran terakhir null", () => {
     const cancelled = buildDashboardView(
       makeSaving({ status: "cancelled" }),
       null,
       member,
     );
-    expect(cancelled.cta.label).toBe("Chat Admin");
+    expect(cancelled.cta.label).toBe("Chat CS QURMA");
     expect(cancelled.lastDeposit).toBeNull();
     expect(cancelled.journey.milestone).toBeNull();
   });

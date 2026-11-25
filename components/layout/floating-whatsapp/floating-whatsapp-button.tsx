@@ -5,8 +5,8 @@ export function FloatingWhatsappButton() {
   return (
     <div className="fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6 lg:right-8 lg:bottom-8">
       <WhatsappLink
-        aria-label="Tanya admin QURMA via WhatsApp (membuka tab baru)"
-        title="Tanya admin via WhatsApp"
+        aria-label="Tanya CS QURMA via WhatsApp (membuka tab baru)"
+        title="Tanya CS QURMA via WhatsApp"
         className={cn(
           "flex items-center justify-center",
           "h-12 w-12 rounded-full sm:h-14 sm:w-14",

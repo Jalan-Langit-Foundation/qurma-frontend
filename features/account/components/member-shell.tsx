@@ -38,7 +38,7 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
 
           <div className="flex items-center gap-2">
             <WhatsappLink
-              aria-label="Chat admin QURMA via WhatsApp (tab baru)"
+              aria-label="Chat CS QURMA via WhatsApp (tab baru)"
               className={buttonClassName({
                 variant: "subtle",
                 size: "icon",

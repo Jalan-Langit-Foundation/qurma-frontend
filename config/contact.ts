@@ -1,7 +1,7 @@
 import { env } from "./env";
 import { SITE_CONFIG } from "./site";
 
-const GREETING = "Assalamualaikum Admin Yayasan Jalan Langit,";
+const GREETING = "Assalamualaikum CS QURMA,";
 const PROGRAM = `program ${SITE_CONFIG.programFullName}`;
 
 export interface SavingPlanMessageDetails {

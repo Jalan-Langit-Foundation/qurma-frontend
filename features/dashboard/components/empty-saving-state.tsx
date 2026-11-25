@@ -12,10 +12,10 @@ const STEPS = [
     text: "Tentukan bobot domba sesuai target tabungan Anda.",
   },
   {
-    title: isSavingRegistrationOpen ? "Atur setoran" : "Daftar lewat admin",
+    title: isSavingRegistrationOpen ? "Atur setoran" : "Daftar lewat CS QURMA",
     text: isSavingRegistrationOpen
       ? "Pilih bulan mulai; setoran bulanan dihitung otomatis."
-      : "Admin QURMA mendaftarkan tabungan dan jadwal setoran Anda.",
+      : "CS QURMA mendaftarkan tabungan dan jadwal setoran Anda.",
   },
   {
     title: "Pantau di sini",
@@ -42,7 +42,7 @@ export function EmptySavingState() {
           <p className="max-w-md text-sm text-white/85 sm:text-base">
             {isSavingRegistrationOpen
               ? `Mulai menabung sekarang agar qurban ${PROGRAM.hijriLabel} terasa ringan.`
-              : "Pendaftaran tabungan saat ini dibantu langsung oleh admin QURMA. Setelah didaftarkan, progres tabungan akan tampil di sini."}
+              : "Pendaftaran tabungan saat ini dibantu langsung oleh CS QURMA. Setelah didaftarkan, progres tabungan akan tampil di sini."}
           </p>
           <CtaButton
             cta={EMPTY_STATE_CTA}

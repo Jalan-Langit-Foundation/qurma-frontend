@@ -18,7 +18,6 @@ export interface TrackingStep {
   state: TrackingStepState;
 }
 
-/** Tahap persiapan qurban (diisi admin lewat Filament, user hanya melihat). */
 export interface Tracking {
   savingId: number;
   /** false selama dana belum lunas */

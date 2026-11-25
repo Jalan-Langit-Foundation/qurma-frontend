@@ -34,7 +34,7 @@ export async function createSavingAction(input: {
     return {
       ok: false,
       message:
-        "Pendaftaran tabungan online belum dibuka. Silakan hubungi admin QURMA melalui WhatsApp.",
+        "Pendaftaran tabungan online belum dibuka. Silakan hubungi CS QURMA melalui WhatsApp.",
     };
   }
 

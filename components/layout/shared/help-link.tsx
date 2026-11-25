@@ -6,7 +6,7 @@ import { WhatsappLink } from "./whatsapp-link";
 export function HelpLink({ className }: { className?: string }) {
   return (
     <WhatsappLink
-      aria-label="Bantuan via WhatsApp admin (tab baru)"
+      aria-label="Bantuan via WhatsApp CS QURMA (tab baru)"
       className={buttonClassName({
         variant: "soft",
         size: "pill",

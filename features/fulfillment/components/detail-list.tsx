@@ -1,10 +1,10 @@
 import * as React from "react";
 
-const PENDING_TEXT = "Menunggu informasi dari admin";
+const PENDING_TEXT = "Menunggu informasi dari CS QURMA";
 
 export interface DetailItem {
   label: string;
-  /** null → ditampilkan "Menunggu informasi dari admin" */
+  /** null → ditampilkan "Menunggu informasi dari CS QURMA" */
   value: React.ReactNode | null;
 }
 

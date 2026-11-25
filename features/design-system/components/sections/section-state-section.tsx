@@ -38,7 +38,7 @@ export function SectionStateSection() {
           status={state}
           onRetry={() => setState("success")}
           emptyTitle="Belum Ada Data Penabung"
-          emptyDescription="Data penabung akan muncul setelah pendaftaran pertama dicatat admin."
+          emptyDescription="Data penabung akan muncul setelah pendaftaran pertama dicatat CS QURMA."
           errorMessage="Koneksi server gagal merespons. Silakan periksa jaringan dan coba lagi."
         >
           <div className="space-y-2 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center">

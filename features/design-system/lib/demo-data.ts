@@ -71,7 +71,7 @@ export const COLOR_TOKENS = [
     name: "Brand",
     token: "brand",
     hex: "#3C95C8",
-    role: "Latar tombol utama, aksen, ikon, border (teks putih 3,3:1 — AA untuk teks tebal ≥14pt)",
+    role: "Latar tombol utama, aksen, ikon, border (teks putih 3,3:1, AA untuk teks tebal ≥ 14pt)",
     textClass: "text-white",
   },
   {

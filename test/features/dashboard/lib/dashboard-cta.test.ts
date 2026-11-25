@@ -32,9 +32,9 @@ describe("buildSavingCta", () => {
     });
   });
 
-  it("dibatalkan → chat admin", () => {
+  it("dibatalkan → chat CS QURMA", () => {
     const cta = buildSavingCta({ ...saving, status: "cancelled" }, member);
-    expect(cta).toMatchObject({ label: "Chat Admin", icon: "chat" });
+    expect(cta).toMatchObject({ label: "Chat CS QURMA", icon: "chat" });
     expect(cta.external).toBe(true);
   });
 });
@@ -47,7 +47,7 @@ describe("buildEmptyStateCta", () => {
     });
   });
 
-  it("pendaftaran ditutup → daftar lewat WhatsApp admin", () => {
+  it("pendaftaran ditutup → daftar lewat WhatsApp CS QURMA", () => {
     const cta = buildEmptyStateCta(false);
     expect(cta.label).toBe("Daftar via WhatsApp");
     expect(cta.href).toMatch(/^https:\/\/wa\.me\//);

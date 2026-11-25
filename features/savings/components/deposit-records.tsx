@@ -10,7 +10,7 @@ export function DepositRecords({ deposits }: { deposits: DepositRecord[] }) {
       <SectionState
         status="empty"
         emptyTitle="Belum Ada Setoran Tercatat"
-        emptyDescription="Setoran yang Anda serahkan ke admin QURMA akan tercatat di sini."
+        emptyDescription="Setoran yang Anda serahkan ke CS QURMA akan tercatat di sini."
         emptyIcon={<Wallet className="h-7 w-7" aria-hidden="true" />}
       />
     );

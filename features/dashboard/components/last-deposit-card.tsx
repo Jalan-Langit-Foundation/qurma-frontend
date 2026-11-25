@@ -67,7 +67,7 @@ export function LastDepositCard({
       ) : (
         <p className="text-sm text-body">
           Belum ada setoran tercatat. Setoran pertama akan muncul di sini
-          setelah diverifikasi admin.
+          setelah diverifikasi CS QURMA
         </p>
       )}
     </BentoCard>

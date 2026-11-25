@@ -61,7 +61,7 @@ function RegisterFormView({ next }: { next: string | null }) {
       next={next}
       size="md"
       title="Buat akun mudhohi"
-      description="Hanya butuh satu menit. Data Anda dipakai admin untuk mencatat setoran."
+      description="Hanya butuh satu menit. Data Anda dipakai CS QURMA untuk mencatat setoran."
     >
       {feedback && (
         <FormAlert

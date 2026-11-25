@@ -92,7 +92,7 @@ function NewSavingFormView({
       <FormAlert
         variant="info"
         title="Periode pendaftaran telah berakhir"
-        message={`Batas pelunasan program (${deadline}) sudah terlewati. Hubungi admin QURMA untuk informasi program berikutnya.`}
+        message={`Batas pelunasan program (${deadline}) sudah terlewati. Hubungi CS QURMA untuk informasi program berikutnya.`}
       />
     );
   }
@@ -144,7 +144,7 @@ function NewSavingFormView({
 
       <p className="font-body text-xs leading-relaxed text-muted sm:text-sm">
         Nominal setoran per bulan dihitung otomatis oleh sistem dan tampil di
-        dashboard setelah tabungan dibuat. Setoran dilakukan langsung ke admin
+        dashboard setelah tabungan dibuat. Setoran dilakukan langsung ke CS
         QURMA.
       </p>
 

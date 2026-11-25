@@ -107,7 +107,7 @@ export async function DashboardPage() {
         <Section
           id={MEMBER_SECTION_IDS.schedule}
           title="Jadwal & Riwayat Setoran"
-          description="Setoran dicatat admin setelah bukti diterima."
+          description="Setoran dicatat CS QURMA setelah bukti diterima."
         >
           <DepositTable installments={ledger.installments} />
           <h3 className="pt-2 font-heading text-base font-semibold text-ink">
@@ -120,7 +120,7 @@ export async function DashboardPage() {
       <Section
         id={MEMBER_SECTION_IDS.packages}
         title="Bandingkan Paket"
-        description="Ingin pindah paket? Admin akan membantu menghitung ulang setoran Anda."
+        description="Ingin pindah paket? CS QURMA akan membantu menghitung ulang setoran Anda."
       >
         <PackageCompareList currentPackageId={saving.packageId} />
         <WhatsappLink
@@ -128,7 +128,7 @@ export async function DashboardPage() {
           className={buttonClassName({ variant: "soft", size: "pill" })}
         >
           <MessageCircle className="h-4 w-4" aria-hidden="true" />
-          Tanya admin soal ganti paket
+          Tanya CS QURMA soal ganti paket
         </WhatsappLink>
       </Section>
     </MemberContainer>

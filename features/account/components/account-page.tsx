@@ -17,8 +17,7 @@ export async function AccountPage() {
           Pengaturan Akun
         </h1>
         <p className="text-sm text-body md:text-base">
-          Data ini dipakai admin QURMA untuk menghubungi Anda dan mencatat
-          setoran.
+          Data ini dipakai CS QURMA untuk menghubungi Anda dan mencatat setoran.
         </p>
       </div>
 

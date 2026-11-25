@@ -19,7 +19,7 @@ export default function Page() {
         eyebrow="Tabungan Qurban"
         title="Buat Tabungan Baru"
         icon={<Wallet className="h-6 w-6" aria-hidden="true" />}
-        description="Pendaftaran tabungan online belum dibuka. Sementara ini, pendaftaran dibantu langsung oleh admin QURMA melalui WhatsApp."
+        description="Pendaftaran tabungan online belum dibuka. Sementara ini, pendaftaran dibantu langsung oleh CS QURMA melalui WhatsApp."
         backLink={{ href: ROUTES.dashboard, label: "Kembali ke Dashboard" }}
         actions={[
           {
