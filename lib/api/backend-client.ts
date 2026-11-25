@@ -8,9 +8,7 @@ type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export interface BackendRequestOptions {
   method?: HttpMethod;
   body?: unknown;
-  /** Token Sanctum (Bearer). Kosongkan untuk endpoint publik. */
   token?: string | null;
-  /** Query string, mis. { page: 2 }. Nilai undefined/null diabaikan. */
   query?: Record<string, string | number | undefined | null>;
   timeoutMs?: number;
 }
@@ -76,13 +74,12 @@ async function send(
     const isTimeout =
       error instanceof DOMException &&
       (error.name === "TimeoutError" || error.name === "AbortError");
-
+    // Detail asli hanya ke log server, bukan ke pengguna
     console.error(`[backend] ${method} ${path} gagal:`, error);
     throw new ApiError({ kind: isTimeout ? "timeout" : "network", status: 0 });
   }
 }
 
-/** Ubah respons gagal (atau sukses tapi formatnya tidak dikenal) menjadi ApiError. */
 function toApiError(
   response: Response,
   json: unknown,
@@ -102,40 +99,41 @@ function toApiError(
   return new ApiError({
     kind,
     status: response.status,
-
     message: kind === "server" ? undefined : errorBody?.message,
     fieldErrors: firstFieldErrors(errorBody?.errors),
   });
 }
 
-/**
- * Satu-satunya pintu ke backend Laravel. Hanya berjalan di server Next
- * (Server Component, Server Action, Route Handler), sehingga:
- * - token tidak pernah terlihat oleh JavaScript di browser,
- * - URL backend tidak bocor ke pengguna,
- * - tidak bergantung pada pengaturan CORS backend.
- *
- * Mengembalikan isi `data` bila sukses; melempar ApiError bila gagal.
- */
-export async function backendRequest<T>(
+export interface BackendResult<T, M> {
+  data: T;
+  meta: M | null;
+}
+
+export async function backendRequestWithMeta<T, M = unknown>(
   path: string,
   options: BackendRequestOptions = {},
-): Promise<T> {
+): Promise<BackendResult<T, M>> {
   const method = options.method ?? "GET";
   const response = await send(path, options, "application/json");
   const json = await readJson(response);
 
   if (response.ok && isApiBody(json) && json.success) {
-    return json.data as T;
+    return { data: json.data as T, meta: (json.meta as M) ?? null };
   }
 
   if (response.ok && json === null) {
-    return undefined as T;
+    return { data: undefined as T, meta: null };
   }
   throw toApiError(response, json, method, path);
 }
 
-/** Ambil nama file dari header Content-Disposition (filename / filename*). */
+export async function backendRequest<T>(
+  path: string,
+  options: BackendRequestOptions = {},
+): Promise<T> {
+  return (await backendRequestWithMeta<T>(path, options)).data;
+}
+
 function parseFileName(disposition: string | null): string | null {
   if (!disposition) return null;
   const encoded = /filename\*=(?:UTF-8'')?([^;]+)/i.exec(disposition)?.[1];
@@ -147,10 +145,6 @@ function parseFileName(disposition: string | null): string | null {
   return /filename="?([^";]+)"?/i.exec(disposition)?.[1]?.trim() ?? null;
 }
 
-/**
- * Unduh berkas biner (mis. PDF kwitansi). Bila gagal, backend tetap
- * membalas JSON standar sehingga error-nya diperlakukan sama seperti backendRequest.
- */
 export async function backendFileRequest(
   path: string,
   options: BackendRequestOptions = {},

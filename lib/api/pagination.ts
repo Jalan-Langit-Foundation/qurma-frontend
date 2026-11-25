@@ -1,6 +1,5 @@
-import type { PaginatedDto } from "./types";
+import type { PaginationMetaDto } from "./types";
 
-/** Daftar berhalaman versi frontend (camelCase, siap dipakai komponen). */
 export interface Paginated<T> {
   items: T[];
   page: number;
@@ -12,23 +11,23 @@ export interface Paginated<T> {
 }
 
 export function toPaginated<TDto, T>(
-  dto: PaginatedDto<TDto>,
+  items: TDto[],
+  meta: PaginationMetaDto | null,
   mapItem: (item: TDto) => T,
 ): Paginated<T> {
-  const page = Math.max(1, dto.meta.current_page);
-  const totalPages = Math.max(1, dto.meta.last_page);
+  const page = Math.max(1, meta?.current_page ?? 1);
+  const totalPages = Math.max(1, meta?.last_page ?? 1);
   return {
-    items: dto.items.map(mapItem),
+    items: items.map(mapItem),
     page,
-    perPage: dto.meta.per_page,
-    total: dto.meta.total,
+    perPage: meta?.per_page ?? items.length,
+    total: meta?.total ?? items.length,
     totalPages,
     hasNextPage: page < totalPages,
     hasPreviousPage: page > 1,
   };
 }
 
-/** Nomor halaman dari URL (?page=2). Nilai tidak valid → 1. */
 export function parsePageParam(value: string | string[] | undefined): number {
   const raw = Array.isArray(value) ? value[0] : value;
   if (!raw || !/^\d+$/.test(raw)) return 1;

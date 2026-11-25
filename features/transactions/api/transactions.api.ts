@@ -1,31 +1,31 @@
 import "server-only";
 import {
   authedFileRequest,
-  authedRequest,
+  authedRequestWithMeta,
   nullIfNotFound,
 } from "@/lib/api/authed-request";
-import { toPaginated, type Paginated } from "@/lib/api/pagination";
-import type { BackendFile, PaginatedDto } from "@/lib/api/types";
-import type { Transaction, TransactionListQuery } from "../lib/types";
-import type { TransactionDto } from "./transactions.dto";
-import { toTransaction, toTransactionListQuery } from "./transactions.mapper";
+import type { BackendFile, PaginationMetaDto } from "@/lib/api/types";
+import type { TransactionListQuery, TransactionPage } from "../lib/types";
+import type { TransactionListDto } from "./transactions.dto";
+import {
+  toTransactionListQuery,
+  toTransactionPage,
+} from "./transactions.mapper";
 
-/**
- * GET /transactions → daftar setoran milik pengguna (terbaru lebih dulu).
- * @public Disiapkan: halaman /transaksi bila NEXT_PUBLIC_FEATURE_TRANSACTIONS=true.
- */
 export async function getTransactions(
   query: TransactionListQuery = {},
-): Promise<Paginated<Transaction>> {
-  const data = await authedRequest<PaginatedDto<TransactionDto>>(
-    "/transactions",
-    { query: { ...toTransactionListQuery(query) } },
-  );
-  return toPaginated(data, toTransaction);
+): Promise<TransactionPage> {
+  const { data, meta } = await authedRequestWithMeta<
+    TransactionListDto,
+    PaginationMetaDto
+  >("/transactions", { query: { ...toTransactionListQuery(query) } });
+  return toTransactionPage(data, meta);
 }
 
 /**
  * GET /transactions/{id}/receipt → PDF kwitansi.
+ * Belum ada di API Contract ("bukti setoran PDF" menyusul); tetap mati lewat
+ * NEXT_PUBLIC_FEATURE_RECEIPTS sampai endpoint tersedia.
  * null = transaksi tidak ada, bukan milik pengguna, atau kwitansi belum terbit.
  */
 export function getReceiptFile(

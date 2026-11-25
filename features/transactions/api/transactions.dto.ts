@@ -1,24 +1,25 @@
-/**
- * USULAN kontrak (belum ada di API Contract). Lihat docs/api-usulan-endpoint.md.
- * Bila backend memakai bentuk lain, cukup ubah file ini dan mapper-nya.
- */
-
 export interface TransactionDto {
   id: number;
   saving_id: number;
   package: { code: string; name: string };
   amount: number;
-  /** Tanggal setoran diterima, "YYYY-MM-DD" */
   paid_at: string;
   note: string | null;
-  /** Nomor kwitansi; null = kwitansi belum diterbitkan */
-  receipt_number: string | null;
-  created_at: string;
 }
 
-/** Query GET /transactions */
+export interface TransactionListDto {
+  total_amount: number;
+  transactions: TransactionDto[];
+}
+
+export type TransactionSortDto = "paid_at" | "-paid_at" | "amount" | "-amount";
+
 export interface TransactionListQueryDto {
   page?: number;
   per_page?: number;
   saving_id?: number;
+  month?: string;
+  from?: string;
+  to?: string;
+  sort?: TransactionSortDto;
 }

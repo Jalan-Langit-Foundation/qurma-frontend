@@ -91,11 +91,6 @@ const features = {
     "NEXT_PUBLIC_FEATURE_RECEIPTS",
     process.env.NEXT_PUBLIC_FEATURE_RECEIPTS,
   ),
-  /** Upgrade paket: GET /savings/{id}/upgrade-options, POST /savings/{id}/upgrade */
-  upgrade: readFlag(
-    "NEXT_PUBLIC_FEATURE_UPGRADE",
-    process.env.NEXT_PUBLIC_FEATURE_UPGRADE,
-  ),
   /** Dashboard memakai satu request GET /user/dashboard */
   dashboardSummary: readFlag(
     "NEXT_PUBLIC_FEATURE_DASHBOARD_SUMMARY",

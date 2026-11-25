@@ -17,6 +17,7 @@ import { JourneyCard } from "./journey-card";
 import { LastDepositCard } from "./last-deposit-card";
 import { MyPackageCard } from "./my-package-card";
 import { ProgressGaugeCard } from "./progress-gauge-card";
+import { UpgradeSuggestionCard } from "./upgrade-suggestion-card";
 
 function Section({
   id,
@@ -51,7 +52,7 @@ function Section({
 
 /** Halaman /dashboard (dirender di server, di dalam <Suspense>). */
 export async function DashboardPage() {
-  const { user, saving } = await loadDashboard();
+  const { user, saving, insights } = await loadDashboard();
 
   if (!saving) {
     return (
@@ -122,6 +123,12 @@ export async function DashboardPage() {
         title="Bandingkan Paket"
         description="Ingin pindah paket? CS QURMA akan membantu menghitung ulang setoran Anda."
       >
+        {insights?.upgradeSuggestion && (
+          <UpgradeSuggestionCard
+            suggestion={insights.upgradeSuggestion}
+            member={member}
+          />
+        )}
         <PackageCompareList currentPackageId={saving.packageId} />
         <WhatsappLink
           message={WHATSAPP_MESSAGES.memberQuestion(member)}

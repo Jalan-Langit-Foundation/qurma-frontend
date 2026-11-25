@@ -14,6 +14,7 @@ export interface Saving {
   status: SavingStatus;
   targetAmount: number;
   totalPaid: number;
+  paidThisMonth: number;
   remainingAmount: number;
   progressPercent: number;
   tenorMonths: number;
@@ -53,23 +54,5 @@ export interface SavingLedger {
 export interface CreateSavingInput {
   packageId: PackageId;
   startMonth: YearMonth;
-  /** Selalu dikirim agar tabungan berakhir tepat di batas pelunasan program */
   tenorMonths: number;
-}
-
-export interface UpgradeOption {
-  /** null bila kode paket dari backend belum dikenal frontend */
-  packageId: PackageId | null;
-  packageName: string;
-  targetAmount: number;
-  additionalAmount: number;
-  newMonthlyAmount: number;
-  remainingMonths: number;
-}
-
-export interface UpgradeOptions {
-  savingId: number;
-  eligible: boolean;
-  reason: string | null;
-  options: UpgradeOption[];
 }

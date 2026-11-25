@@ -18,6 +18,7 @@ export interface SavingSummaryDto {
   status: SavingStatusDto;
   target_amount: number;
   total_paid: number;
+  paid_this_month: number;
   remaining_amount: number;
   progress_percent: number;
   tenor_months: number;
@@ -58,36 +59,4 @@ export interface CreateSavingRequestDto {
   package_code: string;
   start_month: string;
   tenor_months: number;
-}
-
-/* ------------------------------------------------------------------
- * USULAN kontrak upgrade paket (belum ada di API Contract).
- * Lihat docs/api-usulan-endpoint.md.
- * ------------------------------------------------------------------ */
-
-/** Satu pilihan paket tujuan upgrade, dihitung backend. */
-export interface UpgradeOptionDto {
-  package: { code: string; name: string };
-  target_amount: number;
-  /** Selisih target dengan paket sekarang */
-  additional_amount: number;
-  /** Setoran per bulan yang baru untuk sisa periode */
-  new_monthly_amount: number;
-  /** Jumlah bulan tersisa sampai batas pelunasan */
-  remaining_months: number;
-}
-
-/** GET /savings/{id}/upgrade-options */
-export interface UpgradeOptionsDto {
-  saving_id: number;
-  /** false bila upgrade tidak diizinkan (mis. sudah lunas / lewat batas waktu) */
-  eligible: boolean;
-  /** Alasan bila eligible = false, sudah dalam Bahasa Indonesia */
-  reason: string | null;
-  options: UpgradeOptionDto[];
-}
-
-/** POST /savings/{id}/upgrade (harga TIDAK dikirim; dihitung backend) */
-export interface UpgradeSavingRequestDto {
-  package_code: string;
 }

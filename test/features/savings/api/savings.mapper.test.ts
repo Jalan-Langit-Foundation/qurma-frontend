@@ -4,7 +4,6 @@ import {
   toCreateSavingRequest,
   toInstallment,
   toSaving,
-  toUpgradeOptions,
 } from "@/features/savings/api/savings.mapper";
 
 const baseDto: SavingSummaryDto = {
@@ -14,6 +13,7 @@ const baseDto: SavingSummaryDto = {
   status: "active",
   target_amount: 1_900_000,
   total_paid: 814_500,
+  paid_this_month: 271_500,
   remaining_amount: 1_085_500,
   progress_percent: 43,
   tenor_months: 7,
@@ -41,6 +41,7 @@ describe("toSaving", () => {
       packageId: "standar",
       startMonth: "2026-10",
       nextInstallment: { month: "2027-01", amount: 271_500 },
+      paidThisMonth: 271_500,
     });
     expect(saving.journey.find((step) => step.current)?.id).toBe(3);
   });
@@ -104,63 +105,5 @@ describe("toCreateSavingRequest", () => {
       start_month: "2026-12",
       tenor_months: 5,
     });
-  });
-});
-
-describe("toUpgradeOptions", () => {
-  const option = {
-    package: { code: "premium", name: "Premium" },
-    target_amount: 2_990_000,
-    additional_amount: 790_000,
-    new_monthly_amount: 350_000,
-    remaining_months: 5,
-  };
-
-  it("memetakan pilihan upgrade", () => {
-    expect(
-      toUpgradeOptions({
-        saving_id: 7,
-        eligible: true,
-        reason: null,
-        options: [option],
-      }),
-    ).toEqual({
-      savingId: 7,
-      eligible: true,
-      reason: null,
-      options: [
-        {
-          packageId: "premium",
-          packageName: "Premium",
-          targetAmount: 2_990_000,
-          additionalAmount: 790_000,
-          newMonthlyAmount: 350_000,
-          remainingMonths: 5,
-        },
-      ],
-    });
-  });
-
-  it("tidak eligible → pilihan dikosongkan walau backend mengirim isi", () => {
-    const result = toUpgradeOptions({
-      saving_id: 7,
-      eligible: false,
-      reason: "Tabungan sudah lunas",
-      options: [option],
-    });
-    expect(result.eligible).toBe(false);
-    expect(result.options).toEqual([]);
-    expect(result.reason).toBe("Tabungan sudah lunas");
-  });
-
-  it("eligible tapi tanpa pilihan → dianggap tidak tersedia", () => {
-    expect(
-      toUpgradeOptions({
-        saving_id: 7,
-        eligible: true,
-        reason: null,
-        options: [],
-      }).eligible,
-    ).toBe(false);
   });
 });

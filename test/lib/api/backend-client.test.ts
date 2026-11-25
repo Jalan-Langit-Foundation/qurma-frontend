@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/lib/api/api-error";
-import { backendFileRequest, backendRequest } from "@/lib/api/backend-client";
+import {
+  backendFileRequest,
+  backendRequest,
+  backendRequestWithMeta,
+} from "@/lib/api/backend-client";
 import { serverEnv } from "@/lib/server/env";
 
 const API = serverEnv.apiBaseUrl;
@@ -157,6 +161,32 @@ describe("backendRequest", () => {
 
     const error = await catchError(backendRequest("/x"));
     expect(error.kind).toBe("timeout");
+  });
+});
+
+describe("backendRequestWithMeta", () => {
+  it("mengembalikan data beserta meta yang sejajar dengan data", async () => {
+    mockFetch(async () =>
+      jsonResponse(200, {
+        success: true,
+        message: "Daftar transaksi",
+        data: { total_amount: 920_000, transactions: [] },
+        meta: { current_page: 1, per_page: 2, total: 4, last_page: 2 },
+      }),
+    );
+
+    const result = await backendRequestWithMeta("/transactions");
+    expect(result).toEqual({
+      data: { total_amount: 920_000, transactions: [] },
+      meta: { current_page: 1, per_page: 2, total: 4, last_page: 2 },
+    });
+  });
+
+  it("tanpa meta → meta null", async () => {
+    mockFetch(async () =>
+      jsonResponse(200, { success: true, message: "OK", data: { id: 1 } }),
+    );
+    expect((await backendRequestWithMeta("/auth/me")).meta).toBeNull();
   });
 });
 

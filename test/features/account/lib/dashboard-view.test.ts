@@ -19,6 +19,7 @@ function makeSaving(overrides: Partial<Saving> = {}): Saving {
     status: "active",
     targetAmount: 1_900_000,
     totalPaid: 550_000,
+    paidThisMonth: 0,
     remainingAmount: 1_350_000,
     progressPercent: 28,
     tenorMonths: 7,

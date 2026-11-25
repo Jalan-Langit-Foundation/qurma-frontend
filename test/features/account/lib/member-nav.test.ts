@@ -9,7 +9,6 @@ const allOff = {
   profile: false,
   transactions: false,
   receipts: false,
-  upgrade: false,
   dashboardSummary: false,
 };
 

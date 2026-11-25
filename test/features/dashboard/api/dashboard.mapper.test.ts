@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { toDashboardData } from "@/features/dashboard/api/dashboard.mapper";
-import type { DashboardDto } from "@/features/dashboard/api/dashboard.dto";
+import type {
+  DashboardDto,
+  DashboardInsightsDto,
+} from "@/features/dashboard/api/dashboard.dto";
+import type { SavingSummaryDto } from "@/features/savings/api/savings.dto";
 
 const user = {
   id: 1,
@@ -10,63 +14,132 @@ const user = {
   role: "user" as const,
 };
 
-describe("toDashboardData", () => {
-  it("belum punya tabungan → saving null, transaksi kosong", () => {
-    const dto: DashboardDto = { user, saving: null, recent_transactions: [] };
+const saving: SavingSummaryDto = {
+  id: 1,
+  package: { code: "standar", name: "Domba Standar" },
+  program_year: 2027,
+  status: "active",
+  target_amount: 1_600_000,
+  total_paid: 920_000,
+  paid_this_month: 230_000,
+  remaining_amount: 680_000,
+  progress_percent: 57,
+  tenor_months: 7,
+  start_month: "2026-11",
+  end_month: "2027-05",
+  monthly_amount: 230_000,
+  last_installment_amount: 220_000,
+  next_installment: { month: "2027-03", amount: 230_000 },
+  journey: {
+    target_selected: true,
+    saving_started: true,
+    half_reached: true,
+    target_reached: false,
+    animal_prepared: false,
+    qurban_done: false,
+    report_received: false,
+  },
+};
+
+// Contoh persis dari API Contract bagian 7
+const insights: DashboardInsightsDto = {
+  month_summary: {
+    month: "2027-02",
+    installment: {
+      amount: 230_000,
+      paid_amount: 230_000,
+      remaining_amount: 0,
+      status: "paid",
+    },
+    deposited: 230_000,
+  },
+  daily_estimate: 7667,
+  schedule_position: { status: "on_track", amount_behind: 0, months_ahead: 0 },
+  upgrade_suggestion: {
+    from: { code: "standar", name: "Domba Standar", price: 1_600_000 },
+    to: { code: "medium", name: "Domba Medium", price: 2_200_000 },
+    additional_amount: 600_000,
+  },
+};
+
+describe("toDashboardData (API Contract bagian 7)", () => {
+  it("belum punya tabungan → saving & insights null", () => {
+    const dto: DashboardDto = {
+      user,
+      savings_count: 0,
+      has_saving: false,
+      saving: null,
+      insights: null,
+    };
     expect(toDashboardData(dto)).toEqual({
       user,
+      savingsCount: 0,
       saving: null,
-      recentTransactions: [],
+      insights: null,
     });
   });
 
-  it("memetakan tabungan & transaksi dengan mapper fitur masing-masing", () => {
+  it("memetakan tabungan dan insights", () => {
     const data = toDashboardData({
       user,
-      saving: {
-        id: 7,
-        package: { code: "standar", name: "Standar" },
-        program_year: 2027,
-        status: "active",
-        target_amount: 1_900_000,
-        total_paid: 271_500,
-        remaining_amount: 1_628_500,
-        progress_percent: 14,
-        tenor_months: 7,
-        start_month: "2026-10",
-        end_month: "2027-04",
-        monthly_amount: 271_500,
-        last_installment_amount: 271_000,
-        next_installment: { month: "2026-11", amount: 271_500 },
-        journey: {
-          target_selected: true,
-          saving_started: true,
-          half_reached: false,
-          target_reached: false,
-          animal_prepared: false,
-          qurban_done: false,
-          report_received: false,
-        },
-      },
-      recent_transactions: [
-        {
-          id: 1,
-          saving_id: 7,
-          package: { code: "standar", name: "Standar" },
-          amount: 271_500,
-          paid_at: "2026-10-05",
-          note: null,
-          receipt_number: null,
-          created_at: "2026-10-05T09:00:00+07:00",
-        },
-      ],
+      savings_count: 1,
+      has_saving: true,
+      saving,
+      insights,
     });
 
-    expect(data.saving?.packageName).toBe("Standar");
-    expect(data.saving?.startMonth).toBe("2026-10");
-    expect(data.recentTransactions[0]).toMatchObject({
-      savingId: 7,
-      hasReceipt: false,
+    expect(data.savingsCount).toBe(1);
+    expect(data.saving).toMatchObject({
+      packageName: "Domba Standar",
+      paidThisMonth: 230_000,
+      startMonth: "2026-11",
     });
+    expect(data.insights).toEqual({
+      monthSummary: {
+        month: "2027-02",
+        installment: {
+          amount: 230_000,
+          paidAmount: 230_000,
+          remainingAmount: 0,
+          status: "paid",
+        },
+        deposited: 230_000,
+      },
+      dailyEstimate: 7667,
+      schedulePosition: { status: "on_track", amountBehind: 0, monthsAhead: 0 },
+      upgradeSuggestion: {
+        from: { packageId: "standar", name: "Domba Standar", price: 1_600_000 },
+        to: { packageId: "medium", name: "Domba Medium", price: 2_200_000 },
+        additionalAmount: 600_000,
+      },
+    });
+  });
+
+  it("cicilan bulan ini di luar jadwal & tanpa saran upgrade → null", () => {
+    const data = toDashboardData({
+      user,
+      savings_count: 1,
+      has_saving: true,
+      saving,
+      insights: {
+        ...insights,
+        month_summary: { ...insights.month_summary, installment: null },
+        upgrade_suggestion: null,
+      },
+    });
+    expect(data.insights?.monthSummary.installment).toBeNull();
+    expect(data.insights?.upgradeSuggestion).toBeNull();
+  });
+
+  it("has_saving false → isi saving/insights dari backend diabaikan", () => {
+    const data = toDashboardData({
+      user,
+      savings_count: 2,
+      has_saving: false,
+      saving,
+      insights,
+    });
+    expect(data.saving).toBeNull();
+    expect(data.insights).toBeNull();
   });
 });

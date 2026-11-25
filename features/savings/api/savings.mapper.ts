@@ -7,8 +7,6 @@ import type {
   Installment,
   Saving,
   SavingLedger,
-  UpgradeOption,
-  UpgradeOptions,
 } from "../lib/types";
 import { isYearMonth, type YearMonth } from "../lib/year-month";
 import type {
@@ -17,8 +15,6 @@ import type {
   SavingDepositsDto,
   SavingSummaryDto,
   ScheduleItemDto,
-  UpgradeOptionDto,
-  UpgradeOptionsDto,
 } from "./savings.dto";
 
 function toYearMonth(value: string, field: string): YearMonth {
@@ -41,7 +37,9 @@ export function toSaving(dto: SavingSummaryDto): Saving {
     status: dto.status,
     targetAmount: dto.target_amount,
     totalPaid: dto.total_paid,
+    paidThisMonth: dto.paid_this_month,
     remainingAmount: dto.remaining_amount,
+    // Dihitung ulang agar aturan pembulatan sama di seluruh aplikasi
     progressPercent: progress.percent,
     tenorMonths: dto.tenor_months,
     startMonth: toYearMonth(dto.start_month, "start_month"),
@@ -99,26 +97,5 @@ export function toCreateSavingRequest(
     package_code: input.packageId,
     start_month: input.startMonth,
     tenor_months: input.tenorMonths,
-  };
-}
-
-function toUpgradeOption(dto: UpgradeOptionDto): UpgradeOption {
-  return {
-    packageId: isPackageId(dto.package.code) ? dto.package.code : null,
-    packageName: dto.package.name,
-    targetAmount: dto.target_amount,
-    additionalAmount: dto.additional_amount,
-    newMonthlyAmount: dto.new_monthly_amount,
-    remainingMonths: dto.remaining_months,
-  };
-}
-
-export function toUpgradeOptions(dto: UpgradeOptionsDto): UpgradeOptions {
-  const options = dto.eligible ? dto.options.map(toUpgradeOption) : [];
-  return {
-    savingId: dto.saving_id,
-    eligible: dto.eligible && options.length > 0,
-    reason: dto.reason,
-    options,
   };
 }

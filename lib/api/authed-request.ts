@@ -6,17 +6,14 @@ import { ApiError } from "./api-error";
 import {
   backendFileRequest,
   backendRequest,
+  backendRequestWithMeta,
   type BackendRequestOptions,
+  type BackendResult,
 } from "./backend-client";
 import type { BackendFile } from "./types";
 
 type AuthedOptions = Omit<BackendRequestOptions, "token">;
 
-/**
- * Jalankan request dengan token dari cookie sesi.
- * Token tidak ada atau ditolak backend (401) → /session/expired
- * (cookie dihapus lalu diarahkan ke halaman login).
- */
 async function withSession<T>(run: (token: string) => Promise<T>): Promise<T> {
   const token = await getSessionToken();
   if (!token) redirect(ROUTES.sessionExpired);
@@ -31,7 +28,6 @@ async function withSession<T>(run: (token: string) => Promise<T>): Promise<T> {
   }
 }
 
-/** Request JSON ke endpoint yang butuh login. */
 export function authedRequest<T>(
   path: string,
   options: AuthedOptions = {},
@@ -39,7 +35,15 @@ export function authedRequest<T>(
   return withSession((token) => backendRequest<T>(path, { ...options, token }));
 }
 
-/** Unduh berkas dari endpoint yang butuh login. */
+export function authedRequestWithMeta<T, M = unknown>(
+  path: string,
+  options: AuthedOptions = {},
+): Promise<BackendResult<T, M>> {
+  return withSession((token) =>
+    backendRequestWithMeta<T, M>(path, { ...options, token }),
+  );
+}
+
 export function authedFileRequest(
   path: string,
   options: AuthedOptions = {},
@@ -49,7 +53,6 @@ export function authedFileRequest(
   );
 }
 
-/** 404 dari backend berarti "tidak ada" (bukan error) untuk banyak endpoint. */
 export async function nullIfNotFound<T>(
   request: Promise<T>,
 ): Promise<T | null> {

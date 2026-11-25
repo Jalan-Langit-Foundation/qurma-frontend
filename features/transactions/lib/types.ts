@@ -1,22 +1,28 @@
+import type { Paginated } from "@/lib/api/pagination";
+
 export interface Transaction {
   id: number;
   savingId: number;
   packageName: string;
   amount: number;
-  /** "YYYY-MM-DD" */
   paidAt: string;
   note: string | null;
-  receiptNumber: string | null;
-  /** true bila kwitansi bisa diunduh */
-  hasReceipt: boolean;
-  recordedAt: string;
 }
+
+export type TransactionSort = "paid_at" | "-paid_at" | "amount" | "-amount";
 
 export interface TransactionListQuery {
   page?: number;
   perPage?: number;
-  /** Hanya transaksi dari tabungan tertentu */
   savingId?: number;
+  month?: string;
+  from?: string;
+  to?: string;
+  sort?: TransactionSort;
+}
+
+export interface TransactionPage extends Paginated<Transaction> {
+  totalAmount: number;
 }
 
 export const DEFAULT_TRANSACTIONS_PER_PAGE = 10;

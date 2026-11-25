@@ -4,10 +4,8 @@ import { parsePageParam, toPaginated } from "@/lib/api/pagination";
 describe("toPaginated", () => {
   it("memetakan item dan meta halaman", () => {
     const result = toPaginated(
-      {
-        items: [{ id: 1 }, { id: 2 }],
-        meta: { current_page: 2, per_page: 2, total: 5, last_page: 3 },
-      },
+      [{ id: 1 }, { id: 2 }],
+      { current_page: 2, per_page: 2, total: 5, last_page: 3 },
       (item) => item.id * 10,
     );
     expect(result).toEqual({
@@ -23,15 +21,24 @@ describe("toPaginated", () => {
 
   it("daftar kosong tetap dianggap 1 halaman", () => {
     const result = toPaginated(
-      {
-        items: [],
-        meta: { current_page: 1, per_page: 10, total: 0, last_page: 0 },
-      },
+      [],
+      { current_page: 1, per_page: 10, total: 0, last_page: 0 },
       (item: unknown) => item,
     );
     expect(result.totalPages).toBe(1);
     expect(result.hasNextPage).toBe(false);
     expect(result.hasPreviousPage).toBe(false);
+  });
+
+  it("meta tidak dikirim → satu halaman berisi semua item", () => {
+    const result = toPaginated([1, 2, 3], null, (item) => item);
+    expect(result).toMatchObject({
+      page: 1,
+      perPage: 3,
+      total: 3,
+      totalPages: 1,
+      hasNextPage: false,
+    });
   });
 });
 

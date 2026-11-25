@@ -18,6 +18,12 @@ export interface FullPaymentMessageDetails {
   price: string;
 }
 
+export interface UpgradeMessageDetails {
+  fromPackage: string;
+  toPackage: string;
+  additionalAmount: string;
+}
+
 export interface MemberMessageDetails {
   name: string;
   email: string;
@@ -66,6 +72,20 @@ export const WHATSAPP_MESSAGES = {
       ...memberIdentity(details),
       "",
       "Pertanyaan: ",
+    ].join("\n"),
+
+  upgradeRequest: (
+    details: MemberMessageDetails,
+    { fromPackage, toPackage, additionalAmount }: UpgradeMessageDetails,
+  ) =>
+    [
+      `${GREETING} saya ingin naik paket tabungan ${SITE_CONFIG.programFullName}.`,
+      "",
+      ...memberIdentity(details),
+      `Dari: ${fromPackage}`,
+      `Ke: ${toPackage} (tambahan ${additionalAmount})`,
+      "",
+      "Mohon bantuannya untuk menghitung ulang setoran saya. Terima kasih.",
     ].join("\n"),
 
   fullPayment: ({ packageName, weight, price }: FullPaymentMessageDetails) =>

@@ -3,42 +3,56 @@ import type { TransactionDto } from "@/features/transactions/api/transactions.dt
 import {
   toTransaction,
   toTransactionListQuery,
+  toTransactionPage,
 } from "@/features/transactions/api/transactions.mapper";
 
 const dto: TransactionDto = {
-  id: 12,
+  id: 4,
   saving_id: 1,
-  package: { code: "start", name: "Start" },
-  amount: 271_500,
-  paid_at: "2026-11-05",
-  note: "Setoran November",
-  receipt_number: "QRM-2026-000012",
-  created_at: "2026-11-05T10:15:00+07:00",
+  package: { code: "standar", name: "Domba Standar" },
+  amount: 230_000,
+  paid_at: "2027-02-03",
+  note: null,
 };
 
 describe("toTransaction", () => {
-  it("memetakan contoh usulan kontrak", () => {
+  it("memetakan contoh API Contract bagian 9", () => {
     expect(toTransaction(dto)).toEqual({
-      id: 12,
+      id: 4,
       savingId: 1,
-      packageName: "Start",
-      amount: 271_500,
-      paidAt: "2026-11-05",
-      note: "Setoran November",
-      receiptNumber: "QRM-2026-000012",
-      hasReceipt: true,
-      recordedAt: "2026-11-05T10:15:00+07:00",
+      packageName: "Domba Standar",
+      amount: 230_000,
+      paidAt: "2027-02-03",
+      note: null,
+    });
+  });
+});
+
+describe("toTransactionPage", () => {
+  it("menggabungkan data.transactions, total_amount, dan meta", () => {
+    const page = toTransactionPage(
+      { total_amount: 920_000, transactions: [dto, { ...dto, id: 3 }] },
+      { current_page: 1, per_page: 2, total: 4, last_page: 2 },
+    );
+    expect(page.items.map((item) => item.id)).toEqual([4, 3]);
+    expect(page).toMatchObject({
+      totalAmount: 920_000,
+      page: 1,
+      perPage: 2,
+      total: 4,
+      totalPages: 2,
+      hasNextPage: true,
+      hasPreviousPage: false,
     });
   });
 
-  it.each([null, "", "   "])(
-    "nomor kwitansi %j → kwitansi belum tersedia",
-    (receipt) => {
-      const transaction = toTransaction({ ...dto, receipt_number: receipt });
-      expect(transaction.hasReceipt).toBe(false);
-      expect(transaction.receiptNumber).toBeNull();
-    },
-  );
+  it("tanpa meta → dianggap satu halaman", () => {
+    const page = toTransactionPage(
+      { total_amount: 230_000, transactions: [dto] },
+      null,
+    );
+    expect(page).toMatchObject({ total: 1, totalPages: 1, hasNextPage: false });
+  });
 });
 
 describe("toTransactionListQuery", () => {
@@ -47,12 +61,28 @@ describe("toTransactionListQuery", () => {
       page: 1,
       per_page: 10,
       saving_id: undefined,
+      month: undefined,
+      from: undefined,
+      to: undefined,
+      sort: undefined,
     });
   });
 
-  it("halaman di bawah 1 dinaikkan ke 1", () => {
+  it("meneruskan filter & urutan dari kontrak", () => {
     expect(
-      toTransactionListQuery({ page: 0, perPage: 20, savingId: 3 }),
-    ).toEqual({ page: 1, per_page: 20, saving_id: 3 });
+      toTransactionListQuery({
+        page: 0,
+        perPage: 20,
+        savingId: 3,
+        month: "2027-02",
+        sort: "-amount",
+      }),
+    ).toMatchObject({
+      page: 1,
+      per_page: 20,
+      saving_id: 3,
+      month: "2027-02",
+      sort: "-amount",
+    });
   });
 });

@@ -7,6 +7,7 @@ export interface ApiSuccessBody<T> {
   success: true;
   message: string;
   data: T;
+  meta?: unknown;
 }
 
 export interface ApiErrorBody {
@@ -20,15 +21,12 @@ export type ApiBody<T> = ApiSuccessBody<T> | ApiErrorBody;
 /** Error per field dari validasi backend (422), sudah diambil pesan pertamanya. */
 export type FieldErrors = Record<string, string>;
 
-/** Daftar berhalaman dari backend (usulan: docs/api-usulan-endpoint.md). */
-export interface PaginatedDto<T> {
-  items: T[];
-  meta: {
-    current_page: number;
-    per_page: number;
-    total: number;
-    last_page: number;
-  };
+/** `meta` pagination, sejajar dengan `data` (API Contract bagian 9). */
+export interface PaginationMetaDto {
+  current_page: number;
+  per_page: number;
+  total: number;
+  last_page: number;
 }
 
 /** Berkas biner dari backend (mis. PDF kwitansi). */
