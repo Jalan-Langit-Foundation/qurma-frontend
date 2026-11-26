@@ -8,7 +8,10 @@ import { MEMBER_SECTION_IDS } from "@/config/navigation";
 import { PackageCompareList } from "@/features/packages";
 import { getPackages } from "@/features/packages/server";
 import { DepositRecords, DepositTable } from "@/features/savings";
-import { getSavingLedger } from "@/features/savings/server";
+import {
+  getSavingLedger,
+  getSavingRegistration,
+} from "@/features/savings/server";
 import { buildDashboardView, getFirstName } from "../lib/dashboard-view";
 import { loadDashboard } from "../lib/load-dashboard";
 import { DashboardGreeting } from "./dashboard-greeting";
@@ -59,6 +62,7 @@ export async function DashboardPage() {
   ]);
 
   if (!saving) {
+    const registration = await getSavingRegistration();
     return (
       <MemberContainer>
         <DashboardGreeting
@@ -66,7 +70,7 @@ export async function DashboardPage() {
           subtitle="Selamat datang di area penabung QURMA."
         />
         <div className="mt-8">
-          <EmptySavingState packages={packages} />
+          <EmptySavingState packages={packages} registration={registration} />
         </div>
       </MemberContainer>
     );

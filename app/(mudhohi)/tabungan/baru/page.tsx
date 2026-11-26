@@ -4,16 +4,25 @@ import { Wallet } from "lucide-react";
 import { MemberPageSkeleton, PagePlaceholder } from "@/components/layout";
 import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
 import { ROUTES } from "@/config/navigation";
-import { isSavingRegistrationOpen } from "@/features/savings";
-import { NewSavingPage } from "@/features/savings/server";
+import {
+  getSavingRegistration,
+  NewSavingPage,
+  RegistrationClosed,
+} from "@/features/savings/server";
 
 export const metadata: Metadata = {
   title: "Buat Tabungan Qurban",
   description: "Pilih paket qurban dan bulan mulai menabung.",
 };
 
-export default function Page() {
-  if (!isSavingRegistrationOpen) {
+export default async function Page() {
+  const registration = await getSavingRegistration();
+
+  if (registration.state === "closed") {
+    return <RegistrationClosed deadline={registration.deadline} />;
+  }
+
+  if (registration.state === "not_opened") {
     return (
       <PagePlaceholder
         eyebrow="Tabungan Qurban"

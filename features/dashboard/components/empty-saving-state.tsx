@@ -2,34 +2,51 @@ import * as React from "react";
 import { MEMBER_SECTION_IDS } from "@/config/navigation";
 import { PROGRAM } from "@/config/program";
 import { PackageCompareList, type QurbanPackage } from "@/features/packages";
-import { isSavingRegistrationOpen } from "@/features/savings";
+import type { SavingRegistration } from "@/features/savings/server";
+import { formatTanggal } from "@/lib/format";
 import { buildEmptyStateCta } from "../lib/dashboard-cta";
 import { CtaButton } from "./dashboard-greeting";
 
-const STEPS = [
-  {
-    title: "Pilih paket",
-    text: "Tentukan bobot domba sesuai target tabungan Anda.",
-  },
-  {
-    title: isSavingRegistrationOpen ? "Atur setoran" : "Daftar lewat CS QURMA",
-    text: isSavingRegistrationOpen
-      ? "Pilih bulan mulai; setoran bulanan dihitung otomatis."
-      : "CS QURMA mendaftarkan tabungan dan jadwal setoran Anda.",
-  },
-  {
-    title: "Pantau di sini",
-    text: "Progres, jadwal, dan persiapan domba tampil di dashboard ini.",
-  },
-] as const;
+function buildSteps(registrationOpen: boolean) {
+  return [
+    {
+      title: "Pilih paket",
+      text: "Tentukan bobot domba sesuai target tabungan Anda.",
+    },
+    {
+      title: registrationOpen ? "Atur setoran" : "Daftar lewat CS QURMA",
+      text: registrationOpen
+        ? "Pilih bulan mulai; setoran bulanan dihitung otomatis."
+        : "CS QURMA mendaftarkan tabungan dan jadwal setoran Anda.",
+    },
+    {
+      title: "Pantau di sini",
+      text: "Progres, jadwal, dan persiapan domba tampil di dashboard ini.",
+    },
+  ];
+}
 
-const EMPTY_STATE_CTA = buildEmptyStateCta();
+function buildIntro(registration: SavingRegistration): string {
+  switch (registration.state) {
+    case "open":
+      return `Mulai menabung sekarang agar qurban ${PROGRAM.hijriLabel} terasa ringan.`;
+    case "closed":
+      return `Pendaftaran Tabungan Qurban sudah ditutup pada ${formatTanggal(registration.deadline)}. Hubungi CS QURMA bila ada pertanyaan.`;
+    case "not_opened":
+      return "Pendaftaran tabungan saat ini dibantu langsung oleh CS QURMA. Setelah didaftarkan, progres tabungan akan tampil di sini.";
+  }
+}
 
 export function EmptySavingState({
   packages,
+  registration,
 }: {
   packages: readonly QurbanPackage[];
+  registration: SavingRegistration;
 }) {
+  const registrationOpen = registration.state === "open";
+  const steps = buildSteps(registrationOpen);
+
   return (
     <div className="space-y-4">
       <section
@@ -44,18 +61,16 @@ export function EmptySavingState({
             Anda belum memiliki tabungan qurban
           </h2>
           <p className="max-w-md text-sm text-white/85 sm:text-base">
-            {isSavingRegistrationOpen
-              ? `Mulai menabung sekarang agar qurban ${PROGRAM.hijriLabel} terasa ringan.`
-              : "Pendaftaran tabungan saat ini dibantu langsung oleh CS QURMA. Setelah didaftarkan, progres tabungan akan tampil di sini."}
+            {buildIntro(registration)}
           </p>
           <CtaButton
-            cta={EMPTY_STATE_CTA}
+            cta={buildEmptyStateCta(registrationOpen)}
             className="w-full bg-white text-brand-strong hover:bg-brand-soft sm:w-auto"
           />
         </div>
 
         <ol className="grid gap-3">
-          {STEPS.map((step, index) => (
+          {steps.map((step, index) => (
             <li
               key={step.title}
               className="flex gap-4 rounded-2xl bg-white/10 p-4"

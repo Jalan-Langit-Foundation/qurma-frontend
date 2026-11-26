@@ -1,6 +1,6 @@
 import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
 import { ROUTES } from "@/config/navigation";
-import { isSavingRegistrationOpen, type Saving } from "@/features/savings";
+import type { Saving } from "@/features/savings";
 
 export interface DashboardMember {
   name: string;
@@ -49,9 +49,7 @@ export function buildSavingCta(
   }
 }
 
-export function buildEmptyStateCta(
-  registrationOpen: boolean = isSavingRegistrationOpen,
-): DashboardCta {
+export function buildEmptyStateCta(registrationOpen: boolean): DashboardCta {
   return registrationOpen
     ? {
         label: "Mulai Tabungan",

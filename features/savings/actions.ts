@@ -5,7 +5,8 @@ import { ROUTES } from "@/config/navigation";
 import { isPackageId } from "@/features/packages";
 import { ApiError, toUserMessage } from "@/lib/api/api-error";
 import { createSaving } from "./api/savings.api";
-import { isSavingRegistrationOpen } from "./lib/program";
+import { formatTanggal } from "@/lib/format";
+import { getSavingRegistration } from "./api/registration.api";
 import { getStartMonthOptions } from "./lib/start-months";
 import { currentYearMonth } from "./lib/year-month";
 
@@ -19,11 +20,18 @@ export async function createSavingAction(input: {
   packageId: string;
   startMonth: string;
 }): Promise<CreateSavingActionError> {
-  if (!isSavingRegistrationOpen) {
+  const registration = await getSavingRegistration();
+  if (registration.state === "not_opened") {
     return {
       ok: false,
       message:
         "Pendaftaran tabungan online belum dibuka. Silakan hubungi CS QURMA melalui WhatsApp.",
+    };
+  }
+  if (registration.state === "closed") {
+    return {
+      ok: false,
+      message: `Pendaftaran Tabungan Qurban sudah ditutup (batas pendaftaran: ${formatTanggal(registration.deadline)}).`,
     };
   }
 

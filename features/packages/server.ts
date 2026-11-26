@@ -1,3 +1,4 @@
 import "server-only";
 
-export { getPackages } from "./api/program.api";
+export { getPackages, getRegistrationStatus } from "./api/program.api";
+export type { RegistrationStatus } from "./lib/types";
