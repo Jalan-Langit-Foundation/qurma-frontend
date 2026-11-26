@@ -86,11 +86,6 @@ const features = {
     "NEXT_PUBLIC_FEATURE_TRANSACTIONS",
     process.env.NEXT_PUBLIC_FEATURE_TRANSACTIONS,
   ),
-  /** Unduh kwitansi setoran: GET /transactions/{id}/receipt */
-  receipts: readFlag(
-    "NEXT_PUBLIC_FEATURE_RECEIPTS",
-    process.env.NEXT_PUBLIC_FEATURE_RECEIPTS,
-  ),
   /** Dashboard memakai satu request GET /user/dashboard */
   dashboardSummary: readFlag(
     "NEXT_PUBLIC_FEATURE_DASHBOARD_SUMMARY",

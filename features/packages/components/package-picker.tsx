@@ -49,7 +49,7 @@ export function PackagePicker({
                 isSelected ? "text-white" : "text-ink",
               )}
             >
-              {pkg.name}
+              {pkg.shortName}
             </span>
             <span
               className={cn(

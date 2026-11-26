@@ -83,7 +83,7 @@ export function CalculatorResult({
 
         <dl className="mt-8 divide-y divide-white/15 border-y border-white/15 font-body text-sm">
           <div className="flex items-baseline justify-between gap-4 py-3">
-            <dt className="text-white/70">Paket {selectedPackage.name}</dt>
+            <dt className="text-white/70">{selectedPackage.name}</dt>
             <dd className="font-heading font-semibold">
               {formatRupiah(selectedPackage.target)}
             </dd>

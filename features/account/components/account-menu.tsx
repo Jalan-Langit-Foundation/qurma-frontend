@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronRight, Settings } from "lucide-react";
 import { ROUTES } from "@/config/navigation";
-import { LogoutButton } from "@/features/auth";
+import { LogoutDialog, LogoutMenuItem } from "@/features/auth";
 import { cn } from "@/lib/utils";
 import { getInitials } from "../lib/initials";
 
@@ -16,6 +16,7 @@ interface AccountMenuProps {
 /** Avatar + menu akun: identitas, Pengaturan Akun, dan Keluar. */
 export function AccountMenu({ name, email }: AccountMenuProps) {
   const [open, setOpen] = React.useState(false);
+  const [confirmLogout, setConfirmLogout] = React.useState(false);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const menuId = React.useId();
@@ -51,7 +52,7 @@ export function AccountMenu({ name, email }: AccountMenuProps) {
         aria-controls={menuId}
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "group flex h-11 cursor-pointer items-center gap-1 rounded-full p-0.5 pr-1.5 transition-colors focus-ring focus-visible:ring-offset-2",
+          "group flex h-11 cursor-pointer items-center gap-1 rounded-full p-0.5 pr-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2",
           open ? "bg-surface" : "hover:bg-surface",
         )}
       >
@@ -113,10 +114,20 @@ export function AccountMenu({ name, email }: AccountMenuProps) {
           </Link>
 
           <div className="mt-2 border-t border-slate-100 pt-2">
-            <LogoutButton variant="menu" />
+            <LogoutMenuItem
+              onClick={() => {
+                setOpen(false);
+                setConfirmLogout(true);
+              }}
+            />
           </div>
         </div>
       )}
+
+      <LogoutDialog
+        open={confirmLogout}
+        onClose={() => setConfirmLogout(false)}
+      />
     </div>
   );
 }

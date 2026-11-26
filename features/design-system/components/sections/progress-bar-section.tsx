@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { getDefaultPackage } from "@/features/packages";
+import { getDefaultPackage, usePackages } from "@/features/packages";
 import { formatRupiah } from "@/lib/format";
 import { DemoSection } from "../demo-section";
 
@@ -11,7 +11,7 @@ const SLIDER_ID = "progress-slider";
 
 export function ProgressBarSection() {
   const [value, setValue] = React.useState(54);
-  const pkg = getDefaultPackage();
+  const pkg = getDefaultPackage(usePackages());
 
   return (
     <DemoSection

@@ -37,7 +37,7 @@ describe("proxy", () => {
     expect(location(proxy(request("/login")))).toBeNull();
   });
 
-  it.each(["/akun", "/transaksi?page=2", "/kwitansi/12"])(
+  it.each(["/akun", "/transaksi?page=2"])(
     "halaman member baru %s juga dijaga",
     (path) => {
       expect(location(proxy(request(path)))).toMatch(/\/login\?next=/);

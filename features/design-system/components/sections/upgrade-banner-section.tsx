@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import {
-  ALL_PACKAGES,
   getDefaultPackage,
   UpgradeBanner,
+  usePackages,
   type PackageId,
 } from "@/features/packages";
 import {
@@ -13,24 +13,23 @@ import {
   type DemoActionHandler,
 } from "../demo-section";
 
-const PACKAGE_OPTIONS = ALL_PACKAGES.map((pkg) => ({
-  value: pkg.id,
-  label: pkg.id,
-}));
-
-/** Paket dengan target tertinggi tidak punya pilihan upgrade. */
-const HIGHEST_TARGET = Math.max(...ALL_PACKAGES.map((pkg) => pkg.target));
-
 export function UpgradeBannerSection({
   onAction,
 }: {
   onAction: DemoActionHandler;
 }) {
+  const packages = usePackages();
   const [packageId, setPackageId] = React.useState<PackageId>(
-    () => getDefaultPackage().id,
+    () => getDefaultPackage(packages).id,
   );
-  const current = ALL_PACKAGES.find((pkg) => pkg.id === packageId);
-  const isHighest = current?.target === HIGHEST_TARGET;
+  const packageOptions = packages.map((pkg) => ({
+    value: pkg.id,
+    label: pkg.id,
+  }));
+  const current = packages.find((pkg) => pkg.id === packageId);
+  /** Paket dengan target tertinggi tidak punya pilihan upgrade. */
+  const isHighest =
+    current?.target === Math.max(...packages.map((pkg) => pkg.target));
 
   return (
     <DemoSection
@@ -41,7 +40,7 @@ export function UpgradeBannerSection({
       controls={
         <PillGroup
           label="Paket aktif"
-          options={PACKAGE_OPTIONS}
+          options={packageOptions}
           value={packageId}
           onChange={setPackageId}
           pillClassName="uppercase"
@@ -58,7 +57,7 @@ export function UpgradeBannerSection({
           key={packageId}
           currentPackageId={packageId}
           dismissible
-          onUpgrade={(target) => onAction(`Upgrade ke Paket ${target.name}`)}
+          onUpgrade={(target) => onAction(`Upgrade ke ${target.name}`)}
         />
       )}
     </DemoSection>

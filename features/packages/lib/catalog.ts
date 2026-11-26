@@ -2,10 +2,17 @@ import type { QurbanPackage } from "./types";
 
 export const PACKAGE_IDS = ["standar", "medium", "premium"] as const;
 
-export const PACKAGES = [
+const PERKS = [
+  "Domba sehat & sesuai syariat",
+  "Disiapkan oleh peternak mitra",
+  "Laporan dokumentasi pelaksanaan",
+] as const;
+
+export const FALLBACK_PACKAGES = [
   {
     id: "standar",
-    name: "Standar",
+    name: "Domba Standar",
+    shortName: "Standar",
     grade: "A",
     target: 1_600_000,
     weightMinKg: 20,
@@ -14,15 +21,12 @@ export const PACKAGES = [
     description: "Domba pilihan untuk menunaikan qurban.",
     recommended: false,
     copy: { weightLabel: "Target bobot", depositLabel: "Setoran ringan" },
-    perks: [
-      "Domba sehat & sesuai syariat",
-      "Disiapkan oleh peternak mitra",
-      "Laporan dokumentasi pelaksanaan",
-    ],
+    perks: PERKS,
   },
   {
     id: "medium",
-    name: "Medium",
+    name: "Domba Medium",
+    shortName: "Medium",
     grade: "B",
     target: 2_200_000,
     weightMinKg: 26,
@@ -31,15 +35,12 @@ export const PACKAGES = [
     description: "Bobot lebih besar, manfaat lebih luas.",
     recommended: false,
     copy: { weightLabel: "Target bobot", depositLabel: "Setoran terencana" },
-    perks: [
-      "Domba sehat & sesuai syariat",
-      "Disiapkan oleh peternak mitra",
-      "Laporan dokumentasi pelaksanaan",
-    ],
+    perks: PERKS,
   },
   {
     id: "premium",
-    name: "Premium",
+    name: "Domba Premium",
+    shortName: "Premium",
     grade: "C",
     target: 2_990_000,
     weightMinKg: 30,
@@ -48,10 +49,6 @@ export const PACKAGES = [
     description: "Pilihan dengan target bobot terbesar.",
     recommended: false,
     copy: { weightLabel: "Target bobot", depositLabel: "Setoran teratur" },
-    perks: [
-      "Domba sehat & sesuai syariat",
-      "Disiapkan oleh peternak mitra",
-      "Laporan dokumentasi pelaksanaan",
-    ],
+    perks: PERKS,
   },
 ] as const satisfies readonly QurbanPackage[];

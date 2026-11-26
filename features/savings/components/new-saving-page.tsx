@@ -16,7 +16,7 @@ export async function NewSavingPage() {
         eyebrow="Tabungan Qurban"
         title="Buat Tabungan Baru"
         heading="Tabungan Anda Masih Berjalan"
-        description={`Anda sudah memiliki tabungan Paket ${current.packageName} yang sedang berjalan. Satu akun hanya dapat memiliki satu tabungan aktif.`}
+        description={`Anda sudah memiliki tabungan ${current.packageName} yang sedang berjalan. Satu akun hanya dapat memiliki satu tabungan aktif.`}
         backLink={{ href: ROUTES.dashboard, label: "Kembali ke Dashboard" }}
         actions={[{ label: "Lihat Dashboard", href: ROUTES.dashboard }]}
       />

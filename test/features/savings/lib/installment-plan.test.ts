@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ALL_PACKAGES } from "@/features/packages";
+import { FALLBACK_PACKAGES } from "@/features/packages";
 import {
   calculateInstallmentPlan,
   estimateDailySaving,
@@ -37,7 +37,7 @@ describe("calculateInstallmentPlan", () => {
     expect(result.plan.lastAmount).toBe(315_000);
   });
 
-  it.each(ALL_PACKAGES.map((pkg) => pkg.target))(
+  it.each(FALLBACK_PACKAGES.map((pkg) => pkg.target))(
     "total semua angsuran selalu tepat sama dengan target (%i)",
     (target) => {
       for (const startMonth of ["2026-10", "2026-12", "2027-02", "2027-04"]) {

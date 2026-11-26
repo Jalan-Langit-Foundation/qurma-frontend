@@ -16,6 +16,10 @@ export function JourneyCard({
   savingId: number;
   className?: string;
 }) {
+  const completedCount = data.steps.filter(
+    (step) => step.state === "done",
+  ).length;
+
   return (
     <BentoCard
       title="Menuju Hari Qurban"
@@ -32,7 +36,8 @@ export function JourneyCard({
       }
     >
       <p className="text-xs text-white/80">
-        Tahap {data.step} dari {data.total} · {data.title}
+        {completedCount} dari {data.total} tahap selesai · Berikutnya:{" "}
+        {data.title}
       </p>
       {data.milestone ? (
         <>

@@ -1,9 +1,9 @@
 import type { StaticImageData } from "next/image";
 import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
 import {
-  ALL_PACKAGES,
   formatWeightRange,
   type PackageId,
+  type QurbanPackage,
 } from "@/features/packages";
 import { formatRupiah } from "@/lib/format";
 import dombaMedium from "@/public/images/programs/qurban/domba-medium.webp";
@@ -40,23 +40,26 @@ const DOMBA_PHOTOS: Record<PackageId, { src: StaticImageData; alt: string }> = {
   },
 };
 
-const DOMBA_OPTIONS: DombaOption[] = ALL_PACKAGES.map((pkg) => {
-  const name = `Domba ${pkg.name}`;
-  const weight = formatWeightRange(pkg);
-  const price = formatRupiah(pkg.target);
+export const buildDombaOptions = (
+  packages: readonly QurbanPackage[],
+): DombaOption[] =>
+  packages.map((pkg) => {
+    const { name } = pkg;
+    const weight = formatWeightRange(pkg);
+    const price = formatRupiah(pkg.target);
 
-  return {
-    id: pkg.id,
-    name,
-    badge: pkg.note,
-    weightLabel: `Target bobot ${weight}`,
-    priceLabel: price,
-    photo: DOMBA_PHOTOS[pkg.id],
-    whatsappUrl: buildWhatsappUrl(
-      WHATSAPP_MESSAGES.fullPayment({ packageName: name, weight, price }),
-    ),
-  };
-});
+    return {
+      id: pkg.id,
+      name,
+      badge: pkg.note,
+      weightLabel: `Target bobot ${weight}`,
+      priceLabel: price,
+      photo: DOMBA_PHOTOS[pkg.id],
+      whatsappUrl: buildWhatsappUrl(
+        WHATSAPP_MESSAGES.fullPayment({ packageName: name, weight, price }),
+      ),
+    };
+  });
 
 export const TUNAIKAN_CONTENT = {
   label: "Bayar penuh",
@@ -69,7 +72,6 @@ export const TUNAIKAN_CONTENT = {
     "Pilih satu ekor domba sesuai kebutuhan dan tunaikan pembayarannya. Jalan Langit Foundation akan membantu proses pengadaan, penyembelihan, hingga penyaluran manfaat qurban kepada masyarakat di wilayah yang membutuhkan.",
   ],
   optionsLabel: "Pilihan domba",
-  options: DOMBA_OPTIONS,
   priceUnit: "/ ekor",
   photoNote: "Foto ilustrasi",
   ctaLabel: "Konsultasi",

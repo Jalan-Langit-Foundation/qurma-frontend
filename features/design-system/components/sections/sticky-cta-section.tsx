@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getDefaultPackage } from "@/features/packages";
+import { getDefaultPackage, usePackages } from "@/features/packages";
 import { calculateDepositPlan, SAVINGS_PROGRAM } from "@/features/savings";
 import { formatRupiahSingkat } from "@/lib/format";
 import { DemoSection } from "../demo-section";
 
 export function StickyCtaSection() {
-  const pkg = getDefaultPackage();
+  const pkg = getDefaultPackage(usePackages());
   const depositCount = SAVINGS_PROGRAM.defaultDepositCount;
   const depositAmount =
     calculateDepositPlan(pkg.target, depositCount)?.depositAmount ?? 0;
@@ -30,7 +30,7 @@ export function StickyCtaSection() {
           <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-md backdrop-blur-md">
             <div className="flex min-w-0 flex-col">
               <span className="truncate font-heading text-xs font-bold text-ink">
-                Paket {pkg.name} ({formatRupiahSingkat(pkg.target)})
+                {pkg.name} ({formatRupiahSingkat(pkg.target)})
               </span>
               <span className="text-[11px] font-medium text-brand-strong">
                 {depositCount}× setoran ·{" "}

@@ -6,6 +6,7 @@ import { buttonClassName } from "@/components/ui/button-styles";
 import { WHATSAPP_MESSAGES } from "@/config/contact";
 import { MEMBER_SECTION_IDS } from "@/config/navigation";
 import { PackageCompareList } from "@/features/packages";
+import { getPackages } from "@/features/packages/server";
 import { DepositRecords, DepositTable } from "@/features/savings";
 import { getSavingLedger } from "@/features/savings/server";
 import { buildDashboardView, getFirstName } from "../lib/dashboard-view";
@@ -52,7 +53,10 @@ function Section({
 
 /** Halaman /dashboard (dirender di server, di dalam <Suspense>). */
 export async function DashboardPage() {
-  const { user, saving, insights } = await loadDashboard();
+  const [{ user, saving, insights }, packages] = await Promise.all([
+    loadDashboard(),
+    getPackages(),
+  ]);
 
   if (!saving) {
     return (
@@ -62,14 +66,14 @@ export async function DashboardPage() {
           subtitle="Selamat datang di area penabung QURMA."
         />
         <div className="mt-8">
-          <EmptySavingState />
+          <EmptySavingState packages={packages} />
         </div>
       </MemberContainer>
     );
   }
 
   const ledger = await getSavingLedger(saving.id);
-  const view = buildDashboardView(saving, ledger, user);
+  const view = buildDashboardView(saving, ledger, user, packages);
   const member = {
     name: user.name,
     email: user.email,
@@ -129,7 +133,10 @@ export async function DashboardPage() {
             member={member}
           />
         )}
-        <PackageCompareList currentPackageId={saving.packageId} />
+        <PackageCompareList
+          packages={packages}
+          currentPackageId={saving.packageId}
+        />
         <WhatsappLink
           message={WHATSAPP_MESSAGES.memberQuestion(member)}
           className={buttonClassName({ variant: "soft", size: "pill" })}

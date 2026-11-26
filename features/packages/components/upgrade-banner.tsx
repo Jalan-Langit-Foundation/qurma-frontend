@@ -8,6 +8,7 @@ import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { formatWeightRange } from "../lib/package-features";
 import { getPackageById, getUpgradeOptions } from "../lib/packages";
+import { usePackages } from "./packages-provider";
 import type { PackageId, QurbanPackage } from "../lib/types";
 
 export interface UpgradeBannerProps {
@@ -32,9 +33,10 @@ export function UpgradeBanner({
   className,
 }: UpgradeBannerProps) {
   const [isDismissed, setIsDismissed] = React.useState(false);
+  const packages = usePackages();
 
-  const currentPackage = getPackageById(currentPackageId);
-  const upgradeOptions = getUpgradeOptions(currentPackageId);
+  const currentPackage = getPackageById(packages, currentPackageId);
+  const upgradeOptions = getUpgradeOptions(packages, currentPackageId);
   const targetPackage =
     upgradeOptions.find((pkg) => pkg.id === targetPackageId) ??
     upgradeOptions[0];
@@ -84,7 +86,7 @@ export function UpgradeBanner({
           </Badge>
 
           <h3 className="font-heading text-base font-bold text-ink sm:text-lg">
-            Tingkatkan Qurban ke Paket {targetPackage.name}
+            Tingkatkan Qurban ke {targetPackage.name}
           </h3>
 
           <p className="font-body text-xs leading-relaxed text-body sm:text-sm">

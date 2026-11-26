@@ -7,9 +7,9 @@ import { Card } from "@/components/ui/card";
 import { FormAlert } from "@/components/ui/form-alert";
 import { ROUTES } from "@/config/navigation";
 import {
-  ALL_PACKAGES,
   formatWeightRange,
   resolvePackage,
+  usePackages,
   type QurbanPackage,
 } from "@/features/packages";
 import { useActionFeedback } from "@/hooks/use-action-feedback";
@@ -47,6 +47,7 @@ function NewSavingFormView({
   initialPackage,
   initialStartMonth,
 }: NewSavingFormViewProps) {
+  const packages = usePackages();
   const [selectedPackage, setSelectedPackage] = React.useState(initialPackage);
   const [requestedStartMonth, setRequestedStartMonth] =
     React.useState(initialStartMonth);
@@ -120,7 +121,7 @@ function NewSavingFormView({
 
       <PlanInputs
         idPrefix="new-saving"
-        packages={ALL_PACKAGES}
+        packages={packages}
         selectedPackage={selectedPackage}
         startMonth={startMonth}
         monthOptions={monthOptions}
@@ -165,24 +166,22 @@ function NewSavingFormView({
 
 function NewSavingFormWithParams() {
   const searchParams = useSearchParams();
+  const packages = usePackages();
   return (
     <NewSavingFormView
-      initialPackage={resolvePackage(searchParams.get("paket"))}
+      initialPackage={resolvePackage(packages, searchParams.get("paket"))}
       initialStartMonth={searchParams.get("mulai")}
     />
   );
 }
 
-/**
- * Form buat tabungan. Pilihan awal bisa dibawa dari kalkulator landing
- * lewat URL (?paket=medium&mulai=2026-12).
- */
 export function NewSavingForm() {
+  const packages = usePackages();
   return (
     <React.Suspense
       fallback={
         <NewSavingFormView
-          initialPackage={resolvePackage(null)}
+          initialPackage={resolvePackage(packages, null)}
           initialStartMonth={null}
         />
       }

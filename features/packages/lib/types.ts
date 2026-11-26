@@ -7,6 +7,7 @@ type PackageGrade = "A" | "B" | "C";
 export interface QurbanPackage {
   id: PackageId;
   name: string;
+  shortName: string;
   grade: PackageGrade;
   target: number;
   weightMinKg: number;

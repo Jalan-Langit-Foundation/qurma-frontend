@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { FAQ_CONTENT } from "@/features/landing/lib/content/faq";
+import { buildFaqContent } from "@/features/landing/lib/content/faq";
+import { FALLBACK_PACKAGES } from "@/features/packages";
 import { SAVINGS_POLICY } from "@/features/savings";
 
+const FAQ_CONTENT = buildFaqContent(FALLBACK_PACKAGES);
 const questions = FAQ_CONTENT.items.map((item) => item.question).join("\n");
 const answers = FAQ_CONTENT.items.map((item) => String(item.answer)).join(" ");
 
@@ -43,6 +45,15 @@ describe("FAQ (Brief V1.1 H.1 & H.3)", () => {
     if (SAVINGS_POLICY.approved) return;
     expect(answers).not.toMatch(/hari kerja|Sedekah Daging Qurban|100%/);
     expect(answers).toMatch(/Syarat & Ketentuan yang telah disahkan/);
+  });
+
+  it('daftar paket memakai nama dari data, tanpa "Domba" dobel', () => {
+    const answer = String(
+      FAQ_CONTENT.items.find((item) => item.id === "faq-tunaikan-paket")
+        ?.answer,
+    );
+    expect(answer).toContain("Domba Standar (20–25 kg)");
+    expect(answer).not.toContain("Domba Domba");
   });
 
   it("lokasi 2027 belum diklaim final", () => {

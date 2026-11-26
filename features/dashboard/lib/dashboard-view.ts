@@ -1,9 +1,15 @@
-import { getPackageById, formatWeightRange } from "@/features/packages";
 import {
+  formatWeightRange,
+  getPackageById,
+  type QurbanPackage,
+} from "@/features/packages";
+import {
+  formatMonthShort,
   formatYearMonth,
   formatYearMonthShort,
   getSavingStatus,
   SAVINGS_PROGRAM,
+  type InstallmentStatus,
   type Saving,
   type SavingLedger,
   type SavingStatusTone,
@@ -36,6 +42,19 @@ export interface GaugeSegment {
   ratio: number;
 }
 
+/** Satu bulan di grafik "Setoran per bulan" */
+export interface MonthBar {
+  /** "Nov" */
+  label: string;
+  /** "November 2026" (untuk pembaca layar & tooltip) */
+  fullLabel: string;
+  amount: number;
+  paidAmount: number;
+  /** Porsi terbayar 0–1 (tinggi isian batang) */
+  fill: number;
+  status: InstallmentStatus;
+}
+
 export interface DashboardView {
   firstName: string;
   subtitle: string;
@@ -65,7 +84,7 @@ export interface DashboardView {
     dateLabel: string;
     paidCount: number;
     totalCount: number;
-    trend: number[];
+    months: MonthBar[];
   } | null;
   journey: {
     step: number;
@@ -126,7 +145,10 @@ function buildPlan(saving: Saving, ledger: SavingLedger | null) {
   }
   raw.push({
     key: "remaining",
-    label: monthsAfterNext > 0 ? `Sisa ${monthsAfterNext} bulan` : "Sisa",
+    label:
+      next && monthsAfterNext > 0
+        ? `Setelah ${formatYearMonthShort(next.month)} · ${monthsAfterNext} bulan`
+        : "Sisa",
     amount: afterNext,
   });
 
@@ -207,8 +229,6 @@ function buildLastDeposit(ledger: SavingLedger | null) {
     a.paidAt.localeCompare(b.paidAt),
   );
   const last = sorted.at(-1)!;
-  let running = 0;
-  const trend = [0, ...sorted.map((deposit) => (running += deposit.amount))];
 
   return {
     amount: last.amount,
@@ -216,7 +236,14 @@ function buildLastDeposit(ledger: SavingLedger | null) {
     paidCount: ledger.installments.filter((item) => item.status === "paid")
       .length,
     totalCount: ledger.installments.length,
-    trend,
+    months: ledger.installments.map((item) => ({
+      label: formatMonthShort(item.month),
+      fullLabel: formatYearMonth(item.month),
+      amount: item.amount,
+      paidAmount: item.paidAmount,
+      fill: ratio(item.paidAmount, item.amount),
+      status: item.status,
+    })),
   };
 }
 
@@ -231,12 +258,12 @@ function buildJourney(saving: Saving) {
     const half = Math.ceil(target / 2);
     if (saving.totalPaid < half) {
       milestone = {
-        label: "menuju 50% terkumpul",
+        label: `untuk mencapai 50% (${formatRupiah(half)})`,
         shortfall: half - saving.totalPaid,
       };
     } else if (saving.totalPaid < target) {
       milestone = {
-        label: "menuju lunas",
+        label: `untuk lunas (${formatRupiah(target)})`,
         shortfall: target - saving.totalPaid,
       };
     }
@@ -262,8 +289,11 @@ export function buildDashboardView(
   saving: Saving,
   ledger: SavingLedger | null,
   member: DashboardMember,
+  packages: readonly QurbanPackage[],
 ): DashboardView {
-  const pkg = saving.packageId ? getPackageById(saving.packageId) : undefined;
+  const pkg = saving.packageId
+    ? getPackageById(packages, saving.packageId)
+    : undefined;
   const status = getSavingStatus(saving.status);
 
   return {

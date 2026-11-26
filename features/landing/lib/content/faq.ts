@@ -1,7 +1,7 @@
 import type { AccordionItem } from "@/components/ui/accordion";
 import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
 import { PROGRAM } from "@/config/program";
-import { ALL_PACKAGES, formatWeightRange } from "@/features/packages";
+import { formatWeightRange, type QurbanPackage } from "@/features/packages";
 import {
   PAYMENT_DEADLINE,
   SAVINGS_POLICY,
@@ -24,9 +24,8 @@ const listId = (words: readonly string[]) =>
     ? words.join("")
     : `${words.slice(0, -1).join(", ")}, dan ${words.at(-1)}`;
 
-const packageList = listId(
-  ALL_PACKAGES.map((pkg) => `Domba ${pkg.name} (${formatWeightRange(pkg)})`),
-);
+const packageList = (packages: readonly QurbanPackage[]) =>
+  listId(packages.map((pkg) => `${pkg.name} (${formatWeightRange(pkg)})`));
 
 const minDeposit = formatRupiah(SAVINGS_PROGRAM.minDepositAmount);
 const deadline = PAYMENT_DEADLINE.label;
@@ -40,7 +39,7 @@ const unpaidAnswer = SAVINGS_POLICY.approved
   ? `Jika tabungan belum lunas pada ${deadline}, saldo dialihkan menjadi ${SAVINGS_POLICY.unpaidTransferProgram} tanpa pengembalian dana, sesuai akad yang Anda setujui saat mendaftar. Agar tidak terjadi, CS QURMA dapat membantu menyusun ulang rencana setoran sebelum batas pelunasan.`
   : "Ketentuan untuk tabungan yang belum lunas pada batas pelunasan sedang difinalkan dan akan mengikuti Syarat & Ketentuan yang telah disahkan, termasuk akad yang Anda setujui saat mendaftar. Bila setoran Anda tertinggal, segera hubungi CS QURMA agar rencana setoran dapat disusun ulang sebelum batas pelunasan.";
 
-const GROUPS: FaqGroup[] = [
+const buildGroups = (packages: readonly QurbanPackage[]): FaqGroup[] => [
   {
     id: "tunaikan",
     label: "Tunaikan Qurbanmu",
@@ -59,7 +58,7 @@ const GROUPS: FaqGroup[] = [
       {
         id: "faq-tunaikan-paket",
         question: "Apakah saya bisa memilih paket berdasarkan bobot dan harga?",
-        answer: `Ya. Tersedia tiga pilihan domba sesuai target bobot dan harga paket yang diumumkan resmi oleh JLF: ${packageList}. Bobot adalah target spesifikasi, bukan jaminan angka yang tepat.`,
+        answer: `Ya. Tersedia tiga pilihan domba sesuai target bobot dan harga paket yang diumumkan resmi oleh JLF: ${packageList(packages)}. Bobot adalah target spesifikasi, bukan jaminan angka yang tepat.`,
       },
       {
         id: "faq-tunaikan-bayar",
@@ -153,17 +152,21 @@ const GROUPS: FaqGroup[] = [
   },
 ];
 
-export const FAQ_CONTENT = {
-  label: "FAQ",
-  headline: "Yang sering ditanyakan.",
-  description:
-    "Jawaban singkat seputar dua cara berqurban, ketentuan tabungan, hingga laporan pelaksanaan.",
-  groups: GROUPS,
+/** Konten FAQ; daftar paket (nama & bobot) mengikuti data dari GET /program. */
+export function buildFaqContent(packages: readonly QurbanPackage[]) {
+  const groups = buildGroups(packages);
 
-  items: GROUPS.flatMap((group) => group.items),
-  contact: {
-    prompt: "Pertanyaan Anda belum terjawab?",
-    label: "Tanya CS QURMA",
-    href: buildWhatsappUrl(WHATSAPP_MESSAGES.general),
-  },
-} as const;
+  return {
+    label: "FAQ",
+    headline: "Yang sering ditanyakan.",
+    description:
+      "Jawaban singkat seputar dua cara berqurban, ketentuan tabungan, hingga laporan pelaksanaan.",
+    groups,
+    items: groups.flatMap((group) => group.items),
+    contact: {
+      prompt: "Pertanyaan Anda belum terjawab?",
+      label: "Tanya CS QURMA",
+      href: buildWhatsappUrl(WHATSAPP_MESSAGES.general),
+    },
+  } as const;
+}

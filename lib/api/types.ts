@@ -28,11 +28,3 @@ export interface PaginationMetaDto {
   total: number;
   last_page: number;
 }
-
-/** Berkas biner dari backend (mis. PDF kwitansi). */
-export interface BackendFile {
-  body: ReadableStream<Uint8Array>;
-  contentType: string;
-  /** Nama file dari header Content-Disposition backend, bila ada */
-  fileName: string | null;
-}

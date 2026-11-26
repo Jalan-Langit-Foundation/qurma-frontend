@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import {
-  ALL_PACKAGES,
   getDefaultPackage,
+  usePackages,
   type QurbanPackage,
 } from "@/features/packages";
 import {
@@ -33,12 +33,13 @@ function SavingPlannerView({
   onSelectPackage,
   onSelectDepositCount,
 }: SavingPlannerViewProps) {
+  const packages = usePackages();
   const savingWindow = useSavingWindow();
   const plan = calculateDepositPlan(selectedPackage.target, depositCount);
 
   const depositEstimates = React.useMemo(
-    () => estimateDepositAmounts(ALL_PACKAGES, depositCount),
-    [depositCount],
+    () => estimateDepositAmounts(packages, depositCount),
+    [packages, depositCount],
   );
 
   const cta = getSavingCta(selectedPackage, plan);
@@ -46,14 +47,14 @@ function SavingPlannerView({
   return (
     <>
       <p className="sr-only" aria-live="polite">
-        {`Paket ${selectedPackage.name}, ${depositCount} kali setoran.`}
+        {`${selectedPackage.name}, ${depositCount} kali setoran.`}
         {plan
           ? ` Estimasi ${formatRupiah(plan.depositAmount)} per setoran, setoran terakhir ${formatRupiah(plan.lastAmount)}.`
           : ""}
       </p>
 
       <PackagesSection
-        packages={ALL_PACKAGES}
+        packages={packages}
         selectedPackageId={selectedPackage.id}
         depositEstimates={depositEstimates}
         depositCount={depositCount}
@@ -61,7 +62,7 @@ function SavingPlannerView({
       />
 
       <CalculatorSection
-        packages={ALL_PACKAGES}
+        packages={packages}
         selectedPackage={selectedPackage}
         depositCount={depositCount}
         plan={plan}
@@ -93,11 +94,12 @@ function SavingPlannerWithUrlState() {
 }
 
 export function SavingPlanner() {
+  const packages = usePackages();
   return (
     <React.Suspense
       fallback={
         <SavingPlannerView
-          selectedPackage={getDefaultPackage()}
+          selectedPackage={getDefaultPackage(packages)}
           depositCount={SAVINGS_PROGRAM.defaultDepositCount}
         />
       }

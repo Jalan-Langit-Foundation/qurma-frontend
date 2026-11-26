@@ -1,14 +1,14 @@
 import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { PROGRAM } from "@/config/program";
-import { getDefaultPackage } from "@/features/packages";
+import { getDefaultPackage, usePackages } from "@/features/packages";
 import { formatRupiah } from "@/lib/format";
 import { DemoSection } from "../demo-section";
 
 const fontLabel = "font-mono text-xs font-bold text-brand-strong uppercase";
 
 export function TypographySection() {
-  const pkg = getDefaultPackage();
+  const pkg = getDefaultPackage(usePackages());
 
   return (
     <DemoSection
@@ -27,7 +27,7 @@ export function TypographySection() {
             Pilihan Paket Qurban {PROGRAM.year}
           </p>
           <p className="font-heading text-lg font-bold text-brand">
-            Paket {pkg.name} ({formatRupiah(pkg.target)})
+            {pkg.name} ({formatRupiah(pkg.target)})
           </p>
         </Card>
         <Card className="space-y-3 p-6 text-sm leading-relaxed">

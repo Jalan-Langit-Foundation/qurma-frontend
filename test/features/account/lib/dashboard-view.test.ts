@@ -5,6 +5,7 @@ import {
   toGaugeArcs,
   getFirstName,
 } from "@/features/dashboard/lib/dashboard-view";
+import { FALLBACK_PACKAGES } from "@/features/packages";
 import { buildJourneyStepsFromStage } from "@/features/savings";
 import type { Saving, SavingLedger } from "@/features/savings";
 
@@ -70,7 +71,12 @@ describe("helper kecil", () => {
 });
 
 describe("buildDashboardView", () => {
-  const view = buildDashboardView(makeSaving(), ledger, member);
+  const view = buildDashboardView(
+    makeSaving(),
+    ledger,
+    member,
+    FALLBACK_PACKAGES,
+  );
 
   it("salam, chip program, periode & status", () => {
     expect(view.firstName).toBe("Budi");
@@ -103,7 +109,7 @@ describe("buildDashboardView", () => {
     ).toEqual([
       ["paid", 550_000, "Sudah disetor"],
       ["next", 275_000, "Des 2026"],
-      ["remaining", 1_075_000, "Sisa 4 bulan"],
+      ["remaining", 1_075_000, "Setelah Des 2026 · 4 bulan"],
     ]);
     expect(Math.max(...view.plan.bars.map((bar) => bar.height))).toBe(1);
     expect(view.plan.note).toContain("Rp250.000");
@@ -115,14 +121,47 @@ describe("buildDashboardView", () => {
     expect(view.gauge.percent).toBe(28);
   });
 
-  it("setoran terakhir diambil dari tanggal paling baru + tren kumulatif", () => {
+  it("setoran terakhir diambil dari tanggal paling baru", () => {
     expect(view.lastDeposit).toMatchObject({
       amount: 275_000,
       paidCount: 2,
       totalCount: 7,
-      trend: [0, 275_000, 550_000],
     });
     expect(view.lastDeposit?.dateLabel).toBe("4 November 2026");
+  });
+
+  it("grafik setoran per bulan: satu batang per cicilan", () => {
+    const months = view.lastDeposit?.months ?? [];
+    expect(months).toHaveLength(7);
+    expect(
+      months.map((month) => [month.label, month.fill, month.status]),
+    ).toEqual([
+      ["Okt", 1, "paid"],
+      ["Nov", 1, "paid"],
+      ["Des", 0, "next"],
+      ["Jan", 0, "scheduled"],
+      ["Feb", 0, "scheduled"],
+      ["Mar", 0, "scheduled"],
+      ["Apr", 0, "scheduled"],
+    ]);
+    expect(months[0]?.fullLabel).toBe("Oktober 2026");
+  });
+
+  it("cicilan dibayar sebagian → batang terisi sebagian", () => {
+    const partial = buildDashboardView(
+      makeSaving(),
+      {
+        ...ledger,
+        installments: ledger.installments.map((item, index) =>
+          index === 2
+            ? { ...item, paidAmount: 137_500, remainingAmount: 137_500 }
+            : item,
+        ),
+      },
+      member,
+      FALLBACK_PACKAGES,
+    );
+    expect(partial.lastDeposit?.months[2]?.fill).toBe(0.5);
   });
 
   it("perjalanan: tahap aktif & kekurangan menuju 50%", () => {
@@ -130,7 +169,7 @@ describe("buildDashboardView", () => {
     expect(view.journey.total).toBe(7);
     expect(view.journey.title).toBe("50% Tercapai");
     expect(view.journey.milestone).toEqual({
-      label: "menuju 50% terkumpul",
+      label: "untuk mencapai 50% (Rp950.000)",
       shortfall: 400_000,
     });
     expect(view.journey.steps.map((s) => s.state)).toEqual([
@@ -142,6 +181,23 @@ describe("buildDashboardView", () => {
       "upcoming",
       "upcoming",
     ]);
+  });
+
+  it("sudah lewat 50% → kekurangan menuju lunas beserta targetnya", () => {
+    const half = buildDashboardView(
+      makeSaving({
+        totalPaid: 1_100_000,
+        remainingAmount: 800_000,
+        journey: buildJourneyStepsFromStage(4),
+      }),
+      ledger,
+      member,
+      FALLBACK_PACKAGES,
+    );
+    expect(half.journey.milestone).toEqual({
+      label: "untuk lunas (Rp1.900.000)",
+      shortfall: 800_000,
+    });
   });
 
   it("lunas → CTA lacak persiapan, tanpa kekurangan", () => {
@@ -156,6 +212,7 @@ describe("buildDashboardView", () => {
       }),
       ledger,
       member,
+      FALLBACK_PACKAGES,
     );
     expect(done.cta).toMatchObject({
       label: "Lacak Persiapan",
@@ -170,6 +227,7 @@ describe("buildDashboardView", () => {
       makeSaving({ status: "cancelled" }),
       null,
       member,
+      FALLBACK_PACKAGES,
     );
     expect(cancelled.cta.label).toBe("Chat CS QURMA");
     expect(cancelled.lastDeposit).toBeNull();

@@ -2,8 +2,9 @@ import * as React from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
+import { getPackages } from "@/features/packages/server";
 import {
-  PROGRAM_CHOICE_CONTENT,
+  buildProgramChoiceContent,
   type ProgramChoice,
 } from "../../lib/content/program-choice";
 import { LandingSection } from "../landing-section";
@@ -17,6 +18,7 @@ function ProgramPanel({ item, index }: { item: ProgramChoice; index: number }) {
       aria-labelledby={titleId}
       className="group relative flex w-full flex-col overflow-hidden rounded-[28px] bg-surface p-6 transition-colors duration-300 hover:bg-brand-soft sm:p-8 lg:p-10"
     >
+      {/* Nomor urut besar di pojok bawah, di samping tombol (bukan ikon dekoratif) */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute -right-2 -bottom-10 hidden font-heading text-[120px] leading-none font-extrabold tracking-tighter text-white transition-colors duration-300 select-none group-hover:text-white/80 sm:block sm:text-[160px]"
@@ -71,8 +73,11 @@ function ProgramPanel({ item, index }: { item: ProgramChoice; index: number }) {
   );
 }
 
-export function ProgramChoiceSection() {
-  const { headline, description, items } = PROGRAM_CHOICE_CONTENT;
+/** Dua pilihan program yang setara: Tunaikan Qurbanmu & Rencanakan Qurbanmu. */
+export async function ProgramChoiceSection() {
+  const { headline, description, items } = buildProgramChoiceContent(
+    await getPackages(),
+  );
 
   return (
     <LandingSection

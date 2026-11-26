@@ -3,10 +3,10 @@ import { Check } from "lucide-react";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { formatWeightRange } from "../lib/package-features";
-import { ALL_PACKAGES } from "../lib/packages";
-import type { PackageId } from "../lib/types";
+import type { PackageId, QurbanPackage } from "../lib/types";
 
 interface PackageCompareListProps {
+  packages: readonly QurbanPackage[];
   currentPackageId?: PackageId | null;
   className?: string;
 }
@@ -18,10 +18,11 @@ function differenceLabel(target: number, currentTarget: number | null) {
 }
 
 export function PackageCompareList({
+  packages,
   currentPackageId = null,
   className,
 }: PackageCompareListProps) {
-  const current = ALL_PACKAGES.find((pkg) => pkg.id === currentPackageId);
+  const current = packages.find((pkg) => pkg.id === currentPackageId);
 
   return (
     <ul
@@ -30,7 +31,7 @@ export function PackageCompareList({
         className,
       )}
     >
-      {ALL_PACKAGES.map((pkg) => {
+      {packages.map((pkg) => {
         const isCurrent = pkg.id === current?.id;
         const diff = differenceLabel(pkg.target, current?.target ?? null);
 

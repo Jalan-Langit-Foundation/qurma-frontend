@@ -4,13 +4,11 @@ import { ROUTES } from "@/config/navigation";
 import { getSessionToken } from "@/lib/server/session";
 import { ApiError } from "./api-error";
 import {
-  backendFileRequest,
   backendRequest,
   backendRequestWithMeta,
   type BackendRequestOptions,
   type BackendResult,
 } from "./backend-client";
-import type { BackendFile } from "./types";
 
 type AuthedOptions = Omit<BackendRequestOptions, "token">;
 
@@ -41,15 +39,6 @@ export function authedRequestWithMeta<T, M = unknown>(
 ): Promise<BackendResult<T, M>> {
   return withSession((token) =>
     backendRequestWithMeta<T, M>(path, { ...options, token }),
-  );
-}
-
-export function authedFileRequest(
-  path: string,
-  options: AuthedOptions = {},
-): Promise<BackendFile> {
-  return withSession((token) =>
-    backendFileRequest(path, { ...options, token }),
   );
 }
 

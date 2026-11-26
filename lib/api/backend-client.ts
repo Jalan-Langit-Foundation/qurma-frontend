@@ -1,7 +1,7 @@
 import "server-only";
 import { serverEnv } from "@/lib/server/env";
 import { ApiError, kindFromStatus } from "./api-error";
-import type { ApiBody, BackendFile, FieldErrors } from "./types";
+import type { ApiBody, FieldErrors } from "./types";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -56,9 +56,8 @@ function isApiBody(value: unknown): value is ApiBody<unknown> {
 async function send(
   path: string,
   { method = "GET", body, token, query, timeoutMs }: BackendRequestOptions,
-  accept: string,
 ): Promise<Response> {
-  const headers: Record<string, string> = { Accept: accept };
+  const headers: Record<string, string> = { Accept: "application/json" };
   if (body !== undefined) headers["Content-Type"] = "application/json";
   if (token) headers.Authorization = `Bearer ${token}`;
 
@@ -114,7 +113,7 @@ export async function backendRequestWithMeta<T, M = unknown>(
   options: BackendRequestOptions = {},
 ): Promise<BackendResult<T, M>> {
   const method = options.method ?? "GET";
-  const response = await send(path, options, "application/json");
+  const response = await send(path, options);
   const json = await readJson(response);
 
   if (response.ok && isApiBody(json) && json.success) {
@@ -132,42 +131,4 @@ export async function backendRequest<T>(
   options: BackendRequestOptions = {},
 ): Promise<T> {
   return (await backendRequestWithMeta<T>(path, options)).data;
-}
-
-function parseFileName(disposition: string | null): string | null {
-  if (!disposition) return null;
-  const encoded = /filename\*=(?:UTF-8'')?([^;]+)/i.exec(disposition)?.[1];
-  if (encoded) {
-    try {
-      return decodeURIComponent(encoded.trim().replace(/^"|"$/g, ""));
-    } catch {}
-  }
-  return /filename="?([^";]+)"?/i.exec(disposition)?.[1]?.trim() ?? null;
-}
-
-export async function backendFileRequest(
-  path: string,
-  options: BackendRequestOptions = {},
-): Promise<BackendFile> {
-  const method = options.method ?? "GET";
-  const response = await send(
-    path,
-    options,
-    "application/pdf, application/octet-stream, application/json",
-  );
-  const contentType =
-    response.headers.get("content-type") ?? "application/octet-stream";
-
-  if (!response.ok || contentType.includes("application/json")) {
-    throw toApiError(response, await readJson(response), method, path);
-  }
-  if (!response.body) {
-    throw toApiError(response, undefined, method, path);
-  }
-
-  return {
-    body: response.body,
-    contentType,
-    fileName: parseFileName(response.headers.get("content-disposition")),
-  };
 }

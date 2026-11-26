@@ -1,4 +1,4 @@
 export { LoginForm } from "./components/login-form";
-export { LogoutButton } from "./components/logout-button";
+export { LogoutDialog, LogoutMenuItem } from "./components/logout-button";
 export { RegisterForm } from "./components/register-form";
 export type { AuthUser } from "./lib/types";

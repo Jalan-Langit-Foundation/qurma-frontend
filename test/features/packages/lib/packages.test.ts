@@ -1,54 +1,59 @@
 import { describe, expect, it } from "vitest";
-import { PACKAGE_IDS } from "@/features/packages/lib/catalog";
+import {
+  FALLBACK_PACKAGES,
+  PACKAGE_IDS,
+} from "@/features/packages/lib/catalog";
 import { getPackageFeatures } from "@/features/packages/lib/package-features";
 import {
-  ALL_PACKAGES,
   DEFAULT_PACKAGE_ID,
+  getDefaultPackage,
   getPackageById,
-  getUpgradeDifference,
   getUpgradeOptions,
   isPackageId,
   resolvePackage,
 } from "@/features/packages/lib/packages";
 
-describe("katalog paket", () => {
+const packages = FALLBACK_PACKAGES;
+
+describe("katalog lokal (cadangan bila GET /program gagal)", () => {
   it("setiap ID di PACKAGE_IDS punya data, dan sebaliknya", () => {
-    expect(ALL_PACKAGES.map((pkg) => pkg.id).sort()).toEqual(
+    expect(packages.map((pkg) => pkg.id).sort()).toEqual(
       [...PACKAGE_IDS].sort(),
     );
   });
 
-  it("tiga paket Brief V1.1: Standar, Medium, Premium (Grade A/B/C)", () => {
+  it("tiga paket sesuai API Contract: Domba Standar, Medium, Premium", () => {
     expect(
-      ALL_PACKAGES.map((pkg) => [
+      packages.map((pkg) => [
         pkg.name,
+        pkg.shortName,
         pkg.grade,
         pkg.target,
         pkg.weightMinKg,
         pkg.weightMaxKg,
       ]),
     ).toEqual([
-      ["Standar", "A", 1_600_000, 20, 25],
-      ["Medium", "B", 2_200_000, 26, 29],
-      ["Premium", "C", 2_990_000, 30, 35],
+      ["Domba Standar", "Standar", "A", 1_600_000, 20, 25],
+      ["Domba Medium", "Medium", "B", 2_200_000, 26, 29],
+      ["Domba Premium", "Premium", "C", 2_990_000, 30, 35],
     ]);
   });
 
   it("paket default ada di katalog", () => {
-    expect(getPackageById(DEFAULT_PACKAGE_ID)).toBeDefined();
+    expect(getPackageById(packages, DEFAULT_PACKAGE_ID)).toBeDefined();
   });
 
   it("data paket masuk akal dan berurutan dari harga terendah", () => {
-    for (const pkg of ALL_PACKAGES) {
+    for (const pkg of packages) {
       expect(pkg.target).toBeGreaterThan(0);
       expect(pkg.weightMinKg).toBeLessThanOrEqual(pkg.weightMaxKg);
     }
-    const targets = ALL_PACKAGES.map((pkg) => pkg.target);
+    const targets = packages.map((pkg) => pkg.target);
     expect(targets).toEqual([...targets].sort((a, b) => a - b));
   });
 
   it("tidak menjanjikan dashboard (Brief V1.1 bagian G.2)", () => {
-    const perks = ALL_PACKAGES.flatMap((pkg) => pkg.perks).join(" ");
+    const perks = packages.flatMap((pkg) => pkg.perks).join(" ");
     expect(perks.toLowerCase()).not.toContain("dashboard");
   });
 });
@@ -63,35 +68,32 @@ describe("isPackageId & resolvePackage", () => {
   });
 
   it("nilai tidak dikenal dari URL → paket default", () => {
-    expect(resolvePackage("medium").id).toBe("medium");
-    expect(resolvePackage("plus").id).toBe(DEFAULT_PACKAGE_ID);
-    expect(resolvePackage("<script>").id).toBe(DEFAULT_PACKAGE_ID);
-    expect(resolvePackage(null).id).toBe(DEFAULT_PACKAGE_ID);
+    expect(resolvePackage(packages, "medium").id).toBe("medium");
+    expect(resolvePackage(packages, "plus").id).toBe(DEFAULT_PACKAGE_ID);
+    expect(resolvePackage(packages, "<script>").id).toBe(DEFAULT_PACKAGE_ID);
+    expect(resolvePackage(packages, null).id).toBe(DEFAULT_PACKAGE_ID);
+  });
+
+  it("paket default tidak ada di data API → paket pertama", () => {
+    const withoutStandar = packages.filter((pkg) => pkg.id !== "standar");
+    expect(getDefaultPackage(withoutStandar).id).toBe("medium");
+    expect(() => getDefaultPackage([])).toThrow(/kosong/);
   });
 });
 
-describe("upgrade", () => {
+describe("getUpgradeOptions", () => {
   it("hanya paket lebih tinggi, urut dari terdekat", () => {
-    expect(getUpgradeOptions("standar").map((pkg) => pkg.id)).toEqual([
-      "medium",
-      "premium",
-    ]);
-    expect(getUpgradeOptions("medium").map((pkg) => pkg.id)).toEqual([
-      "premium",
-    ]);
-    expect(getUpgradeOptions("premium")).toEqual([]);
-    expect(getUpgradeOptions("tidak-ada")).toEqual([]);
-  });
-
-  it("selisih target", () => {
-    expect(getUpgradeDifference("standar", "medium")).toBe(600_000);
-    expect(getUpgradeDifference("medium", "premium")).toBe(790_000);
-    expect(getUpgradeDifference("medium", "standar")).toBeNull();
+    const ids = (id: string) =>
+      getUpgradeOptions(packages, id).map((pkg) => pkg.id);
+    expect(ids("standar")).toEqual(["medium", "premium"]);
+    expect(ids("medium")).toEqual(["premium"]);
+    expect(ids("premium")).toEqual([]);
+    expect(ids("tidak-ada")).toEqual([]);
   });
 });
 
 describe("getPackageFeatures", () => {
-  const standar = resolvePackage("standar");
+  const standar = resolvePackage(packages, "standar");
 
   it("baris bobot ditulis sebagai target, baris setoran dari data", () => {
     expect(getPackageFeatures(standar, 229_000).slice(0, 2)).toEqual([

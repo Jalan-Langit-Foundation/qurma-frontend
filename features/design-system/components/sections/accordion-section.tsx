@@ -3,11 +3,13 @@
 import * as React from "react";
 import { Accordion } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { FAQ_CONTENT } from "@/features/landing";
+import { buildFaqContent } from "@/features/landing/lib/content/faq";
+import { usePackages } from "@/features/packages";
 import { DemoSection } from "../demo-section";
 
 export function AccordionSection() {
   const [allowMultiple, setAllowMultiple] = React.useState(false);
+  const { items } = buildFaqContent(usePackages());
 
   return (
     <DemoSection
@@ -28,9 +30,9 @@ export function AccordionSection() {
     >
       <Accordion
         key={String(allowMultiple)}
-        items={FAQ_CONTENT.items}
+        items={items}
         allowMultiple={allowMultiple}
-        defaultOpenIds={FAQ_CONTENT.items.slice(0, 1).map((item) => item.id)}
+        defaultOpenIds={items.slice(0, 1).map((item) => item.id)}
       />
     </DemoSection>
   );

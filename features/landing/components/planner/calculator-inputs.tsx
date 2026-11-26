@@ -86,7 +86,7 @@ export function CalculatorInputs({
                 />
                 <span className="flex flex-col">
                   <span className="font-heading text-base font-bold text-ink">
-                    {pkg.name}
+                    {pkg.shortName}
                   </span>
                   <span className="mt-0.5 font-body text-xs text-muted sm:hidden">
                     {formatWeightRange(pkg)}

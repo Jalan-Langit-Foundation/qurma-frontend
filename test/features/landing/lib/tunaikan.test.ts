@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { TUNAIKAN_CONTENT } from "@/features/landing/lib/content/tunaikan";
+import {
+  buildDombaOptions,
+  TUNAIKAN_CONTENT,
+} from "@/features/landing/lib/content/tunaikan";
+import { FALLBACK_PACKAGES } from "@/features/packages";
 
 function decodedMessage(url: string) {
   const text = new URL(url).searchParams.get("text");
@@ -8,7 +12,7 @@ function decodedMessage(url: string) {
 }
 
 describe("jalur Tunaikan Qurbanmu (Brief V1.1 bagian D & G.1)", () => {
-  const { options } = TUNAIKAN_CONTENT;
+  const options = buildDombaOptions(FALLBACK_PACKAGES);
 
   it("tiga pilihan domba publik, urut dari Standar", () => {
     expect(options.map((option) => option.name)).toEqual([

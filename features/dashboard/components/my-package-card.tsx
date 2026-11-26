@@ -51,7 +51,7 @@ export function MyPackageCard({
               QURMA
             </span>
             <span className="rounded-full bg-white/20 px-3 py-1 font-heading text-[11px] font-semibold tracking-wider uppercase">
-              Paket {data.name}
+              {data.name}
             </span>
           </div>
           <div className="space-y-1">
@@ -99,7 +99,11 @@ export function MyPackageCard({
             </p>
           )}
         </details>
-        <Row label="Sisa target" value={formatRupiah(data.remaining)} strong />
+        <Row
+          label="Sisa sampai lunas"
+          value={formatRupiah(data.remaining)}
+          strong
+        />
       </dl>
 
       <a

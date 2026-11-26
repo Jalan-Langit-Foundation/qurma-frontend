@@ -36,7 +36,7 @@ export function StickyCta({
         <div className="flex min-w-0 flex-col">
           <div className="flex items-center gap-1.5">
             <span className="truncate font-heading text-xs font-bold text-ink">
-              Paket {selectedPackage.name}
+              {selectedPackage.name}
             </span>
             <span className="text-[11px] font-bold text-brand-strong">
               {formatRupiah(selectedPackage.target)}

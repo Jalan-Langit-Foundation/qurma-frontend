@@ -2,18 +2,25 @@
 
 import * as React from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { resolvePackage, type QurbanPackage } from "@/features/packages";
+import {
+  resolvePackage,
+  usePackages,
+  type QurbanPackage,
+} from "@/features/packages";
 import { resolveDepositCount, type DepositCount } from "@/features/savings";
 
 const PARAM_PACKAGE = "paket";
 const PARAM_DEPOSIT_COUNT = "setoran";
 
-/** Pilihan kalkulator disimpan di URL (?paket=standar&setoran=6) agar bisa dibagikan. */
 export function useSavingPlanParams() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const packages = usePackages();
 
-  const selectedPackage = resolvePackage(searchParams.get(PARAM_PACKAGE));
+  const selectedPackage = resolvePackage(
+    packages,
+    searchParams.get(PARAM_PACKAGE),
+  );
   const depositCount = resolveDepositCount(
     searchParams.get(PARAM_DEPOSIT_COUNT),
   );

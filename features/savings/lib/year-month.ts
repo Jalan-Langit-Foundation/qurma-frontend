@@ -61,7 +61,8 @@ const SHORT_MONTH_FORMAT = new Intl.DateTimeFormat("id-ID", {
   timeZone: "UTC",
 });
 
-function formatMonthShort(value: YearMonth): string {
+/** "Nov" */
+export function formatMonthShort(value: YearMonth): string {
   const { year, month } = parse(value);
   return SHORT_MONTH_FORMAT.format(new Date(Date.UTC(year, month - 1, 1)));
 }

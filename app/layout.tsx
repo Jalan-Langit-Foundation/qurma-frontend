@@ -3,6 +3,8 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { ScrollToTopOnRefresh } from "@/components/layout";
 import { PageLoader } from "@/components/ui/page-loader";
 import { SITE_CONFIG } from "@/config/site";
+import { PackagesProvider } from "@/features/packages";
+import { getPackages } from "@/features/packages/server";
 
 import "./globals.css";
 
@@ -72,7 +74,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -87,7 +89,9 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         <PageLoader />
         <ScrollToTopOnRefresh />
-        {children}
+        <PackagesProvider packages={await getPackages()}>
+          {children}
+        </PackagesProvider>
       </body>
     </html>
   );

@@ -61,7 +61,7 @@ export function PackageCard({
         <div>
           <div className="mb-3">
             <CardTitle as="h3" size="base">
-              Paket {pkg.name}
+              {pkg.name}
             </CardTitle>
           </div>
 
@@ -101,8 +101,8 @@ export function PackageCard({
               aria-pressed={selected}
               aria-label={
                 selected
-                  ? `Paket ${pkg.name} terpilih. ${continueLabel}`
-                  : `Pilih Paket ${pkg.name}`
+                  ? `${pkg.name} terpilih. ${continueLabel}`
+                  : `Pilih ${pkg.name}`
               }
               className={cn(
                 buttonBase,

@@ -3,14 +3,17 @@ import { MessageCircle } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
-import { FAQ_CONTENT } from "../../lib/content/faq";
+import { getPackages } from "@/features/packages/server";
+import { buildFaqContent } from "../../lib/content/faq";
 import { LandingSection } from "../landing-section";
 import { IndexNumber, SectionIntro } from "../section-intro";
 
 const groupAnchor = (id: string) => `faq-${id}`;
 
-export function FaqSection() {
-  const { label, headline, description, groups, contact } = FAQ_CONTENT;
+export async function FaqSection() {
+  const { label, headline, description, groups, contact } = buildFaqContent(
+    await getPackages(),
+  );
 
   return (
     <LandingSection

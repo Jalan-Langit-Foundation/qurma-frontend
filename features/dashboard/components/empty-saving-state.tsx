@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MEMBER_SECTION_IDS } from "@/config/navigation";
 import { PROGRAM } from "@/config/program";
-import { PackageCompareList } from "@/features/packages";
+import { PackageCompareList, type QurbanPackage } from "@/features/packages";
 import { isSavingRegistrationOpen } from "@/features/savings";
 import { buildEmptyStateCta } from "../lib/dashboard-cta";
 import { CtaButton } from "./dashboard-greeting";
@@ -25,7 +25,11 @@ const STEPS = [
 
 const EMPTY_STATE_CTA = buildEmptyStateCta();
 
-export function EmptySavingState() {
+export function EmptySavingState({
+  packages,
+}: {
+  packages: readonly QurbanPackage[];
+}) {
   return (
     <div className="space-y-4">
       <section
@@ -84,7 +88,7 @@ export function EmptySavingState() {
         >
           Pilihan Paket {PROGRAM.name}
         </h2>
-        <PackageCompareList />
+        <PackageCompareList packages={packages} />
       </section>
     </div>
   );

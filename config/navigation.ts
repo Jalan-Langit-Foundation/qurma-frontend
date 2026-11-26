@@ -16,7 +16,6 @@ export const ROUTES = {
   terms: "/syarat-ketentuan",
   fullPayment: "/tunaikan-qurbanmu",
   transactions: "/transaksi",
-  receipt: (transactionId: number | string) => `/kwitansi/${transactionId}`,
 } as const;
 
 export const PROTECTED_ROUTE_PREFIXES = [
@@ -26,7 +25,6 @@ export const PROTECTED_ROUTE_PREFIXES = [
   "/report",
   ROUTES.account,
   ROUTES.transactions,
-  "/kwitansi",
 ] as const;
 
 export const GUEST_ONLY_ROUTES = [ROUTES.login, ROUTES.register] as const;

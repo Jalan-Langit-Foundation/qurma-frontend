@@ -8,7 +8,6 @@ import { MEMBER_NAV_ITEMS } from "@/config/navigation";
 const allOff = {
   profile: false,
   transactions: false,
-  receipts: false,
   dashboardSummary: false,
 };
 

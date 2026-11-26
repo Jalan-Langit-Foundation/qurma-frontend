@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { ROUTES, SECTION_IDS, sectionHref } from "@/config/navigation";
-import { PROGRAM_CHOICE_CONTENT } from "@/features/landing/lib/content/program-choice";
+import { buildProgramChoiceContent } from "@/features/landing/lib/content/program-choice";
+import { FALLBACK_PACKAGES } from "@/features/packages";
 
 describe("pilihan program (Brief V1.1 bagian B & C.2)", () => {
-  const items = PROGRAM_CHOICE_CONTENT.items;
+  const items = buildProgramChoiceContent(FALLBACK_PACKAGES).items;
 
   it("dua pilihan dengan nama tampilan sesuai brief", () => {
     expect(items.map((item) => [item.title, item.internalName])).toEqual([

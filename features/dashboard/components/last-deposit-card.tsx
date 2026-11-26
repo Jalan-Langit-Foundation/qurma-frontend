@@ -1,44 +1,86 @@
 import * as React from "react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { formatRupiah } from "@/lib/format";
-import type { DashboardView } from "../lib/dashboard-view";
+import { cn } from "@/lib/utils";
+import type { DashboardView, MonthBar } from "../lib/dashboard-view";
 
-const WIDTH = 240;
-const HEIGHT = 64;
+const STATUS_TEXT: Record<MonthBar["status"], string> = {
+  paid: "lunas",
+  next: "berikutnya",
+  overdue: "terlambat",
+  scheduled: "belum jatuh tempo",
+};
 
-function Sparkline({ points }: { points: number[] }) {
-  if (points.length < 2) return null;
-  const max = Math.max(...points, 1);
-  const step = WIDTH / (points.length - 1);
-  const coords = points.map(
-    (value, index) =>
-      [index * step, HEIGHT - 4 - (value / max) * (HEIGHT - 8)] as const,
-  );
-  const line = coords
-    .map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`)
-    .join(" ");
+function describeMonth(month: MonthBar): string {
+  const paid =
+    month.paidAmount > 0 && month.paidAmount < month.amount
+      ? `, terbayar ${formatRupiah(month.paidAmount)} dari ${formatRupiah(month.amount)}`
+      : "";
+  return `${month.fullLabel}: ${STATUS_TEXT[month.status]}${paid}`;
+}
 
+/** Satu batang per bulan cicilan: isian = porsi yang sudah dibayar. */
+function MonthlyBars({ months }: { months: MonthBar[] }) {
   return (
-    <svg
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      preserveAspectRatio="none"
-      className="h-16 w-full"
-      aria-hidden="true"
-    >
-      <polygon
-        points={`0,${HEIGHT} ${line} ${WIDTH},${HEIGHT}`}
-        fill="var(--color-brand-soft)"
-      />
-      <polyline
-        points={line}
-        fill="none"
-        stroke="var(--color-brand)"
-        strokeWidth={2.5}
-        strokeLinejoin="round"
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
+    <figure>
+      <figcaption className="mb-2 flex items-center justify-between gap-3 text-[11px] text-muted">
+        <span className="font-semibold text-night">Setoran per bulan</span>
+        <span className="flex items-center gap-3">
+          <span className="flex items-center gap-1">
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 rounded-full bg-brand"
+            />
+            Lunas
+          </span>
+          <span className="flex items-center gap-1">
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 rounded-full ring-1 ring-brand ring-inset"
+            />
+            Berikutnya
+          </span>
+        </span>
+      </figcaption>
+
+      <ol className="flex items-end gap-1.5">
+        {months.map((month) => (
+          <li
+            key={month.fullLabel}
+            title={describeMonth(month)}
+            className="flex min-w-0 flex-1 flex-col items-center gap-1.5"
+          >
+            <span
+              className={cn(
+                "relative flex h-14 w-full items-end overflow-hidden rounded-lg",
+                month.status === "overdue" ? "bg-red-50" : "bg-surface",
+                month.status === "next" && "ring-1 ring-brand ring-inset",
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className="w-full rounded-lg bg-brand"
+                style={{ height: `${month.fill * 100}%` }}
+              />
+              <span className="sr-only">{describeMonth(month)}</span>
+            </span>
+            <span
+              aria-hidden="true"
+              className={cn(
+                "text-[11px]",
+                month.status === "next"
+                  ? "font-semibold text-brand-strong"
+                  : month.status === "overdue"
+                    ? "font-semibold text-red-600"
+                    : "text-muted",
+              )}
+            >
+              {month.label}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </figure>
   );
 }
 
@@ -60,14 +102,16 @@ export function LastDepositCard({
           <p className="mt-4 inline-flex w-fit rounded-full bg-surface px-3 py-1.5 text-xs font-semibold text-night">
             {data.paidCount} dari {data.totalCount} bulan lunas
           </p>
-          <div className="mt-auto pt-4">
-            <Sparkline points={data.trend} />
-          </div>
+          {data.months.length > 0 && (
+            <div className="mt-auto pt-5">
+              <MonthlyBars months={data.months} />
+            </div>
+          )}
         </>
       ) : (
         <p className="text-sm text-body">
           Belum ada setoran tercatat. Setoran pertama akan muncul di sini
-          setelah diverifikasi CS QURMA
+          setelah diverifikasi CS QURMA.
         </p>
       )}
     </BentoCard>

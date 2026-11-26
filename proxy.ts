@@ -4,6 +4,7 @@ import {
   PROTECTED_ROUTE_PREFIXES,
   ROUTES,
 } from "@/config/navigation";
+import { getSafeRedirectPath } from "@/features/auth/lib/redirect";
 import { SESSION_COOKIE } from "@/lib/server/session-cookie";
 
 const isProtected = (pathname: string) =>
@@ -25,7 +26,9 @@ export function proxy(request: NextRequest) {
   }
 
   if (isGuestOnly(pathname) && hasSession) {
-    return NextResponse.redirect(new URL(ROUTES.dashboard, request.url));
+    // Sudah masuk: lanjutkan ke tujuan ?next (hanya path internal), selain itu dashboard
+    const next = getSafeRedirectPath(request.nextUrl.searchParams.get("next"));
+    return NextResponse.redirect(new URL(next, request.url));
   }
 
   return NextResponse.next();
@@ -39,7 +42,6 @@ export const config = {
     "/report/:path*",
     "/akun/:path*",
     "/transaksi/:path*",
-    "/kwitansi/:path*",
     "/login",
     "/register",
   ],
