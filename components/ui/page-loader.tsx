@@ -40,6 +40,7 @@ function PageLoaderContent() {
   const [isMounted, setIsMounted] = React.useState(false);
   const [isVisible, setIsVisible] = React.useState(false);
   const timersRef = React.useRef<ReturnType<typeof setTimeout>[]>([]);
+  const routeKeyRef = React.useRef(routeKey);
 
   const clearTimers = React.useCallback(() => {
     timersRef.current.forEach(clearTimeout);
@@ -51,15 +52,21 @@ function PageLoaderContent() {
     setIsVisible(false);
   }
 
-  React.useEffect(() => clearTimers, [routeKey, clearTimers]);
+  React.useLayoutEffect(() => {
+    routeKeyRef.current = routeKey;
+    return clearTimers;
+  }, [routeKey, clearTimers]);
 
   React.useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       if (!isInternalPageNavigation(event)) return;
 
       clearTimers();
+      const startedAt = routeKeyRef.current;
       timersRef.current.push(
         setTimeout(() => {
+          // Halaman sudah berganti → tidak perlu overlay
+          if (routeKeyRef.current !== startedAt) return;
           setIsMounted(true);
           setIsVisible(true);
         }, SHOW_DELAY_MS),

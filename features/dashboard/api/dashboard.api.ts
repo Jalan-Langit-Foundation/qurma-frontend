@@ -1,10 +1,19 @@
 import "server-only";
+import { getCurrentUser } from "@/features/auth/server";
 import { authedRequest } from "@/lib/api/authed-request";
+import { parseResponse } from "@/lib/api/response-schema";
 import type { DashboardData } from "../lib/types";
-import type { DashboardDto } from "./dashboard.dto";
+import { dashboardDtoSchema } from "./dashboard.dto";
 import { toDashboardData } from "./dashboard.mapper";
 
-/** GET /user/dashboard → ringkasan dashboard dalam satu request. */
 export async function getDashboardSummary(): Promise<DashboardData> {
-  return toDashboardData(await authedRequest<DashboardDto>("/user/dashboard"));
+  const [data, user] = await Promise.all([
+    authedRequest<unknown>("/user/dashboard"),
+    getCurrentUser(),
+  ]);
+
+  return toDashboardData(
+    parseResponse(dashboardDtoSchema, data, "GET /user/dashboard"),
+    user,
+  );
 }

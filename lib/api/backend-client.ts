@@ -1,4 +1,5 @@
 import "server-only";
+import { unstable_rethrow } from "next/navigation";
 import { serverEnv } from "@/lib/server/env";
 import { ApiError, kindFromStatus } from "./api-error";
 import type { ApiBody, FieldErrors } from "./types";
@@ -52,7 +53,6 @@ function isApiBody(value: unknown): value is ApiBody<unknown> {
   );
 }
 
-/** Kirim request; gangguan jaringan & timeout diubah menjadi ApiError. */
 async function send(
   path: string,
   { method = "GET", body, token, query, timeoutMs }: BackendRequestOptions,
@@ -70,6 +70,7 @@ async function send(
       signal: AbortSignal.timeout(timeoutMs ?? serverEnv.apiTimeoutMs),
     });
   } catch (error) {
+    unstable_rethrow(error);
     const isTimeout =
       error instanceof DOMException &&
       (error.name === "TimeoutError" || error.name === "AbortError");

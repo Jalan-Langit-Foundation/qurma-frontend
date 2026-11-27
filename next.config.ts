@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
 
+  logging: {
+    serverFunctions: false,
+  },
+
   experimental: {
     agentUpgrade: "security",
   },

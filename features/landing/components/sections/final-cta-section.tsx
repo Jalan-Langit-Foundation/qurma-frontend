@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
 import { FINAL_CTA_CONTENT } from "../../lib/content/final-cta";
@@ -27,16 +27,15 @@ export function FinalCtaSection() {
           className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full border border-white/10"
         />
 
-        <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 font-heading text-xs font-semibold tracking-wide uppercase backdrop-blur-md sm:text-sm">
-          <Sparkles className="h-4 w-4 text-brand-soft" aria-hidden="true" />
-          <span>{pillBadge}</span>
+        <p className="mb-6 inline-flex rounded-full bg-white/15 px-4 py-1.5 font-heading text-xs font-semibold tracking-wide uppercase backdrop-blur-md sm:text-sm">
+          {pillBadge}
         </p>
 
-        <h2 className="mx-auto max-w-2xl font-heading text-2xl leading-tight font-extrabold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
+        <h2 className="mx-auto max-w-3xl font-heading text-2xl leading-tight font-extrabold tracking-tight text-balance sm:text-3xl md:text-4xl lg:text-5xl">
           {headline}
         </h2>
 
-        <p className="mx-auto mt-4 max-w-xl font-body text-sm leading-relaxed text-white/90 sm:mt-6 sm:text-base">
+        <p className="mx-auto mt-4 max-w-xl font-body text-sm leading-relaxed text-pretty text-white/90 sm:mt-6 sm:text-base">
           {description}
         </p>
 

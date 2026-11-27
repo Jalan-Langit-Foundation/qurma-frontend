@@ -41,6 +41,7 @@ const saving: SavingSummaryDto = {
   },
 };
 
+// Contoh persis dari API Contract bagian 7
 const insights: DashboardInsightsDto = {
   month_summary: {
     month: "2027-02",
@@ -64,13 +65,12 @@ const insights: DashboardInsightsDto = {
 describe("toDashboardData (API Contract bagian 7)", () => {
   it("belum punya tabungan → saving & insights null", () => {
     const dto: DashboardDto = {
-      user,
       savings_count: 0,
       has_saving: false,
       saving: null,
       insights: null,
     };
-    expect(toDashboardData(dto)).toEqual({
+    expect(toDashboardData(dto, user)).toEqual({
       user,
       savingsCount: 0,
       saving: null,
@@ -79,13 +79,15 @@ describe("toDashboardData (API Contract bagian 7)", () => {
   });
 
   it("memetakan tabungan dan insights", () => {
-    const data = toDashboardData({
+    const data = toDashboardData(
+      {
+        savings_count: 1,
+        has_saving: true,
+        saving,
+        insights,
+      },
       user,
-      savings_count: 1,
-      has_saving: true,
-      saving,
-      insights,
-    });
+    );
 
     expect(data.savingsCount).toBe(1);
     expect(data.saving).toMatchObject({
@@ -115,29 +117,33 @@ describe("toDashboardData (API Contract bagian 7)", () => {
   });
 
   it("cicilan bulan ini di luar jadwal & tanpa saran upgrade → null", () => {
-    const data = toDashboardData({
-      user,
-      savings_count: 1,
-      has_saving: true,
-      saving,
-      insights: {
-        ...insights,
-        month_summary: { ...insights.month_summary, installment: null },
-        upgrade_suggestion: null,
+    const data = toDashboardData(
+      {
+        savings_count: 1,
+        has_saving: true,
+        saving,
+        insights: {
+          ...insights,
+          month_summary: { ...insights.month_summary, installment: null },
+          upgrade_suggestion: null,
+        },
       },
-    });
+      user,
+    );
     expect(data.insights?.monthSummary.installment).toBeNull();
     expect(data.insights?.upgradeSuggestion).toBeNull();
   });
 
   it("has_saving false → isi saving/insights dari backend diabaikan", () => {
-    const data = toDashboardData({
+    const data = toDashboardData(
+      {
+        savings_count: 2,
+        has_saving: false,
+        saving,
+        insights,
+      },
       user,
-      savings_count: 2,
-      has_saving: false,
-      saving,
-      insights,
-    });
+    );
     expect(data.saving).toBeNull();
     expect(data.insights).toBeNull();
   });

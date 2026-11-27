@@ -3,9 +3,9 @@ import { SECTION_IDS } from "@/config/navigation";
 import { PROGRAM } from "@/config/program";
 
 export const FINAL_CTA_CONTENT = {
-  pillBadge: `Persiapan Terencana Menuju Idul Adha ${PROGRAM.hijriLabel}`,
+  pillBadge: `Persiapan Terencana Menuju Iduladha ${PROGRAM.hijriLabel}`,
   headline: `Qurban ${PROGRAM.year} Bisa Dimulai Hari Ini.`,
-  description: `Niat baik tidak perlu ditunda. Mari sambut Idul Adha ${PROGRAM.year} dengan hati tenang, persiapan teratur, dan kepastian qurban terbaik bagi sesama.`,
+  description: `Niat baik tidak perlu ditunda. Mari sambut Iduladha ${PROGRAM.year} dengan hati tenang, persiapan teratur, dan kepastian qurban terbaik bagi sesama.`,
 
   primaryCta: {
     label: "Konsultasi via WhatsApp",

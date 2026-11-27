@@ -1,4 +1,4 @@
-import { toAuthUser } from "@/features/auth/server";
+import type { AuthUser } from "@/features/auth";
 import { isPackageId } from "@/features/packages";
 import { toSaving } from "@/features/savings/server";
 import type {
@@ -53,11 +53,14 @@ function toDashboardInsights(dto: DashboardInsightsDto): DashboardInsights {
   };
 }
 
-export function toDashboardData(dto: DashboardDto): DashboardData {
+export function toDashboardData(
+  dto: DashboardDto,
+  user: AuthUser,
+): DashboardData {
   const saving = dto.has_saving && dto.saving ? toSaving(dto.saving) : null;
 
   return {
-    user: toAuthUser(dto.user),
+    user,
     savingsCount: dto.savings_count,
     saving,
     insights: saving && dto.insights ? toDashboardInsights(dto.insights) : null,
