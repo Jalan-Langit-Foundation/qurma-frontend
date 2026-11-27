@@ -1,7 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { TERMS } from "@/features/legal/lib/terms";
-import { isSavingRegistrationOpen, SAVINGS_POLICY } from "@/features/savings";
+import { buildTerms } from "@/features/legal/lib/terms";
+import { FALLBACK_SCHEDULE, getPaymentDeadline } from "@/features/program";
+import { SAVINGS_POLICY } from "@/features/savings";
 
+const build = (websiteRegistration: boolean) =>
+  buildTerms({
+    paymentDeadline: getPaymentDeadline(FALLBACK_SCHEDULE),
+    schedule: FALLBACK_SCHEDULE,
+    websiteRegistration,
+  });
+
+const TERMS = build(false);
 const text = JSON.stringify(TERMS);
 
 describe("S&K sesuai Brief V1.1 (E.3, G.2, H.2, H.3)", () => {
@@ -34,8 +43,26 @@ describe("S&K sesuai Brief V1.1 (E.3, G.2, H.2, H.3)", () => {
   });
 
   it("tidak menyinggung akun/kata sandi selama registrasi belum dibuka (G.2)", () => {
-    if (isSavingRegistrationOpen) return;
     expect(text).not.toMatch(/kata sandi|membuat akun|data akun/);
+  });
+
+  it("setelah registrasi website dibuka, S&K menyebut akun", () => {
+    expect(JSON.stringify(build(true))).toMatch(/membuat akun/);
+  });
+
+  it("batas pelunasan & bulan mulai mengikuti jadwal CS QURMA", () => {
+    const custom = buildTerms({
+      paymentDeadline: getPaymentDeadline({
+        ...FALLBACK_SCHEDULE,
+        payoffDeadline: "2027-05-03",
+        eidAlAdhaDate: "2027-05-17",
+      }),
+      schedule: { openingMonth: "2026-12" },
+      websiteRegistration: false,
+    });
+    const customText = JSON.stringify(custom);
+    expect(customText).toContain("H-14 Iduladha");
+    expect(customText).toContain("Desember 2026");
   });
 
   it("menampilkan catatan draf selama ketentuan belum disahkan", () => {

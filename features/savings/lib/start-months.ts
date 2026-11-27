@@ -1,4 +1,4 @@
-import { SAVINGS_PROGRAM } from "./program";
+import type { ProgramSchedule } from "@/features/program";
 import {
   addMonths,
   compareYearMonth,
@@ -12,25 +12,36 @@ import {
 export interface StartMonthOption {
   value: YearMonth;
   label: string;
-
   tenorMonths: number;
 }
 
+type StartMonthRules = Pick<
+  ProgramSchedule,
+  "openingMonth" | "lastInstallmentMonth" | "maxTenor"
+>;
+
+/**
+ * Bulan mulai yang boleh dipilih: tidak sebelum bulan ini & bulan pembukaan,
+ * lama menabung tidak melebihi `maxTenor`, dan selesai di bulan cicilan terakhir
+ * yang ditetapkan CS QURMA.
+ */
 export function getStartMonthOptions(
   currentMonth: YearMonth,
-  program: Pick<
-    typeof SAVINGS_PROGRAM,
-    "openingMonth" | "finalPaymentMonth"
-  > = SAVINGS_PROGRAM,
+  rules: StartMonthRules,
 ): StartMonthOption[] {
+  const end = rules.lastInstallmentMonth;
+  const earliestByTenor = addMonths(end, 1 - Math.max(1, rules.maxTenor));
   const options: StartMonthOption[] = [];
-  let month = maxYearMonth(currentMonth, program.openingMonth);
+  let month = maxYearMonth(
+    maxYearMonth(currentMonth, rules.openingMonth),
+    earliestByTenor,
+  );
 
-  while (compareYearMonth(month, program.finalPaymentMonth) <= 0) {
+  while (compareYearMonth(month, end) <= 0) {
     options.push({
       value: month,
       label: formatYearMonth(month),
-      tenorMonths: countMonthsInclusive(month, program.finalPaymentMonth),
+      tenorMonths: countMonthsInclusive(month, end),
     });
     month = addMonths(month, 1);
   }

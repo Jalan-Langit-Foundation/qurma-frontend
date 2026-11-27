@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { ProgramPackageDto } from "@/features/packages/api/program.dto";
-import { toQurbanPackages } from "@/features/packages/api/program.mapper";
+import {
+  mergeApiPackages,
+  type ApiPackage,
+} from "@/features/packages/lib/merge-packages";
 import { FALLBACK_PACKAGES } from "@/features/packages/lib/catalog";
 
-// Contoh dari API Contract bagian 2 (GET /program)
-const API_PACKAGES: ProgramPackageDto[] = [
+const API_PACKAGES: ApiPackage[] = [
   {
     code: "standar",
     name: "Domba Standar",
@@ -28,9 +29,9 @@ const API_PACKAGES: ProgramPackageDto[] = [
   },
 ];
 
-describe("toQurbanPackages (GET /program)", () => {
+describe("mergeApiPackages (GET /program)", () => {
   it("nama, harga & bobot dari API; teks pemasaran dari katalog lokal", () => {
-    const [standar] = toQurbanPackages([
+    const [standar] = mergeApiPackages([
       { ...API_PACKAGES[0]!, price: 1_750_000, weight_min: 21 },
     ]);
     const local = FALLBACK_PACKAGES[0];
@@ -45,28 +46,28 @@ describe("toQurbanPackages (GET /program)", () => {
   });
 
   it("contoh kontrak menghasilkan data yang sama dengan katalog lokal", () => {
-    expect(toQurbanPackages(API_PACKAGES)).toEqual(FALLBACK_PACKAGES);
+    expect(mergeApiPackages(API_PACKAGES)).toEqual(FALLBACK_PACKAGES);
   });
 
   it("urut dari harga terendah walau API mengirim acak", () => {
-    const ids = toQurbanPackages([...API_PACKAGES].reverse()).map(
+    const ids = mergeApiPackages([...API_PACKAGES].reverse()).map(
       (pkg) => pkg.id,
     );
     expect(ids).toEqual(["standar", "medium", "premium"]);
   });
 
   it("hanya paket yang dikirim API yang tampil", () => {
-    const ids = toQurbanPackages(API_PACKAGES.slice(0, 2)).map((pkg) => pkg.id);
+    const ids = mergeApiPackages(API_PACKAGES.slice(0, 2)).map((pkg) => pkg.id);
     expect(ids).toEqual(["standar", "medium"]);
   });
 
   it("nama tanpa awalan Domba tetap dipakai apa adanya", () => {
-    const [pkg] = toQurbanPackages([{ ...API_PACKAGES[1]!, name: "Medium" }]);
+    const [pkg] = mergeApiPackages([{ ...API_PACKAGES[1]!, name: "Medium" }]);
     expect(pkg).toMatchObject({ name: "Medium", shortName: "Medium" });
   });
 
   it("kode tidak dikenal atau data rusak dilewati", () => {
-    const ids = toQurbanPackages([
+    const ids = mergeApiPackages([
       { ...API_PACKAGES[0]!, code: "sapi" },
       { ...API_PACKAGES[1]!, price: 0 },
       { ...API_PACKAGES[2]!, weight_min: 40 },
@@ -76,8 +77,8 @@ describe("toQurbanPackages (GET /program)", () => {
   });
 
   it("tidak ada paket yang valid → katalog lokal", () => {
-    expect(toQurbanPackages([])).toBe(FALLBACK_PACKAGES);
-    expect(toQurbanPackages([{ ...API_PACKAGES[0]!, code: "sapi" }])).toBe(
+    expect(mergeApiPackages([])).toBe(FALLBACK_PACKAGES);
+    expect(mergeApiPackages([{ ...API_PACKAGES[0]!, code: "sapi" }])).toBe(
       FALLBACK_PACKAGES,
     );
   });

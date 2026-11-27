@@ -73,7 +73,7 @@ async function send(
     const isTimeout =
       error instanceof DOMException &&
       (error.name === "TimeoutError" || error.name === "AbortError");
-    // Detail asli hanya ke log server, bukan ke pengguna
+
     console.error(`[backend] ${method} ${path} gagal:`, error);
     throw new ApiError({ kind: isTimeout ? "timeout" : "network", status: 0 });
   }

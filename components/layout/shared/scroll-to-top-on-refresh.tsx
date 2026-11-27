@@ -5,8 +5,7 @@ import * as React from "react";
 export function ScrollToTopOnRefresh() {
   React.useEffect(() => {
     const navigation = performance.getEntriesByType("navigation")[0] as
-      | PerformanceNavigationTiming
-      | undefined;
+      PerformanceNavigationTiming | undefined;
 
     if (navigation?.type !== "reload") return;
 

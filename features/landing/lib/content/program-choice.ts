@@ -1,6 +1,7 @@
 import { ROUTES, SECTION_IDS, sectionHref } from "@/config/navigation";
 import type { QurbanPackage } from "@/features/packages";
-import { PAYMENT_DEADLINE, SAVINGS_PROGRAM } from "@/features/savings";
+import type { PaymentDeadline } from "@/features/program";
+import { SAVINGS_PROGRAM } from "@/features/savings";
 import { formatRupiah } from "@/lib/format";
 
 export interface ProgramFact {
@@ -18,7 +19,10 @@ export interface ProgramChoice {
   cta: { label: string; href: string };
 }
 
-export function buildProgramChoiceContent(packages: readonly QurbanPackage[]) {
+export function buildProgramChoiceContent(
+  packages: readonly QurbanPackage[],
+  paymentDeadline: PaymentDeadline,
+) {
   const lowestPackagePrice = Math.min(...packages.map((pkg) => pkg.target));
 
   return {
@@ -64,7 +68,7 @@ export function buildProgramChoiceContent(packages: readonly QurbanPackage[]) {
           },
           {
             label: "Lunas paling lambat",
-            value: PAYMENT_DEADLINE.relativeLabel,
+            value: paymentDeadline.relativeLabel,
           },
         ],
         cta: {

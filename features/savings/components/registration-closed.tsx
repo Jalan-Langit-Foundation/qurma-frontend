@@ -7,6 +7,7 @@ import {
   Lock,
   Megaphone,
   MessageCircle,
+  type LucideIcon,
 } from "lucide-react";
 import { MemberPage, WhatsappLink } from "@/components/layout";
 import { buttonClassName } from "@/components/ui/button-styles";
@@ -14,31 +15,16 @@ import { WHATSAPP_MESSAGES } from "@/config/contact";
 import { ROUTES } from "@/config/navigation";
 import { PROGRAM } from "@/config/program";
 import { formatBulanTahun } from "@/lib/format";
+import {
+  REGISTRATION_CLOSED_OPTIONS,
+  type RegistrationClosedIcon,
+} from "../lib/content/registration-closed";
 
-const OPTIONS = [
-  {
-    icon: HandHeart,
-    title: "Tunaikan langsung",
-    text: "Bayar penuh tanpa menabung. Domba disiapkan CS QURMA.",
-    action: {
-      kind: "link",
-      href: ROUTES.fullPayment,
-      label: "Lihat pilihan domba",
-    },
-  },
-  {
-    icon: MessageCircle,
-    title: "Tanya CS QURMA",
-    text: "Tanyakan pilihan qurban yang masih tersedia untuk Anda.",
-    action: { kind: "whatsapp", label: "Chat via WhatsApp" },
-  },
-  {
-    icon: Megaphone,
-    title: "Program berikutnya",
-    text: "Tabungan Qurban tahun depan diumumkan di halaman utama.",
-    action: { kind: "link", href: ROUTES.home, label: "Ke halaman utama" },
-  },
-] as const;
+const OPTION_ICONS: Record<RegistrationClosedIcon, LucideIcon> = {
+  pay: HandHeart,
+  chat: MessageCircle,
+  announce: Megaphone,
+};
 
 const linkClass =
   "mt-auto inline-flex min-h-11 items-center gap-1.5 self-start rounded-full text-sm font-semibold text-brand-strong hover:text-brand-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2";
@@ -145,11 +131,11 @@ export function RegistrationClosed({ deadline }: { deadline: string }) {
           Masih ingin berqurban?
         </h2>
         <ul className="grid gap-4 sm:grid-cols-3">
-          {OPTIONS.map((option) => {
-            const Icon = option.icon;
+          {REGISTRATION_CLOSED_OPTIONS.map((option) => {
+            const Icon = OPTION_ICONS[option.icon];
             return (
               <li
-                key={option.title}
+                key={option.id}
                 className="flex flex-col gap-3 rounded-3xl border border-line bg-white p-6 shadow-card"
               >
                 <span

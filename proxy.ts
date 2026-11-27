@@ -26,7 +26,6 @@ export function proxy(request: NextRequest) {
   }
 
   if (isGuestOnly(pathname) && hasSession) {
-    // Sudah masuk: lanjutkan ke tujuan ?next (hanya path internal), selain itu dashboard
     const next = getSafeRedirectPath(request.nextUrl.searchParams.get("next"));
     return NextResponse.redirect(new URL(next, request.url));
   }

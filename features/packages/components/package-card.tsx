@@ -11,7 +11,6 @@ import type { QurbanPackage } from "../lib/types";
 export interface PackageCardProps {
   pkg: QurbanPackage;
   selected?: boolean;
-  /** Estimasi nominal per setoran sesuai simulasi aktif */
   depositEstimate: number | null;
   onSelect?: (pkg: QurbanPackage) => void;
   onContinue?: (pkg: QurbanPackage) => void;
@@ -101,8 +100,8 @@ export function PackageCard({
               aria-pressed={selected}
               aria-label={
                 selected
-                  ? `${pkg.name} terpilih. ${continueLabel}`
-                  : `Pilih ${pkg.name}`
+                  ? `${continueLabel}: ${pkg.name} terpilih`
+                  : `Pilih Paket ${pkg.name}`
               }
               className={cn(
                 buttonBase,

@@ -5,8 +5,16 @@ import {
   SECTION_IDS,
   sectionHref,
 } from "@/config/navigation";
-import { REGISTRATION_FLOW_CONTENT } from "@/features/landing/lib/content/registration-flow";
-import { TERMS_SUMMARY_CONTENT } from "@/features/landing/lib/content/terms-summary";
+import { buildRegistrationFlowContent } from "@/features/landing/lib/content/registration-flow";
+import { buildTermsSummaryContent } from "@/features/landing/lib/content/terms-summary";
+import { FALLBACK_SCHEDULE, getPaymentDeadline } from "@/features/program";
+
+const REGISTRATION_FLOW_CONTENT = buildRegistrationFlowContent({
+  state: "not_opened",
+});
+const TERMS_SUMMARY_CONTENT = buildTermsSummaryContent(
+  getPaymentDeadline(FALLBACK_SCHEDULE),
+);
 
 describe("beranda & navbar (Brief V1.1 bagian N)", () => {
   it("urutan section mengikuti brief", () => {
@@ -41,6 +49,15 @@ describe("beranda & navbar (Brief V1.1 bagian N)", () => {
     expect(text).toContain("CS QURMA");
     expect(text).toContain("WhatsApp");
     expect(REGISTRATION_FLOW_CONTENT.cta.href).toMatch(/^https:\/\/wa\.me\//);
+  });
+
+  it("catatan alur pendaftaran mengikuti status dari backend", () => {
+    expect(buildRegistrationFlowContent({ state: "open" }).note).toBeNull();
+    expect(REGISTRATION_FLOW_CONTENT.note).toMatch(/belum dibuka/);
+    expect(
+      buildRegistrationFlowContent({ state: "closed", deadline: "2027-04-30" })
+        .note,
+    ).toContain("30 April 2027");
   });
 
   it("ringkasan S&K menautkan halaman lengkap", () => {

@@ -4,12 +4,15 @@ import {
   type QurbanPackage,
 } from "@/features/packages";
 import {
+  buildJourneyTimeline,
   formatMonthShort,
   formatYearMonth,
   formatYearMonthShort,
   getSavingStatus,
   SAVINGS_PROGRAM,
   type InstallmentStatus,
+  type JourneyTimelineStep,
+  type DepositRecord,
   type Saving,
   type SavingLedger,
   type SavingStatusTone,
@@ -42,15 +45,11 @@ export interface GaugeSegment {
   ratio: number;
 }
 
-/** Satu bulan di grafik "Setoran per bulan" */
 export interface MonthBar {
-  /** "Nov" */
   label: string;
-  /** "November 2026" (untuk pembaca layar & tooltip) */
   fullLabel: string;
   amount: number;
   paidAmount: number;
-  /** Porsi terbayar 0–1 (tinggi isian batang) */
   fill: number;
   status: InstallmentStatus;
 }
@@ -67,7 +66,8 @@ export interface DashboardView {
     target: number;
     collected: number;
     remaining: number;
-    deposits: { id: number; dateLabel: string; amount: number }[];
+
+    deposits: { id: number; dateLabel: string; amount: number }[] | null;
   };
   plan: {
     monthlyAmount: number;
@@ -87,11 +87,9 @@ export interface DashboardView {
     months: MonthBar[];
   } | null;
   journey: {
-    step: number;
+    completed: number;
     total: number;
-    title: string;
-    milestone: { label: string; shortfall: number } | null;
-    steps: { title: string; state: "done" | "current" | "upcoming" }[];
+    steps: JourneyTimelineStep[];
   };
 }
 
@@ -247,41 +245,42 @@ function buildLastDeposit(ledger: SavingLedger | null) {
   };
 }
 
-function buildJourney(saving: Saving) {
-  const total = saving.journey.length;
-  const currentIndex = saving.journey.findIndex((step) => step.current);
-  const index = currentIndex === -1 ? total - 1 : currentIndex;
-  const target = saving.targetAmount;
+function buildJourney(saving: Saving): DashboardView["journey"] {
+  const steps = buildJourneyTimeline({
+    journey: saving.journey,
+    targetAmount: saving.targetAmount,
+    totalPaid: saving.totalPaid,
+    startMonth: saving.startMonth,
+  });
+  return {
+    completed: steps.filter((step) => step.state === "done").length,
+    total: steps.length,
+    steps,
+  };
+}
 
-  let milestone: DashboardView["journey"]["milestone"] = null;
-  if (target > 0 && saving.status !== "cancelled") {
-    const half = Math.ceil(target / 2);
-    if (saving.totalPaid < half) {
-      milestone = {
-        label: `untuk mencapai 50% (${formatRupiah(half)})`,
-        shortfall: half - saving.totalPaid,
-      };
-    } else if (saving.totalPaid < target) {
-      milestone = {
-        label: `untuk lunas (${formatRupiah(target)})`,
-        shortfall: target - saving.totalPaid,
-      };
-    }
-  }
+export function buildPackageView(
+  saving: Saving,
+  packages: readonly QurbanPackage[],
+  deposits: readonly DepositRecord[] | null,
+): DashboardView["package"] {
+  const pkg = saving.packageId
+    ? getPackageById(packages, saving.packageId)
+    : undefined;
 
   return {
-    step: index + 1,
-    total,
-    title: saving.journey[index]?.title ?? "",
-    milestone,
-    steps: saving.journey.map((step) => ({
-      title: step.title,
-      state: step.completed
-        ? ("done" as const)
-        : step.current
-          ? ("current" as const)
-          : ("upcoming" as const),
-    })),
+    name: saving.packageName,
+    weightLabel: pkg ? `Target bobot ${formatWeightRange(pkg)}` : null,
+    idLabel: formatSavingId(saving.id),
+    target: saving.targetAmount,
+    collected: saving.totalPaid,
+    remaining: saving.remainingAmount,
+    deposits:
+      deposits?.map((deposit) => ({
+        id: deposit.id,
+        dateLabel: formatTanggal(deposit.paidAt),
+        amount: deposit.amount,
+      })) ?? null,
   };
 }
 
@@ -291,9 +290,6 @@ export function buildDashboardView(
   member: DashboardMember,
   packages: readonly QurbanPackage[],
 ): DashboardView {
-  const pkg = saving.packageId
-    ? getPackageById(packages, saving.packageId)
-    : undefined;
   const status = getSavingStatus(saving.status);
 
   return {
@@ -308,19 +304,7 @@ export function buildDashboardView(
       },
       { icon: "status", label: status.label, tone: status.tone },
     ],
-    package: {
-      name: saving.packageName,
-      weightLabel: pkg ? `Target bobot ${formatWeightRange(pkg)}` : null,
-      idLabel: formatSavingId(saving.id),
-      target: saving.targetAmount,
-      collected: saving.totalPaid,
-      remaining: saving.remainingAmount,
-      deposits: (ledger?.deposits ?? []).map((deposit) => ({
-        id: deposit.id,
-        dateLabel: formatTanggal(deposit.paidAt),
-        amount: deposit.amount,
-      })),
-    },
+    package: buildPackageView(saving, packages, ledger?.deposits ?? []),
     plan: buildPlan(saving, ledger),
     gauge: buildGauge(saving),
     lastDeposit: buildLastDeposit(ledger),

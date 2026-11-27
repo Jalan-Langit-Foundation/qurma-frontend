@@ -1,10 +1,11 @@
 import * as React from "react";
+import Link from "next/link";
+import { ROUTES } from "@/config/navigation";
 import { ArrowRight } from "lucide-react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { DashboardView, PlanBar } from "../lib/dashboard-view";
-import { sectionHash } from "../lib/section-hash";
 
 const HATCH = {
   backgroundImage:
@@ -20,22 +21,27 @@ const BAR_STYLES: Record<PlanBar["key"], string> = {
 export function DepositPlanCard({
   data,
   className,
+  showScheduleLink = true,
 }: {
   data: DashboardView["plan"];
   className?: string;
+  /** false di halaman Jadwal sendiri */
+  showScheduleLink?: boolean;
 }) {
   return (
     <BentoCard
       title="Rencana Setoran"
       className={className}
       action={
-        <a
-          href={sectionHash("schedule")}
-          className="inline-flex items-center gap-1 rounded-full text-xs font-semibold text-brand-strong hover:underline focus-ring"
-        >
-          Lihat jadwal
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </a>
+        showScheduleLink && (
+          <Link
+            href={ROUTES.savingSchedule}
+            className="inline-flex items-center gap-1 rounded-full text-xs font-semibold text-brand-strong hover:underline focus-ring"
+          >
+            Lihat jadwal
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+        )
       }
     >
       <p className="font-heading text-3xl font-semibold text-ink">

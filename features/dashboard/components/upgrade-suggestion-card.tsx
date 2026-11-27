@@ -18,11 +18,11 @@ export function UpgradeSuggestionCard({
     <div className="flex flex-col gap-4 rounded-2xl border border-brand-line bg-brand-soft p-5 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <p className="font-heading text-base font-semibold text-brand-ink">
-          Progres Anda sudah lebih dari separuh
+          Naik ke {suggestion.to.name}?
         </p>
         <p className="mt-1 text-sm text-brand-ink-soft">
-          Ingin naik dari {suggestion.from.name} ke {suggestion.to.name}?
-          Tambahannya {additional}, sisa setoran dihitung ulang oleh CS QURMA.
+          Dari {suggestion.from.name}, tambahannya {additional}. Sisa setoran
+          dihitung ulang oleh CS QURMA.
         </p>
       </div>
       <WhatsappLink

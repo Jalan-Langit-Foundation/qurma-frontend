@@ -6,6 +6,7 @@ import {
   usePackages,
   type QurbanPackage,
 } from "@/features/packages";
+import { useSavingRegistration } from "@/features/program";
 import {
   calculateDepositPlan,
   estimateDepositAmounts,
@@ -35,6 +36,7 @@ function SavingPlannerView({
 }: SavingPlannerViewProps) {
   const packages = usePackages();
   const savingWindow = useSavingWindow();
+  const registration = useSavingRegistration();
   const plan = calculateDepositPlan(selectedPackage.target, depositCount);
 
   const depositEstimates = React.useMemo(
@@ -42,7 +44,13 @@ function SavingPlannerView({
     [packages, depositCount],
   );
 
-  const cta = getSavingCta(selectedPackage, plan);
+  const cta = getSavingCta(
+    selectedPackage,
+    plan,
+    registration.state === "open",
+  );
+
+  const closed = savingWindow === "closed";
 
   return (
     <>
@@ -66,13 +74,13 @@ function SavingPlannerView({
         selectedPackage={selectedPackage}
         depositCount={depositCount}
         plan={plan}
-        closed={savingWindow === "closed"}
+        closed={closed}
         cta={cta}
         onSelectPackage={onSelectPackage}
         onSelectDepositCount={onSelectDepositCount}
       />
 
-      {savingWindow !== "closed" && (
+      {!closed && (
         <StickyCta selectedPackage={selectedPackage} plan={plan} cta={cta} />
       )}
     </>

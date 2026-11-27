@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { buildFaqContent } from "@/features/landing/lib/content/faq";
 import { FALLBACK_PACKAGES } from "@/features/packages";
+import { FALLBACK_SCHEDULE, getPaymentDeadline } from "@/features/program";
 import { SAVINGS_POLICY } from "@/features/savings";
 
-const FAQ_CONTENT = buildFaqContent(FALLBACK_PACKAGES);
+const FAQ_CONTENT = buildFaqContent(
+  FALLBACK_PACKAGES,
+  getPaymentDeadline(FALLBACK_SCHEDULE),
+);
 const questions = FAQ_CONTENT.items.map((item) => item.question).join("\n");
 const answers = FAQ_CONTENT.items.map((item) => String(item.answer)).join(" ");
 
@@ -54,6 +58,19 @@ describe("FAQ (Brief V1.1 H.1 & H.3)", () => {
     );
     expect(answer).toContain("Domba Standar (20–25 kg)");
     expect(answer).not.toContain("Domba Domba");
+  });
+
+  it("batas pelunasan mengikuti jadwal dari CS QURMA", () => {
+    const custom = buildFaqContent(
+      FALLBACK_PACKAGES,
+      getPaymentDeadline({
+        ...FALLBACK_SCHEDULE,
+        payoffDeadline: "2027-05-03",
+        eidAlAdhaDate: "2027-05-17",
+      }),
+    );
+    const text = custom.items.map((item) => String(item.answer)).join(" ");
+    expect(text).toContain("H-14 Iduladha");
   });
 
   it("lokasi 2027 belum diklaim final", () => {

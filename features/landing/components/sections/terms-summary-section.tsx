@@ -2,12 +2,17 @@ import * as React from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
-import { TERMS_SUMMARY_CONTENT } from "../../lib/content/terms-summary";
+import { getPaymentDeadline } from "@/features/program";
+import { getProgram } from "@/features/program/server";
+import { buildTermsSummaryContent } from "../../lib/content/terms-summary";
 import { LandingSection } from "../landing-section";
 import { IndexNumber, SectionIntro } from "../section-intro";
 
-export function TermsSummarySection() {
-  const { label, headline, status, points, link } = TERMS_SUMMARY_CONTENT;
+export async function TermsSummarySection() {
+  const { schedule } = await getProgram();
+  const { label, headline, status, points, link } = buildTermsSummaryContent(
+    getPaymentDeadline(schedule),
+  );
 
   return (
     <LandingSection id={SECTION_IDS.termsSummary} label={label} tone="soft">

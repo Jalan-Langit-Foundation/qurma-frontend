@@ -4,11 +4,12 @@ import * as React from "react";
 import { Card } from "@/components/ui/card";
 import {
   buildJourneyStepsFromStage,
-  JourneyChecklist,
+  buildJourneyTimeline,
+  JourneyTimeline,
 } from "@/features/savings";
 import { DemoSection, PillGroup } from "../demo-section";
 
-const STAGE_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8].map((stage) => ({
+const STAGE_OPTIONS = [1, 2, 3, 4, 5, 6, 7].map((stage) => ({
   value: stage,
   label: stage,
 }));
@@ -16,16 +17,22 @@ const STAGE_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8].map((stage) => ({
 export function JourneySection() {
   const [activeStage, setActiveStage] = React.useState(3);
   const steps = React.useMemo(
-    () => buildJourneyStepsFromStage(activeStage),
+    () =>
+      buildJourneyTimeline({
+        journey: buildJourneyStepsFromStage(activeStage),
+        targetAmount: 1_600_000,
+        totalPaid: activeStage > 3 ? 1_600_000 : 920_000,
+        startMonth: "2026-11",
+      }),
     [activeStage],
   );
 
   return (
     <DemoSection
-      id="journey-checklist"
+      id="journey-timeline"
       eyebrow="features/savings"
-      title="JourneyChecklist"
-      description="7 tahap perjalanan qurban. Nilai 8 = semua tahap selesai."
+      title="JourneyTimeline"
+      description="6 tahap perjalanan qurban (dashboard & /qurban). Nilai 7 = semua tahap selesai."
       controls={
         <PillGroup
           label="Pilih tahap aktif"
@@ -37,9 +44,14 @@ export function JourneySection() {
         />
       }
     >
-      <Card className="p-6 sm:p-8">
-        <JourneyChecklist steps={steps} />
-      </Card>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card className="p-6 sm:p-8">
+          <JourneyTimeline steps={steps} />
+        </Card>
+        <div className="rounded-[28px] bg-night p-6 sm:p-8">
+          <JourneyTimeline steps={steps} tone="dark" />
+        </div>
+      </div>
     </DemoSection>
   );
 }

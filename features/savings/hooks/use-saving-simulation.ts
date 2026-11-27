@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useProgramSchedule } from "@/features/program";
 import {
   estimateDailySaving,
   calculateInstallmentPlan,
@@ -42,10 +43,11 @@ export function useSavingSimulation({
   requestedStartMonth,
 }: UseSavingSimulationInput): SavingSimulationState {
   const currentMonth = useCurrentYearMonth();
+  const schedule = useProgramSchedule();
 
   const startMonthOptions = React.useMemo(
-    () => (currentMonth ? getStartMonthOptions(currentMonth) : []),
-    [currentMonth],
+    () => (currentMonth ? getStartMonthOptions(currentMonth, schedule) : []),
+    [currentMonth, schedule],
   );
 
   return React.useMemo<SavingSimulationState>(() => {
@@ -57,7 +59,13 @@ export function useSavingSimulation({
     );
     if (!startMonth) return { status: "closed" };
 
-    const result = calculateInstallmentPlan({ target, startMonth });
+    const result = calculateInstallmentPlan({
+      target,
+      startMonth,
+      endMonth: schedule.lastInstallmentMonth,
+      roundingUnit: schedule.rounding,
+      maxTenorMonths: schedule.maxTenor,
+    });
     if (!result.ok) {
       return {
         status: "error",
@@ -74,5 +82,5 @@ export function useSavingSimulation({
       plan: result.plan,
       dailyEstimate: estimateDailySaving(result.plan.monthlyAmount),
     };
-  }, [currentMonth, requestedStartMonth, startMonthOptions, target]);
+  }, [currentMonth, requestedStartMonth, schedule, startMonthOptions, target]);
 }

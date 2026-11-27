@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 import { ROUTES } from "@/config/navigation";
 import { isPackageId } from "@/features/packages";
 import { ApiError, toUserMessage } from "@/lib/api/api-error";
-import { createSaving } from "./api/savings.api";
+import { getProgram, getSavingRegistration } from "@/features/program/server";
 import { formatTanggal } from "@/lib/format";
-import { getSavingRegistration } from "./api/registration.api";
+import { createSaving } from "./api/savings.api";
 import { getStartMonthOptions } from "./lib/start-months";
 import { currentYearMonth } from "./lib/year-month";
 
@@ -39,7 +39,8 @@ export async function createSavingAction(input: {
     return { ok: false, message: "Paket qurban tidak ditemukan." };
   }
 
-  const option = getStartMonthOptions(currentYearMonth()).find(
+  const { schedule } = await getProgram();
+  const option = getStartMonthOptions(currentYearMonth(), schedule).find(
     (candidate) => candidate.value === input.startMonth,
   );
   if (!option) {

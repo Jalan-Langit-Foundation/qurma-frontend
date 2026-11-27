@@ -9,6 +9,8 @@ export const ROUTES = {
   register: "/register",
   dashboard: "/dashboard",
   newSaving: "/tabungan/baru",
+  savingSchedule: "/tabungan/jadwal",
+  savingPackages: "/tabungan/paket",
   sessionExpired: "/session/expired",
   qurban: (id: number | string) => `/qurban/${id}`,
   report: (id: number | string) => `/report/${id}`,
@@ -67,43 +69,80 @@ export const NAVBAR_MEMBER_CTA: NavLink = {
   href: ROUTES.dashboard,
 };
 
+/** Anchor di dashboard saat belum punya tabungan (daftar paket). */
 export const MEMBER_SECTION_IDS = {
   packages: "paket",
-  schedule: "jadwal",
 } as const;
 
-export type MemberNavIcon = "home" | "package" | "calendar" | "receipt";
+export type MemberNavIcon =
+  "home" | "calendar" | "package" | "track" | "report" | "receipt" | "chat";
+
+/** "saving": butuh tabungan; "report": terkunci sampai Shohibul Report terbit */
+export type MemberNavRequirement = "saving" | "report";
 
 export interface MemberNavItem {
+  id: string;
   label: string;
-  href: string;
   icon: MemberNavIcon;
+  /** Fungsi untuk halaman per tabungan, mis. /qurban/[id] */
+  href: string | ((savingId: number) => string);
+  requires?: MemberNavRequirement;
+  /** Teks kecil saat menu terkunci */
+  lockedHint?: string;
+  /** Badge bulan setoran berikutnya */
+  showNextMonth?: boolean;
   feature?: FeatureName;
   activePrefixes?: readonly string[];
 }
 
-export const MEMBER_NAV_ITEMS: readonly MemberNavItem[] = [
+export interface MemberNavGroup {
+  label: string;
+  items: readonly MemberNavItem[];
+}
+
+export const MEMBER_NAV_GROUPS: readonly MemberNavGroup[] = [
   {
-    label: "Ringkasan",
-    href: ROUTES.dashboard,
-    icon: "home",
-    activePrefixes: ["/tabungan", "/qurban", "/report"],
-  },
-  {
-    label: "Paket",
-    href: `${ROUTES.dashboard}#${MEMBER_SECTION_IDS.packages}`,
-    icon: "package",
-  },
-  {
-    label: "Jadwal",
-    href: `${ROUTES.dashboard}#${MEMBER_SECTION_IDS.schedule}`,
-    icon: "calendar",
-  },
-  {
-    label: "Transaksi",
-    href: ROUTES.transactions,
-    icon: "receipt",
-    feature: "transactions",
+    label: "Tabungan",
+    items: [
+      {
+        id: "ringkasan",
+        label: "Ringkasan",
+        href: ROUTES.dashboard,
+        icon: "home",
+        activePrefixes: ["/tabungan/baru"],
+      },
+      {
+        id: "jadwal",
+        label: "Jadwal setoran",
+        href: ROUTES.savingSchedule,
+        icon: "calendar",
+        requires: "saving",
+        showNextMonth: true,
+      },
+      {
+        id: "paket",
+        label: "Paket qurban",
+        href: ROUTES.savingPackages,
+        icon: "package",
+      },
+      {
+        id: "lacak",
+        label: "Lacak qurban",
+        href: ROUTES.qurban,
+        icon: "track",
+        requires: "saving",
+        activePrefixes: ["/qurban"],
+      },
+      {
+        id: "laporan",
+        label: "Laporan qurban",
+        href: ROUTES.report,
+        icon: "report",
+        requires: "report",
+        lockedHint: "Setelah Iduladha",
+        activePrefixes: ["/report"],
+      },
+    ],
   },
 ];
 

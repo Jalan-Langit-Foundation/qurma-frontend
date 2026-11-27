@@ -2,7 +2,8 @@ import * as React from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
-import { getPackages } from "@/features/packages/server";
+import { getPaymentDeadline } from "@/features/program";
+import { getProgram } from "@/features/program/server";
 import {
   buildProgramChoiceContent,
   type ProgramChoice,
@@ -75,8 +76,10 @@ function ProgramPanel({ item, index }: { item: ProgramChoice; index: number }) {
 
 /** Dua pilihan program yang setara: Tunaikan Qurbanmu & Rencanakan Qurbanmu. */
 export async function ProgramChoiceSection() {
+  const { packages, schedule } = await getProgram();
   const { headline, description, items } = buildProgramChoiceContent(
-    await getPackages(),
+    packages,
+    getPaymentDeadline(schedule),
   );
 
   return (

@@ -18,15 +18,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 Card.displayName = "Card";
 
 type CardTitleElement =
-  | "h1"
-  | "h2"
-  | "h3"
-  | "h4"
-  | "h5"
-  | "h6"
-  | "p"
-  | "label"
-  | "span";
+  "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "label" | "span";
 
 export interface CardTitleProps extends React.HTMLAttributes<HTMLElement> {
   as?: CardTitleElement;

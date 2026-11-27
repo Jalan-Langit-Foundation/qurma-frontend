@@ -9,7 +9,7 @@ import {
 } from "@/features/savings";
 import { formatRupiah } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { PLANNER_CONTENT } from "../../lib/content/planner";
+import { useCalculatorContent } from "../../hooks/use-calculator-content";
 import { IndexNumber } from "../section-intro";
 
 interface CalculatorInputsProps {
@@ -51,7 +51,7 @@ export function CalculatorInputs({
   onSelectPackage,
   onSelectDepositCount,
 }: CalculatorInputsProps) {
-  const content = PLANNER_CONTENT.calculator;
+  const content = useCalculatorContent();
   const sliderId = React.useId();
   const fillPercent =
     maxCount === minCount

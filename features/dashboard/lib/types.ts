@@ -9,11 +9,7 @@ export interface PackagePrice {
 }
 
 export type SchedulePositionStatus =
-  | "not_started"
-  | "behind"
-  | "on_track"
-  | "ahead"
-  | "completed";
+  "not_started" | "behind" | "on_track" | "ahead" | "completed";
 
 export interface UpgradeSuggestion {
   from: PackagePrice;

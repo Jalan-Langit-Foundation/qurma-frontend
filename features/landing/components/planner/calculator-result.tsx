@@ -8,7 +8,7 @@ import type { QurbanPackage } from "@/features/packages";
 import type { DepositPlan } from "@/features/savings";
 import { formatRupiah, formatRupiahSingkat } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { PLANNER_CONTENT } from "../../lib/content/planner";
+import { useCalculatorContent } from "../../hooks/use-calculator-content";
 import type { SavingCta } from "../../lib/saving-cta";
 import { Eyebrow } from "../section-intro";
 
@@ -60,7 +60,7 @@ export function CalculatorResult({
   plan,
   cta,
 }: CalculatorResultProps) {
-  const content = PLANNER_CONTENT.calculator;
+  const content = useCalculatorContent();
 
   return (
     <div className="flex flex-col justify-between gap-10 rounded-[28px] bg-brand-ink p-6 text-white sm:p-8 lg:p-10">

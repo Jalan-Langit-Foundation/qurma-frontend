@@ -49,7 +49,6 @@ describe("calculateDepositPlan (Brief V1.1 bagian H.2)", () => {
     expect(calculateDepositPlan(0, 6)).toBeNull();
     expect(calculateDepositPlan(1_600_000, 0)).toBeNull();
     expect(calculateDepositPlan(1_600_000, 2.5)).toBeNull();
-    // setoran terakhir akan ≤ 0
     expect(calculateDepositPlan(10_000, 6)).toBeNull();
   });
 });

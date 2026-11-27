@@ -1,10 +1,11 @@
 import * as React from "react";
+import Link from "next/link";
+import { ROUTES } from "@/config/navigation";
 import { ChevronDown } from "lucide-react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { buttonClassName } from "@/components/ui/button-styles";
 import { formatRupiah } from "@/lib/format";
 import type { DashboardView } from "../lib/dashboard-view";
-import { sectionHash } from "../lib/section-hash";
 
 function Row({
   label,
@@ -34,9 +35,12 @@ function Row({
 export function MyPackageCard({
   data,
   className,
+  showPackagesLink = true,
 }: {
   data: DashboardView["package"];
   className?: string;
+  /** false di halaman Paket sendiri */
+  showPackagesLink?: boolean;
 }) {
   return (
     <BentoCard title="Paket Saya" className={className}>
@@ -67,38 +71,42 @@ export function MyPackageCard({
 
       <dl className="divide-y divide-slate-100">
         <Row label="Target paket" value={formatRupiah(data.target)} />
-        <details className="group">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-3.5 focus-visible:rounded-lg focus-ring [&::-webkit-details-marker]:hidden">
-            <span className="text-sm text-muted">Terkumpul</span>
-            <span className="flex items-center gap-2 font-heading text-sm font-medium text-ink">
-              {formatRupiah(data.collected)}
-              <ChevronDown
-                className="h-4 w-4 text-muted transition-transform group-open:rotate-180"
-                aria-hidden="true"
-              />
-              <span className="sr-only">(lihat rincian setoran)</span>
-            </span>
-          </summary>
-          {data.deposits.length > 0 ? (
-            <ul className="mb-3 space-y-2 rounded-2xl bg-surface p-3">
-              {data.deposits.map((deposit) => (
-                <li
-                  key={deposit.id}
-                  className="flex justify-between gap-3 text-xs"
-                >
-                  <span className="text-body">{deposit.dateLabel}</span>
-                  <span className="font-semibold text-ink">
-                    {formatRupiah(deposit.amount)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mb-3 rounded-2xl bg-surface p-3 text-xs text-body">
-              Belum ada setoran tercatat.
-            </p>
-          )}
-        </details>
+        {data.deposits === null ? (
+          <Row label="Terkumpul" value={formatRupiah(data.collected)} />
+        ) : (
+          <details className="group">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-3.5 focus-visible:rounded-lg focus-ring [&::-webkit-details-marker]:hidden">
+              <span className="text-sm text-muted">Terkumpul</span>
+              <span className="flex items-center gap-2 font-heading text-sm font-medium text-ink">
+                {formatRupiah(data.collected)}
+                <ChevronDown
+                  className="h-4 w-4 text-muted transition-transform group-open:rotate-180"
+                  aria-hidden="true"
+                />
+                <span className="sr-only">(lihat rincian setoran)</span>
+              </span>
+            </summary>
+            {data.deposits.length > 0 ? (
+              <ul className="mb-3 space-y-2 rounded-2xl bg-surface p-3">
+                {data.deposits.map((deposit) => (
+                  <li
+                    key={deposit.id}
+                    className="flex justify-between gap-3 text-xs"
+                  >
+                    <span className="text-body">{deposit.dateLabel}</span>
+                    <span className="font-semibold text-ink">
+                      {formatRupiah(deposit.amount)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mb-3 rounded-2xl bg-surface p-3 text-xs text-body">
+                Belum ada setoran tercatat.
+              </p>
+            )}
+          </details>
+        )}
         <Row
           label="Sisa sampai lunas"
           value={formatRupiah(data.remaining)}
@@ -106,16 +114,18 @@ export function MyPackageCard({
         />
       </dl>
 
-      <a
-        href={sectionHash("packages")}
-        className={buttonClassName({
-          variant: "subtle",
-          size: "pill",
-          className: "mt-auto",
-        })}
-      >
-        Lihat paket lain
-      </a>
+      {showPackagesLink && (
+        <Link
+          href={ROUTES.savingPackages}
+          className={buttonClassName({
+            variant: "subtle",
+            size: "pill",
+            className: "mt-auto",
+          })}
+        >
+          Lihat paket lain
+        </Link>
+      )}
     </BentoCard>
   );
 }

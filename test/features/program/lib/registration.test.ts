@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveSavingRegistration } from "@/features/savings/lib/registration";
+import { resolveSavingRegistration } from "@/features/program/lib/registration";
 
 const deadline = "2026-11-25";
 

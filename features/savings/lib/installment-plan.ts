@@ -45,9 +45,11 @@ export type InstallmentPlanResult =
 interface CalculateInstallmentPlanInput {
   target: number;
   startMonth: string;
-  endMonth?: YearMonth;
-  roundingUnit?: number;
-  maxTenorMonths?: number;
+  /** Bulan cicilan terakhir (dari jadwal program) */
+  endMonth: YearMonth;
+  /** Pembulatan setoran bulanan; samakan dengan backend (`rounding`) */
+  roundingUnit: number;
+  maxTenorMonths: number;
 }
 
 const failure = (error: InstallmentPlanError): InstallmentPlanResult => ({
@@ -59,9 +61,9 @@ const failure = (error: InstallmentPlanError): InstallmentPlanResult => ({
 export function calculateInstallmentPlan({
   target,
   startMonth,
-  endMonth = SAVINGS_PROGRAM.finalPaymentMonth,
-  roundingUnit = SAVINGS_PROGRAM.roundingUnit,
-  maxTenorMonths = SAVINGS_PROGRAM.maxTenorMonths,
+  endMonth,
+  roundingUnit,
+  maxTenorMonths,
 }: CalculateInstallmentPlanInput): InstallmentPlanResult {
   if (!Number.isFinite(target) || target <= 0) return failure("invalid_target");
   if (!isYearMonth(startMonth)) return failure("invalid_month");

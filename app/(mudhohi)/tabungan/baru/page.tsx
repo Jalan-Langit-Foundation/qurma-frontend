@@ -4,11 +4,8 @@ import { Wallet } from "lucide-react";
 import { MemberPageSkeleton, PagePlaceholder } from "@/components/layout";
 import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
 import { ROUTES } from "@/config/navigation";
-import {
-  getSavingRegistration,
-  NewSavingPage,
-  RegistrationClosed,
-} from "@/features/savings/server";
+import { getSavingRegistration } from "@/features/program/server";
+import { NewSavingPage, RegistrationClosed } from "@/features/savings/server";
 
 export const metadata: Metadata = {
   title: "Buat Tabungan Qurban",

@@ -11,11 +11,7 @@ export interface PackagePriceDto {
 }
 
 export type SchedulePositionStatusDto =
-  | "not_started"
-  | "behind"
-  | "on_track"
-  | "ahead"
-  | "completed";
+  "not_started" | "behind" | "on_track" | "ahead" | "completed";
 
 export interface DashboardInsightsDto {
   month_summary: {

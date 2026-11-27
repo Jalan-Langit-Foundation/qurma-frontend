@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
 import type { QurbanPackage } from "@/features/packages";
 import type { DepositCount, DepositPlan } from "@/features/savings";
+import { useCalculatorContent } from "../../hooks/use-calculator-content";
 import { PLANNER_CONTENT } from "../../lib/content/planner";
 import type { SavingCta } from "../../lib/saving-cta";
 import { LandingSection } from "../landing-section";
@@ -18,12 +19,14 @@ interface CalculatorSectionProps {
   selectedPackage: QurbanPackage;
   depositCount: DepositCount;
   plan: DepositPlan | null;
+  /** true setelah batas pelunasan program terlewati */
   closed: boolean;
   cta: SavingCta;
   onSelectPackage?: (pkg: QurbanPackage) => void;
   onSelectDepositCount?: (count: DepositCount) => void;
 }
 
+/** Kalkulator "Rencanakan Qurbanmu": paket + jumlah setoran (Brief H.2). */
 export function CalculatorSection({
   packages,
   selectedPackage,
@@ -34,7 +37,7 @@ export function CalculatorSection({
   onSelectPackage,
   onSelectDepositCount,
 }: CalculatorSectionProps) {
-  const content = PLANNER_CONTENT.calculator;
+  const content = useCalculatorContent();
 
   return (
     <LandingSection

@@ -33,6 +33,30 @@ describe("proxy", () => {
     );
   });
 
+  it("register/login saat sudah masuk dengan ?next → ikuti next", () => {
+    const next = encodeURIComponent("/tabungan/baru?paket=medium");
+    expect(location(proxy(request(`/register?next=${next}`, true)))).toBe(
+      "http://localhost:3000/tabungan/baru?paket=medium",
+    );
+    expect(location(proxy(request("/login?next=%2Fqurban%2F1", true)))).toBe(
+      "http://localhost:3000/qurban/1",
+    );
+  });
+
+  it.each([
+    "https://situs-penipu.com",
+    "//situs-penipu.com",
+    "/\\situs-penipu.com",
+    "/login",
+    "/register?next=/dashboard",
+    "/\t/situs-penipu.com",
+  ])("next tidak aman (%s) → dashboard", (next) => {
+    const path = `/login?next=${encodeURIComponent(next)}`;
+    expect(location(proxy(request(path, true)))).toBe(
+      "http://localhost:3000/dashboard",
+    );
+  });
+
   it("login tanpa sesi → tampil", () => {
     expect(location(proxy(request("/login")))).toBeNull();
   });

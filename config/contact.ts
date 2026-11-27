@@ -31,6 +31,20 @@ export interface MemberMessageDetails {
   saving?: { id: number; packageName: string };
 }
 
+/** Identitas member untuk pesan WhatsApp; tabungan ikut bila ada. */
+export function toMemberMessageDetails(
+  user: { name: string; email: string },
+  saving?: { id: number; packageName: string } | null,
+): MemberMessageDetails {
+  return {
+    name: user.name,
+    email: user.email,
+    ...(saving
+      ? { saving: { id: saving.id, packageName: saving.packageName } }
+      : {}),
+  };
+}
+
 function memberIdentity({ name, email, saving }: MemberMessageDetails) {
   const lines = [`Nama: ${name}`, `Email akun: ${email}`];
   if (saving) {

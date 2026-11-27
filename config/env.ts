@@ -46,9 +46,13 @@ function readWhatsappNumber(raw: string | undefined): string {
   return number;
 }
 
-/** "true" | "false" | kosong. Nilai lain dianggap salah ketik dan ditolak. */
-function readFlag(name: string, value: string | undefined): boolean {
-  if (value === undefined || value === "") return false;
+/** "true" | "false" | kosong (= `fallback`). Nilai lain dianggap salah ketik dan ditolak. */
+function readFlag(
+  name: string,
+  value: string | undefined,
+  fallback = false,
+): boolean {
+  if (value === undefined || value === "") return fallback;
   if (value === "true") return true;
   if (value === "false") return false;
   throw new Error(
@@ -71,9 +75,8 @@ const showTestimonialsFlag = readFlag(
 );
 
 /**
- * Fitur yang menunggu endpoint backend. Default mati: menu & tombolnya tidak tampil
- * (blueprint: jangan menjanjikan fitur yang belum aktif). Nyalakan per fitur
- * setelah endpoint-nya siap DAN halamannya sudah dibuat.
+ * Saklar fitur per endpoint backend. Fitur yang belum siap default mati: menu &
+ * tombolnya tidak tampil (blueprint: jangan menjanjikan fitur yang belum aktif).
  */
 const features = {
   /** Halaman Profil Akun: PUT /user/profile, PUT /user/password */
@@ -86,10 +89,14 @@ const features = {
     "NEXT_PUBLIC_FEATURE_TRANSACTIONS",
     process.env.NEXT_PUBLIC_FEATURE_TRANSACTIONS,
   ),
-  /** Dashboard memakai satu request GET /user/dashboard */
+  /**
+   * Dashboard memakai satu request GET /user/dashboard (endpoint sudah ada di
+   * backend). Default menyala; isi "false" untuk kembali ke GET /savings/current.
+   */
   dashboardSummary: readFlag(
     "NEXT_PUBLIC_FEATURE_DASHBOARD_SUMMARY",
     process.env.NEXT_PUBLIC_FEATURE_DASHBOARD_SUMMARY,
+    true,
   ),
 } as const;
 

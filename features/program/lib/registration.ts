@@ -1,4 +1,4 @@
-import type { RegistrationStatus } from "@/features/packages/lib/types";
+import type { RegistrationStatus } from "./types";
 
 export type SavingRegistration =
   | { state: "open" }

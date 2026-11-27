@@ -1,64 +1,46 @@
 import "server-only";
 import * as React from "react";
-import Link from "next/link";
-import { MessageCircle } from "lucide-react";
-import {
-  BrandLogo,
-  MAIN_CONTENT_ID,
-  SkipLink,
-  WhatsappLink,
-} from "@/components/layout";
-import { buttonClassName } from "@/components/ui/button-styles";
-import { ROUTES } from "@/config/navigation";
-import { getCurrentUser } from "@/features/auth/server";
-import { AccountMenu, AccountMenuPlaceholder } from "./account-menu";
-import { MemberBottomNav, MemberTopNav } from "./member-nav";
+import { MAIN_CONTENT_ID, SkipLink } from "@/components/layout";
+import { getSidebarModel } from "../api/sidebar.api";
+import { MemberSidebar } from "./member-sidebar";
 
-async function AccountMenuSlot() {
-  const user = await getCurrentUser();
-  return <AccountMenu name={user.name} email={user.email} />;
+async function SidebarSlot() {
+  return <MemberSidebar {...await getSidebarModel()} />;
+}
+
+function SidebarFallback() {
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        className="sticky top-0 z-30 h-16 border-b border-line bg-white lg:hidden"
+      />
+      <div
+        aria-hidden="true"
+        className="sticky top-4 m-4 mr-0 hidden h-[calc(100dvh-2rem)] w-[272px] shrink-0 flex-col gap-3 rounded-3xl border border-slate-200/70 bg-white px-3 py-4 lg:flex"
+      >
+        <div className="h-10 w-32 animate-pulse rounded-xl bg-slate-100" />
+        {Array.from({ length: 5 }, (_, index) => (
+          <div
+            key={index}
+            className="h-11 animate-pulse rounded-xl bg-slate-100"
+          />
+        ))}
+      </div>
+    </>
+  );
 }
 
 export function MemberShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-surface">
+    <div className="min-h-screen bg-surface lg:flex lg:items-start">
       <SkipLink />
-
-      <div className="mx-auto w-full max-w-[1400px] px-3 pt-3 sm:px-5 sm:pt-5">
-        <header className="flex items-center justify-between gap-3 rounded-3xl bg-white px-2.5 py-2 sm:px-3">
-          <Link
-            href={ROUTES.dashboard}
-            aria-label="Ringkasan tabungan QURMA"
-            className="flex h-12 items-center rounded-2xl bg-brand-soft px-3 focus-ring"
-          >
-            <BrandLogo eager className="h-7" />
-          </Link>
-
-          <MemberTopNav />
-
-          <div className="flex items-center gap-2">
-            <WhatsappLink
-              aria-label="Chat CS QURMA via WhatsApp (tab baru)"
-              className={buttonClassName({
-                variant: "subtle",
-                size: "icon",
-                className: "h-11 w-11",
-              })}
-            >
-              <MessageCircle className="h-5 w-5" aria-hidden="true" />
-            </WhatsappLink>
-            <React.Suspense fallback={<AccountMenuPlaceholder />}>
-              <AccountMenuSlot />
-            </React.Suspense>
-          </div>
-        </header>
-      </div>
-
-      <main id={MAIN_CONTENT_ID} className="flex-1 pb-28 md:pb-10">
+      <React.Suspense fallback={<SidebarFallback />}>
+        <SidebarSlot />
+      </React.Suspense>
+      <main id={MAIN_CONTENT_ID} className="min-w-0 flex-1 pb-12">
         {children}
       </main>
-
-      <MemberBottomNav />
     </div>
   );
 }

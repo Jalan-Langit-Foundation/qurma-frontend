@@ -1,4 +1,8 @@
-import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
+import {
+  buildWhatsappUrl,
+  toMemberMessageDetails,
+  WHATSAPP_MESSAGES,
+} from "@/config/contact";
 import { ROUTES } from "@/config/navigation";
 import type { Saving } from "@/features/savings";
 
@@ -18,10 +22,7 @@ export function buildSavingCta(
   saving: Pick<Saving, "id" | "packageName" | "status">,
   member: DashboardMember,
 ): DashboardCta {
-  const details = {
-    ...member,
-    saving: { id: saving.id, packageName: saving.packageName },
-  };
+  const details = toMemberMessageDetails(member, saving);
 
   switch (saving.status) {
     case "active":

@@ -40,9 +40,19 @@ describe("config/env", () => {
     ).rejects.toThrow(/NEXT_PUBLIC_SAVING_REGISTRATION_OPEN/);
   });
 
-  it("fitur yang menunggu backend default mati", async () => {
+  it("fitur yang menunggu backend default mati, ringkasan dashboard default menyala", async () => {
     const env = await loadEnv({ NEXT_PUBLIC_SITE_URL: "https://qurma.id" });
-    expect(Object.values(env.features).every((on) => on === false)).toBe(true);
+    expect(env.features.profile).toBe(false);
+    expect(env.features.transactions).toBe(false);
+    expect(env.features.dashboardSummary).toBe(true);
+  });
+
+  it("ringkasan dashboard bisa dimatikan lewat flag", async () => {
+    const env = await loadEnv({
+      NEXT_PUBLIC_SITE_URL: "https://qurma.id",
+      NEXT_PUBLIC_FEATURE_DASHBOARD_SUMMARY: "false",
+    });
+    expect(env.features.dashboardSummary).toBe(false);
   });
 
   it("testimoni default disembunyikan, bisa dinyalakan lewat flag", async () => {

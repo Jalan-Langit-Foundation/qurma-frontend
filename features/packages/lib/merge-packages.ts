@@ -1,13 +1,21 @@
-import { FALLBACK_PACKAGES } from "../lib/catalog";
-import { isPackageId } from "../lib/packages";
-import type { QurbanPackage } from "../lib/types";
-import type { ProgramPackageDto } from "./program.dto";
+import { FALLBACK_PACKAGES } from "./catalog";
+import { isPackageId } from "./packages";
+import type { QurbanPackage } from "./types";
+
+/** Paket dari GET /program (bentuk mentah API) */
+export interface ApiPackage {
+  code: string;
+  name: string;
+  price: number;
+  weight_min: number;
+  weight_max: number;
+}
 
 function toShortName(name: string): string {
   return name.replace(/^domba\s+/i, "").trim() || name;
 }
 
-function isValidPackage(dto: ProgramPackageDto): boolean {
+function isValidPackage(dto: ApiPackage): boolean {
   return (
     dto.name.trim() !== "" &&
     dto.price > 0 &&
@@ -16,8 +24,8 @@ function isValidPackage(dto: ProgramPackageDto): boolean {
   );
 }
 
-export function toQurbanPackages(
-  dtos: readonly ProgramPackageDto[],
+export function mergeApiPackages(
+  dtos: readonly ApiPackage[],
 ): readonly QurbanPackage[] {
   const packages = dtos.flatMap((dto): QurbanPackage[] => {
     if (!isPackageId(dto.code) || !isValidPackage(dto)) return [];

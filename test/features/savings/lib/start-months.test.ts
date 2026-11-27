@@ -8,7 +8,8 @@ import { formatYearMonth } from "@/features/savings/lib/year-month";
 
 const program = {
   openingMonth: "2026-10",
-  finalPaymentMonth: "2027-04",
+  lastInstallmentMonth: "2027-04",
+  maxTenor: 12,
 } as const;
 
 describe("getStartMonthOptions", () => {
@@ -38,6 +39,40 @@ describe("getStartMonthOptions", () => {
 
   it("setelah batas pelunasan → kosong (program ditutup)", () => {
     expect(getStartMonthOptions("2027-05", program)).toEqual([]);
+  });
+});
+
+describe("getStartMonthOptions mengikuti pengaturan CS QURMA", () => {
+  it("lama menabung maksimal membatasi bulan mulai paling awal", () => {
+    const options = getStartMonthOptions("2026-08", {
+      ...program,
+      maxTenor: 4,
+    });
+    expect(options.map((option) => option.value)).toEqual([
+      "2027-01",
+      "2027-02",
+      "2027-03",
+      "2027-04",
+    ]);
+    expect(options[0]?.tenorMonths).toBe(4);
+  });
+
+  it("bulan cicilan terakhir dari admin menjadi batas akhir", () => {
+    const options = getStartMonthOptions("2026-11", {
+      ...program,
+      lastInstallmentMonth: "2027-05",
+    });
+    expect(options.at(-1)).toMatchObject({ value: "2027-05", tenorMonths: 1 });
+    expect(options[0]?.tenorMonths).toBe(7);
+  });
+
+  it("bulan pembukaan dari admin dihormati", () => {
+    expect(
+      getStartMonthOptions("2026-08", {
+        ...program,
+        openingMonth: "2027-02",
+      })[0]?.value,
+    ).toBe("2027-02");
   });
 });
 

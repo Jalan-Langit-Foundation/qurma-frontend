@@ -3,10 +3,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { ROUTES } from "@/config/navigation";
-import { formatRupiah } from "@/lib/format";
-import { cn } from "@/lib/utils";
+import { JourneyTimeline } from "@/features/savings";
 import type { DashboardView } from "../lib/dashboard-view";
 
+/** Kartu "Perjalanan qurban": 6 tahap yang sama dengan halaman /qurban. */
 export function JourneyCard({
   data,
   savingId,
@@ -16,69 +16,23 @@ export function JourneyCard({
   savingId: number;
   className?: string;
 }) {
-  const completedCount = data.steps.filter(
-    (step) => step.state === "done",
-  ).length;
-
   return (
     <BentoCard
-      title="Menuju Hari Qurban"
-      tone="brand"
+      title="Perjalanan qurban"
+      description={`${data.completed} dari ${data.total} tahap selesai`}
+      tone="night"
       className={className}
       action={
         <Link
           href={ROUTES.qurban(savingId)}
-          className="inline-flex items-center gap-1 rounded-full text-xs font-semibold text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="inline-flex min-h-11 items-center gap-1 rounded-full text-sm font-semibold text-brand-sky hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
         >
           Lacak
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       }
     >
-      <p className="text-xs text-white/80">
-        {completedCount} dari {data.total} tahap selesai · Berikutnya:{" "}
-        {data.title}
-      </p>
-      {data.milestone ? (
-        <>
-          <p className="mt-1 font-heading text-3xl font-semibold">
-            {formatRupiah(data.milestone.shortfall)} lagi
-          </p>
-          <p className="mt-1 text-sm text-white/85">{data.milestone.label}</p>
-        </>
-      ) : (
-        <p className="mt-1 font-heading text-3xl font-semibold">{data.title}</p>
-      )}
-
-      <ol
-        aria-label="Tahap perjalanan qurban"
-        className="mt-6 flex items-center gap-1.5"
-      >
-        {data.steps.map((step) => (
-          <li
-            key={step.title}
-            className={cn(
-              "h-2.5 flex-1 rounded-full",
-              step.state === "done" && "bg-white",
-              step.state === "current" && "bg-white/60",
-              step.state === "upcoming" && "bg-white/20",
-            )}
-          >
-            <span className="sr-only">
-              {step.title}:{" "}
-              {step.state === "done"
-                ? "selesai"
-                : step.state === "current"
-                  ? "sedang berjalan"
-                  : "belum"}
-            </span>
-          </li>
-        ))}
-      </ol>
-
-      <p className="mt-auto pt-5 text-xs text-white/80">
-        Domba disiapkan setelah tabungan lunas.
-      </p>
+      <JourneyTimeline steps={data.steps} tone="dark" />
     </BentoCard>
   );
 }

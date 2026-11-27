@@ -1,13 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export type ButtonVariant =
-  | "primary"
-  | "outline"
-  | "ghost"
-  | "destructive"
-  | "white"
-  | "soft"
-  | "subtle";
+  "primary" | "outline" | "ghost" | "destructive" | "white" | "soft" | "subtle";
 
 export type ButtonSize = "sm" | "md" | "lg" | "icon" | "pill" | "pill-lg";
 

@@ -39,7 +39,6 @@ export function toSaving(dto: SavingSummaryDto): Saving {
     totalPaid: dto.total_paid,
     paidThisMonth: dto.paid_this_month,
     remainingAmount: dto.remaining_amount,
-    // Dihitung ulang agar aturan pembulatan sama di seluruh aplikasi
     progressPercent: progress.percent,
     tenorMonths: dto.tenor_months,
     startMonth: toYearMonth(dto.start_month, "start_month"),
@@ -55,7 +54,11 @@ export function toSaving(dto: SavingSummaryDto): Saving {
           amount: dto.next_installment.amount,
         }
       : null,
-    journey: buildJourneySteps(dto.journey),
+    journey: buildJourneySteps({
+      ...dto.journey,
+
+      saving_started: dto.journey.saving_started && dto.total_paid > 0,
+    }),
   };
 }
 

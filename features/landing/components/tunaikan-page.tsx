@@ -3,13 +3,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { sectionHref, SECTION_IDS } from "@/config/navigation";
-import { getPackages } from "@/features/packages/server";
+import { getProgram } from "@/features/program/server";
 import { buildDombaOptions, TUNAIKAN_CONTENT } from "../lib/content/tunaikan";
 import { DombaCard } from "./domba-card";
 import { Eyebrow, IndexNumber } from "./section-intro";
 
 export async function TunaikanPage() {
-  const options = buildDombaOptions(await getPackages());
+  const options = buildDombaOptions((await getProgram()).packages);
   const {
     label,
     title,

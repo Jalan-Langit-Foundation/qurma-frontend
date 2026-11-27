@@ -1,7 +1,10 @@
 import * as React from "react";
 import {
   CalendarDays,
+  FileText,
   House,
+  MapPin,
+  MessageCircle,
   Package,
   ReceiptText,
   type LucideIcon,
@@ -10,9 +13,12 @@ import type { MemberNavIcon } from "@/config/navigation";
 
 const ICONS: Record<MemberNavIcon, LucideIcon> = {
   home: House,
-  package: Package,
   calendar: CalendarDays,
+  package: Package,
+  track: MapPin,
+  report: FileText,
   receipt: ReceiptText,
+  chat: MessageCircle,
 };
 
 /** Ikon menu area penabung (config hanya menyimpan nama ikon, bukan komponen). */

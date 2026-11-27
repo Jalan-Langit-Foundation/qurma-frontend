@@ -1,17 +1,10 @@
 export type TrackingStepKeyDto =
-  | "funds"
-  | "animal"
-  | "verification"
-  | "execution"
-  | "report";
+  "funds" | "animal" | "verification" | "execution" | "report";
 
 export type TrackingStepStateDto = "done" | "in_progress" | "pending";
 
 export type FulfillmentStatusDto =
-  | "animal_preparing"
-  | "verifying"
-  | "waiting_execution"
-  | "executed";
+  "animal_preparing" | "verifying" | "waiting_execution" | "executed";
 
 export interface TrackingDto {
   saving_id: number;

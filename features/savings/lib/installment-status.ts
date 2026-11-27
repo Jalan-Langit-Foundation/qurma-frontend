@@ -1,11 +1,7 @@
 export type InstallmentStatus = "paid" | "overdue" | "next" | "scheduled";
 
 export type InstallmentStatusLabel =
-  | "Lunas"
-  | "Terlambat"
-  | "Pelunasan"
-  | "Berikutnya"
-  | "Terjadwal";
+  "Lunas" | "Terlambat" | "Pelunasan" | "Berikutnya" | "Terjadwal";
 
 export function getInstallmentStatusLabel(
   status: InstallmentStatus,

@@ -1,7 +1,7 @@
 import { buildWhatsappUrl, WHATSAPP_MESSAGES } from "@/config/contact";
 import { ROUTES } from "@/config/navigation";
 import type { QurbanPackage } from "@/features/packages";
-import { isSavingRegistrationOpen, type DepositPlan } from "@/features/savings";
+import type { DepositPlan } from "@/features/savings";
 import { formatRupiah } from "@/lib/format";
 
 export interface SavingCta {
@@ -12,11 +12,13 @@ export interface SavingCta {
   note: string;
 }
 
+/** `registrationOpen`: saklar .env + status pendaftaran dari backend. */
 export function getSavingCta(
   pkg: QurbanPackage,
   plan: DepositPlan | null,
+  registrationOpen: boolean,
 ): SavingCta {
-  if (isSavingRegistrationOpen) {
+  if (registrationOpen) {
     const next = `${ROUTES.newSaving}?paket=${pkg.id}`;
     return {
       href: `${ROUTES.register}?next=${encodeURIComponent(next)}`,

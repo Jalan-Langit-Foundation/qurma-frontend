@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { closeOnBackdropClick, useModalDialog } from "@/hooks/use-modal-dialog";
 import { Button } from "./button";
 
 interface ConfirmDialogProps {
@@ -10,7 +11,6 @@ interface ConfirmDialogProps {
   description: string;
   icon?: React.ReactNode;
   cancelLabel?: string;
-  /** Tombol konfirmasi (mis. tombol submit di dalam <form>) */
   children: React.ReactNode;
 }
 
@@ -23,16 +23,9 @@ export function ConfirmDialog({
   cancelLabel = "Batal",
   children,
 }: ConfirmDialogProps) {
-  const dialogRef = React.useRef<HTMLDialogElement>(null);
+  const dialogRef = useModalDialog(open);
   const titleId = React.useId();
   const descriptionId = React.useId();
-
-  React.useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
-    if (!open && dialog.open) dialog.close();
-  }, [open]);
 
   return (
     <dialog
@@ -40,10 +33,7 @@ export function ConfirmDialog({
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
       onClose={onClose}
-      onClick={(event) => {
-        // Klik di latar (di luar kotak dialog) → tutup
-        if (event.target === event.currentTarget) onClose();
-      }}
+      onClick={closeOnBackdropClick(onClose)}
       className="m-auto w-[min(24rem,calc(100vw-2rem))] rounded-3xl bg-white p-0 shadow-pop backdrop:bg-night/40 backdrop:backdrop-blur-sm open:animate-pop-in"
     >
       <div className="p-6">

@@ -7,6 +7,7 @@ export {
   resolvePackage,
 } from "./lib/packages";
 export { formatWeightRange } from "./lib/package-features";
+export { mergeApiPackages, type ApiPackage } from "./lib/merge-packages";
 export { PackagesProvider, usePackages } from "./components/packages-provider";
 export { PackageCard } from "./components/package-card";
 export { PackagePicker } from "./components/package-picker";

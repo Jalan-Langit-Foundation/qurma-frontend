@@ -16,7 +16,11 @@ describe("getSafeRedirectPath", () => {
     ["/\\situs-palsu.com"],
     ["javascript:alert(1)"],
     ["dashboard"],
-  ])("menolak %s → dashboard", (next) => {
+    ["/\t/situs-palsu.com"],
+    ["/\n/situs-palsu.com"],
+    ["/\r\n//situs-palsu.com"],
+    ["/\\/situs-palsu.com"],
+  ])("menolak %j → dashboard", (next) => {
     expect(getSafeRedirectPath(next)).toBe("/dashboard");
   });
 
@@ -24,6 +28,13 @@ describe("getSafeRedirectPath", () => {
     expect(getSafeRedirectPath("/login?next=/dashboard")).toBe("/dashboard");
     expect(getSafeRedirectPath("/register")).toBe("/dashboard");
     expect(getSafeRedirectPath("/session/expired")).toBe("/dashboard");
+  });
+
+  it("path internal yang memuat karakter aneh tetap internal", () => {
+    expect(getSafeRedirectPath("/qurban/1#foto")).toBe("/qurban/1#foto");
+    expect(getSafeRedirectPath("/%09/situs-palsu.com")).toBe(
+      "/%09/situs-palsu.com",
+    );
   });
 });
 

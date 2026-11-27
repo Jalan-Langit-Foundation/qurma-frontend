@@ -12,11 +12,11 @@ import {
   usePackages,
   type QurbanPackage,
 } from "@/features/packages";
+import { getPaymentDeadline, useProgramSchedule } from "@/features/program";
 import { useActionFeedback } from "@/hooks/use-action-feedback";
 import { formatRupiah } from "@/lib/format";
 import { createSavingAction } from "../actions";
 import { useSavingSimulation } from "../hooks/use-saving-simulation";
-import { SAVINGS_PROGRAM } from "../lib/program";
 import { toStartMonthSelectOptions } from "../lib/start-months";
 import { formatYearMonth } from "../lib/year-month";
 import { PlanInputs } from "./plan-inputs";
@@ -59,7 +59,10 @@ function NewSavingFormView({
     requestedStartMonth,
   });
 
-  const deadline = formatYearMonth(SAVINGS_PROGRAM.finalPaymentMonth);
+  const schedule = useProgramSchedule();
+  const paymentDeadline = getPaymentDeadline(schedule);
+  const deadline = `${paymentDeadline.isEstimate ? "±" : ""}${paymentDeadline.dateLabel}`;
+  const lastMonth = formatYearMonth(schedule.lastInstallmentMonth);
   const hasOptions =
     simulation.status === "ready" || simulation.status === "error";
   const startMonth = hasOptions ? simulation.startMonth : undefined;
@@ -68,17 +71,15 @@ function NewSavingFormView({
     : undefined;
 
   const monthOptions = hasOptions
-    ? toStartMonthSelectOptions(simulation.startMonthOptions, deadline)
+    ? toStartMonthSelectOptions(simulation.startMonthOptions, lastMonth)
     : [];
 
   const submit = () => {
     if (!startMonth) return;
     startTransition(() =>
-      // Bila berhasil, action langsung mengarahkan ke dashboard
       run(
         () => createSavingAction({ packageId: selectedPackage.id, startMonth }),
         {
-          // Sudah punya tabungan aktif → bukan kesalahan, arahkan ke dashboard
           toFeedback: ({ message, hasActiveSaving }) => ({
             variant: hasActiveSaving ? "info" : "error",
             message,

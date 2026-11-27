@@ -1,17 +1,10 @@
 export type TrackingStepKey =
-  | "funds"
-  | "animal"
-  | "verification"
-  | "execution"
-  | "report";
+  "funds" | "animal" | "verification" | "execution" | "report";
 
 export type TrackingStepState = "done" | "in_progress" | "pending";
 
 export type FulfillmentStatus =
-  | "animal_preparing"
-  | "verifying"
-  | "waiting_execution"
-  | "executed";
+  "animal_preparing" | "verifying" | "waiting_execution" | "executed";
 
 export interface TrackingStep {
   key: TrackingStepKey;

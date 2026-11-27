@@ -6,7 +6,6 @@
     "features/transactions/server.ts"
   ],
   "project": ["**/*.{ts,tsx}"],
-  "ignore": ["next-env.d.ts"],
   "ignoreDependencies": ["tailwindcss", "@tailwindcss/turbopack"],
   "ignoreExportsUsedInFile": {
     "interface": true,

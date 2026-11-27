@@ -3,8 +3,10 @@ import * as React from "react";
 import { notFound } from "next/navigation";
 import { MemberPage, PageHeader } from "@/components/layout";
 import { ROUTES } from "@/config/navigation";
+import { getCurrentSaving } from "@/features/savings/server";
 import { parsePositiveId } from "@/lib/params";
 import { getTracking } from "../api/fulfillment.api";
+import { buildTrackingJourney } from "../lib/journey";
 import { TrackingView } from "./tracking-view";
 
 const BACK_TO_DASHBOARD = {
@@ -12,7 +14,6 @@ const BACK_TO_DASHBOARD = {
   label: "Kembali ke Dashboard",
 };
 
-/** Halaman /qurban/[id]: tracking persiapan hewan qurban. */
 export async function TrackingPage({
   params,
 }: {
@@ -21,18 +22,24 @@ export async function TrackingPage({
   const savingId = parsePositiveId((await params).id);
   if (!savingId) notFound();
 
-  const tracking = await getTracking(savingId);
+  const [tracking, saving] = await Promise.all([
+    getTracking(savingId),
+    getCurrentSaving(),
+  ]);
   if (!tracking) notFound();
 
   return (
     <MemberPage>
       <PageHeader
-        eyebrow="Persiapan Qurban"
-        title="Lacak Hewan Qurban"
-        description="Pantau tahap penyiapan domba qurban Anda hingga pelaksanaan."
+        eyebrow="Perjalanan Qurban"
+        title="Lacak Qurban"
+        description="Enam tahap dari mulai menabung hingga laporan qurban terbit."
         backLink={BACK_TO_DASHBOARD}
       />
-      <TrackingView tracking={tracking} />
+      <TrackingView
+        tracking={tracking}
+        steps={buildTrackingJourney(tracking, saving)}
+      />
     </MemberPage>
   );
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildDashboardView,
+  buildPackageView,
   formatSavingId,
   toGaugeArcs,
   getFirstName,
@@ -29,7 +30,7 @@ function makeSaving(overrides: Partial<Saving> = {}): Saving {
     monthlyAmount: 275_000,
     lastInstallmentAmount: 250_000,
     nextInstallment: { month: "2026-12", amount: 275_000 },
-    journey: buildJourneyStepsFromStage(3),
+    journey: buildJourneyStepsFromStage(2),
     ...overrides,
   };
 }
@@ -164,16 +165,10 @@ describe("buildDashboardView", () => {
     expect(partial.lastDeposit?.months[2]?.fill).toBe(0.5);
   });
 
-  it("perjalanan: tahap aktif & kekurangan menuju 50%", () => {
-    expect(view.journey.step).toBe(3);
-    expect(view.journey.total).toBe(7);
-    expect(view.journey.title).toBe("50% Tercapai");
-    expect(view.journey.milestone).toEqual({
-      label: "untuk mencapai 50% (Rp950.000)",
-      shortfall: 400_000,
-    });
+  it("perjalanan: 6 tahap, tahap aktif menyebut kekurangan menuju 50%", () => {
+    expect(view.journey.completed).toBe(1);
+    expect(view.journey.total).toBe(6);
     expect(view.journey.steps.map((s) => s.state)).toEqual([
-      "done",
       "done",
       "current",
       "upcoming",
@@ -181,6 +176,11 @@ describe("buildDashboardView", () => {
       "upcoming",
       "upcoming",
     ]);
+    expect(view.journey.steps[1]).toMatchObject({
+      title: "50% terkumpul",
+      note: "Rp400.000 lagi",
+    });
+    expect(view.journey.steps[2]?.note).toBe("Rp1.900.000");
   });
 
   it("sudah lewat 50% → kekurangan menuju lunas beserta targetnya", () => {
@@ -188,15 +188,16 @@ describe("buildDashboardView", () => {
       makeSaving({
         totalPaid: 1_100_000,
         remainingAmount: 800_000,
-        journey: buildJourneyStepsFromStage(4),
+        journey: buildJourneyStepsFromStage(3),
       }),
       ledger,
       member,
       FALLBACK_PACKAGES,
     );
-    expect(half.journey.milestone).toEqual({
-      label: "untuk lunas (Rp1.900.000)",
-      shortfall: 800_000,
+    expect(half.journey.steps[1]?.note).toBe("Rp950.000");
+    expect(half.journey.steps[2]).toMatchObject({
+      state: "current",
+      note: "Rp800.000 lagi",
     });
   });
 
@@ -208,7 +209,7 @@ describe("buildDashboardView", () => {
         remainingAmount: 0,
         progressPercent: 100,
         nextInstallment: null,
-        journey: buildJourneyStepsFromStage(5),
+        journey: buildJourneyStepsFromStage(4),
       }),
       ledger,
       member,
@@ -218,7 +219,10 @@ describe("buildDashboardView", () => {
       label: "Lacak Persiapan",
       href: "/qurban/1",
     });
-    expect(done.journey.milestone).toBeNull();
+    expect(done.journey.steps[3]).toMatchObject({
+      state: "current",
+      note: "Sedang disiapkan peternak mitra",
+    });
     expect(done.plan.bars.map((bar) => bar.key)).toEqual(["paid", "remaining"]);
   });
 
@@ -231,7 +235,6 @@ describe("buildDashboardView", () => {
     );
     expect(cancelled.cta.label).toBe("Chat CS QURMA");
     expect(cancelled.lastDeposit).toBeNull();
-    expect(cancelled.journey.milestone).toBeNull();
   });
 });
 
@@ -249,6 +252,23 @@ describe("toGaugeArcs", () => {
     ).toEqual([
       { key: "collected", start: 0, length: 28 },
       { key: "remaining", start: 30, length: 70 },
+    ]);
+  });
+});
+
+describe("buildPackageView", () => {
+  it("tanpa rincian setoran (halaman Paket) → deposits null", () => {
+    const view = buildPackageView(makeSaving(), FALLBACK_PACKAGES, null);
+    expect(view.deposits).toBeNull();
+    expect(view.weightLabel).toBe("Target bobot 20–25 kg");
+  });
+
+  it("dengan rincian → tanggal diformat", () => {
+    const view = buildPackageView(makeSaving(), FALLBACK_PACKAGES, [
+      { id: 1, amount: 230_000, paidAt: "2026-11-05", note: null },
+    ]);
+    expect(view.deposits).toEqual([
+      { id: 1, dateLabel: "5 November 2026", amount: 230_000 },
     ]);
   });
 });

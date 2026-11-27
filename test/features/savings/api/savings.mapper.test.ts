@@ -43,7 +43,17 @@ describe("toSaving", () => {
       nextInstallment: { month: "2027-01", amount: 271_500 },
       paidThisMonth: 271_500,
     });
-    expect(saving.journey.find((step) => step.current)?.id).toBe(3);
+    expect(saving.journey.find((step) => step.current)?.key).toBe(
+      "half_reached",
+    );
+  });
+
+  it("belum ada setoran → tahap 'Mulai menabung' belum selesai", () => {
+    const saving = toSaving({ ...baseDto, total_paid: 0 });
+    expect(saving.journey[0]).toMatchObject({
+      key: "saving_started",
+      current: true,
+    });
   });
 
   it("persen dihitung ulang dengan aturan yang sama di seluruh aplikasi (dibulatkan ke bawah)", () => {

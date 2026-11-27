@@ -1,10 +1,4 @@
-export interface ProgramPackageDto {
-  code: string;
-  name: string;
-  price: number;
-  weight_min: number;
-  weight_max: number;
-}
+import type { ApiPackage } from "@/features/packages";
 
 export interface ProgramDto {
   program: {
@@ -18,6 +12,7 @@ export interface ProgramDto {
     idul_adha_is_estimate: boolean;
     payoff_deadline: string;
     last_installment_month: string;
-    packages: ProgramPackageDto[];
+    opening_month?: string;
+    packages: ApiPackage[];
   };
 }

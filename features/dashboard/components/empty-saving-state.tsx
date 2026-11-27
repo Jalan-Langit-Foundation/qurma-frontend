@@ -2,40 +2,10 @@ import * as React from "react";
 import { MEMBER_SECTION_IDS } from "@/config/navigation";
 import { PROGRAM } from "@/config/program";
 import { PackageCompareList, type QurbanPackage } from "@/features/packages";
-import type { SavingRegistration } from "@/features/savings/server";
-import { formatTanggal } from "@/lib/format";
+import type { SavingRegistration } from "@/features/program";
 import { buildEmptyStateCta } from "../lib/dashboard-cta";
+import { buildEmptyStateIntro, buildEmptyStateSteps } from "../lib/empty-state";
 import { CtaButton } from "./dashboard-greeting";
-
-function buildSteps(registrationOpen: boolean) {
-  return [
-    {
-      title: "Pilih paket",
-      text: "Tentukan bobot domba sesuai target tabungan Anda.",
-    },
-    {
-      title: registrationOpen ? "Atur setoran" : "Daftar lewat CS QURMA",
-      text: registrationOpen
-        ? "Pilih bulan mulai; setoran bulanan dihitung otomatis."
-        : "CS QURMA mendaftarkan tabungan dan jadwal setoran Anda.",
-    },
-    {
-      title: "Pantau di sini",
-      text: "Progres, jadwal, dan persiapan domba tampil di dashboard ini.",
-    },
-  ];
-}
-
-function buildIntro(registration: SavingRegistration): string {
-  switch (registration.state) {
-    case "open":
-      return `Mulai menabung sekarang agar qurban ${PROGRAM.hijriLabel} terasa ringan.`;
-    case "closed":
-      return `Pendaftaran Tabungan Qurban sudah ditutup pada ${formatTanggal(registration.deadline)}. Hubungi CS QURMA bila ada pertanyaan.`;
-    case "not_opened":
-      return "Pendaftaran tabungan saat ini dibantu langsung oleh CS QURMA. Setelah didaftarkan, progres tabungan akan tampil di sini.";
-  }
-}
 
 export function EmptySavingState({
   packages,
@@ -45,7 +15,7 @@ export function EmptySavingState({
   registration: SavingRegistration;
 }) {
   const registrationOpen = registration.state === "open";
-  const steps = buildSteps(registrationOpen);
+  const steps = buildEmptyStateSteps(registrationOpen);
 
   return (
     <div className="space-y-4">
@@ -61,7 +31,7 @@ export function EmptySavingState({
             Anda belum memiliki tabungan qurban
           </h2>
           <p className="max-w-md text-sm text-white/85 sm:text-base">
-            {buildIntro(registration)}
+            {buildEmptyStateIntro(registration)}
           </p>
           <CtaButton
             cta={buildEmptyStateCta(registrationOpen)}

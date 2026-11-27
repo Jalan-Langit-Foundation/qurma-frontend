@@ -4,7 +4,8 @@ import { ScrollToTopOnRefresh } from "@/components/layout";
 import { PageLoader } from "@/components/ui/page-loader";
 import { SITE_CONFIG } from "@/config/site";
 import { PackagesProvider } from "@/features/packages";
-import { getPackages } from "@/features/packages/server";
+import { ProgramProvider } from "@/features/program";
+import { getProgram, getSavingRegistration } from "@/features/program/server";
 
 import "./globals.css";
 
@@ -79,6 +80,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [program, registration] = await Promise.all([
+    getProgram(),
+    getSavingRegistration(),
+  ]);
+
   return (
     <html
       lang="id"
@@ -89,8 +95,13 @@ export default async function RootLayout({
       <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         <PageLoader />
         <ScrollToTopOnRefresh />
-        <PackagesProvider packages={await getPackages()}>
-          {children}
+        <PackagesProvider packages={program.packages}>
+          <ProgramProvider
+            schedule={program.schedule}
+            registration={registration}
+          >
+            {children}
+          </ProgramProvider>
         </PackagesProvider>
       </body>
     </html>

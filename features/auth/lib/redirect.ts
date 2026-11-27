@@ -1,27 +1,29 @@
 import { ROUTES } from "@/config/navigation";
 
+const PARSE_BASE = "http://qurma.invalid";
+
+const BLOCKED_PATHS: readonly string[] = [
+  ROUTES.login,
+  ROUTES.register,
+  ROUTES.sessionExpired,
+];
+
 export function getSafeRedirectPath(
   next: string | null | undefined,
   fallback: string = ROUTES.dashboard,
 ): string {
-  if (!next) return fallback;
-  if (
-    !next.startsWith("/") ||
-    next.startsWith("//") ||
-    next.startsWith("/\\")
-  ) {
-    return fallback;
-  }
+  if (!next || !next.startsWith("/")) return fallback;
 
-  const pathname = next.split(/[?#]/)[0];
-  if (
-    pathname === ROUTES.login ||
-    pathname === ROUTES.register ||
-    pathname === ROUTES.sessionExpired
-  ) {
+  let url: URL;
+  try {
+    url = new URL(next, PARSE_BASE);
+  } catch {
     return fallback;
   }
-  return next;
+  if (url.origin !== PARSE_BASE) return fallback;
+  if (BLOCKED_PATHS.includes(url.pathname)) return fallback;
+
+  return `${url.pathname}${url.search}${url.hash}`;
 }
 
 export function withNext(path: string, next: string | null): string {

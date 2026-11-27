@@ -41,7 +41,6 @@ const saving: SavingSummaryDto = {
   },
 };
 
-// Contoh persis dari API Contract bagian 7
 const insights: DashboardInsightsDto = {
   month_summary: {
     month: "2027-02",

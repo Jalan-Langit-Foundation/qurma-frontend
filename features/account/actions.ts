@@ -5,6 +5,7 @@ import { env } from "@/config/env";
 import { ApiError, toUserMessage } from "@/lib/api/api-error";
 import { zodFieldErrors } from "@/lib/validation";
 import { changePassword, updateProfile } from "./api/account.api";
+import { dismissUpgradePromo } from "./api/upgrade-promo";
 import {
   changePasswordSchema,
   profileSchema,
@@ -62,6 +63,7 @@ export async function updateProfileAction(
   }
 }
 
+/** Ganti kata sandi (wajib menyertakan kata sandi saat ini). */
 export async function changePasswordAction(
   input: ChangePasswordFormData,
 ): Promise<ChangePasswordResult> {
@@ -86,4 +88,9 @@ export async function changePasswordAction(
   } catch (error) {
     return toFailure(error);
   }
+}
+
+/** Tutup banner upgrade di sidebar sampai login berikutnya. */
+export async function dismissUpgradePromoAction(): Promise<void> {
+  await dismissUpgradePromo();
 }

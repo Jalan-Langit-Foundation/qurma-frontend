@@ -3,6 +3,7 @@ import { getInstallmentStatusLabel } from "@/features/savings/lib/installment-st
 import {
   buildJourneySteps,
   buildJourneyStepsFromStage,
+  buildJourneyTimeline,
 } from "@/features/savings/lib/journey";
 import { calculateProgress } from "@/features/savings/lib/progress";
 
@@ -40,11 +41,22 @@ describe("calculateProgress", () => {
   });
 });
 
-describe("journey", () => {
+describe("journey (6 tahap)", () => {
+  it("enam tahap berurutan, sama untuk dashboard & /qurban", () => {
+    expect(buildJourneyStepsFromStage(1).map((step) => step.title)).toEqual([
+      "Mulai menabung",
+      "50% terkumpul",
+      "Lunas",
+      "Domba disiapkan",
+      "Verifikasi & pelaksanaan",
+      "Laporan terbit",
+    ]);
+  });
+
   it("tahap pertama yang belum selesai menjadi tahap aktif", () => {
     const steps = buildJourneySteps({
-      target_selected: true,
       saving_started: true,
+      half_reached: true,
     });
     expect(
       steps.filter((step) => step.completed).map((step) => step.id),
@@ -55,14 +67,49 @@ describe("journey", () => {
   });
 
   it("semua selesai → tidak ada tahap aktif", () => {
-    const steps = buildJourneyStepsFromStage(8);
+    const steps = buildJourneyStepsFromStage(7);
     expect(steps.every((step) => step.completed)).toBe(true);
     expect(steps.some((step) => step.current)).toBe(false);
   });
 
-  it("tahap aktif 7 → laporan menjadi tahap berjalan", () => {
-    const steps = buildJourneyStepsFromStage(7);
-    expect(steps.find((step) => step.current)?.title).toBe("Laporan Diterima");
+  it("tahap aktif 6 → laporan menjadi tahap berjalan", () => {
+    const steps = buildJourneyStepsFromStage(6);
+    expect(steps.find((step) => step.current)?.title).toBe("Laporan terbit");
+  });
+});
+
+describe("buildJourneyTimeline", () => {
+  const base = {
+    targetAmount: 1_600_000,
+    totalPaid: 920_000,
+    startMonth: "2026-11" as const,
+  };
+
+  it("catatan mengikuti kondisi tabungan", () => {
+    const timeline = buildJourneyTimeline({
+      ...base,
+      journey: buildJourneyStepsFromStage(3),
+    });
+    expect(timeline.map((step) => [step.state, step.note])).toEqual([
+      ["done", "November 2026"],
+      ["done", "Rp800.000"],
+      ["current", "Rp680.000 lagi"],
+      ["upcoming", "Setelah lunas"],
+      ["upcoming", "Iduladha 1448 H"],
+      ["upcoming", "Foto & dokumentasi"],
+    ]);
+  });
+
+  it("domba sudah disiapkan → catatan berubah", () => {
+    const timeline = buildJourneyTimeline({
+      ...base,
+      totalPaid: 1_600_000,
+      journey: buildJourneyStepsFromStage(5),
+    });
+    expect(timeline[3]).toMatchObject({
+      state: "done",
+      note: "Domba sudah disiapkan",
+    });
   });
 });
 

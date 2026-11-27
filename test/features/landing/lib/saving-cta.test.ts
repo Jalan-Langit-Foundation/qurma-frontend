@@ -6,7 +6,7 @@ import { calculateDepositPlan } from "@/features/savings";
 describe("CTA kalkulator tabungan", () => {
   it("pesan WhatsApp berisi rencana setoran hasil simulasi", () => {
     const pkg = resolvePackage(FALLBACK_PACKAGES, "standar");
-    const cta = getSavingCta(pkg, calculateDepositPlan(pkg.target, 6));
+    const cta = getSavingCta(pkg, calculateDepositPlan(pkg.target, 6), false);
     const message = new URL(cta.href).searchParams.get("text") ?? "";
 
     expect(cta.external).toBe(true);
@@ -18,8 +18,17 @@ describe("CTA kalkulator tabungan", () => {
 
   it("setoran sama rata ditulis satu kali", () => {
     const pkg = resolvePackage(FALLBACK_PACKAGES, "standar");
-    const cta = getSavingCta(pkg, calculateDepositPlan(pkg.target, 2));
+    const cta = getSavingCta(pkg, calculateDepositPlan(pkg.target, 2), false);
     const message = new URL(cta.href).searchParams.get("text") ?? "";
     expect(message).toContain("2 kali, 2 × Rp800.000");
+  });
+
+  it("pendaftaran dibuka backend → daftar akun lalu ke form tabungan", () => {
+    const pkg = resolvePackage(FALLBACK_PACKAGES, "medium");
+    const cta = getSavingCta(pkg, null, true);
+    expect(cta.external).toBe(false);
+    expect(cta.href).toBe(
+      `/register?next=${encodeURIComponent("/tabungan/baru?paket=medium")}`,
+    );
   });
 });

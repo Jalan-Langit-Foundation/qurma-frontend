@@ -2,13 +2,14 @@ import * as React from "react";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SECTION_IDS } from "@/config/navigation";
-import { REGISTRATION_FLOW_CONTENT } from "../../lib/content/registration-flow";
+import { getSavingRegistration } from "@/features/program/server";
+import { buildRegistrationFlowContent } from "../../lib/content/registration-flow";
 import { LandingSection } from "../landing-section";
 import { SectionIntro } from "../section-intro";
 
-export function RegistrationFlowSection() {
+export async function RegistrationFlowSection() {
   const { label, headline, description, steps, cta, note } =
-    REGISTRATION_FLOW_CONTENT;
+    buildRegistrationFlowContent(await getSavingRegistration());
 
   return (
     <LandingSection id={SECTION_IDS.registrationFlow} label={label} tone="soft">

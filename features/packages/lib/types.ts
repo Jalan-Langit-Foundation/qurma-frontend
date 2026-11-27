@@ -4,12 +4,6 @@ export type PackageId = (typeof PACKAGE_IDS)[number];
 
 type PackageGrade = "A" | "B" | "C";
 
-/** Status pendaftaran dari GET /program (diatur admin di Pengaturan Program). */
-export interface RegistrationStatus {
-  open: boolean;
-  deadline: string;
-}
-
 export interface QurbanPackage {
   id: PackageId;
   /** Nama tampilan dari API, mis. "Domba Standar" */
