@@ -1,11 +1,14 @@
 import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
 
-/**
- * Merges class names with tailwind-merge and clsx
- */
+const twMerge = extendTailwindMerge({
+  extend: {
+    theme: {
+      shadow: ["card", "brand", "brand-sm"],
+    },
+  },
+});
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-export * from "./format";

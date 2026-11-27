@@ -2,81 +2,101 @@
 
 import * as React from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+const SHOW_DELAY_MS = 150;
+
+const SAFETY_TIMEOUT_MS = 10_000;
+
+function isInternalPageNavigation(event: MouseEvent): boolean {
+  if (event.button !== 0) return false;
+  if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)
+    return false;
+
+  const anchor = (event.target as HTMLElement | null)?.closest("a");
+  if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download"))
+    return false;
+
+  const href = anchor.getAttribute("href");
+  if (!href || !href.startsWith("/") || href.startsWith("/#")) return false;
+
+  try {
+    const target = new URL(anchor.href, window.location.origin);
+    return (
+      target.origin === window.location.origin &&
+      target.pathname !== window.location.pathname
+    );
+  } catch {
+    return false;
+  }
+}
 
 function PageLoaderContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [shouldRender, setShouldRender] = React.useState(false);
+  const routeKey = `${pathname}?${searchParams.toString()}`;
 
-  // Sembunyikan loader saat rute selesai berganti
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      const hideTimer = setTimeout(() => setShouldRender(false), 200);
-      return () => clearTimeout(hideTimer);
-    }, 180);
-    return () => clearTimeout(timer);
-  }, [pathname, searchParams]);
+  const [prevRouteKey, setPrevRouteKey] = React.useState(routeKey);
+  const [isMounted, setIsMounted] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
+  const timersRef = React.useRef<ReturnType<typeof setTimeout>[]>([]);
+  const routeKeyRef = React.useRef(routeKey);
 
-  // Intersep klik pada link internal untuk memicu loading screen saat berpindah halaman
-  React.useEffect(() => {
-    const handleAnchorClick = (event: MouseEvent) => {
-      const target = event.target as HTMLElement | null;
-      const anchor = target?.closest("a") as HTMLAnchorElement | null;
-
-      if (!anchor) return;
-
-      const href = anchor.getAttribute("href");
-      const targetAttr = anchor.getAttribute("target");
-
-      // Validasi link internal ke halaman berbeda (bukan hash scroll atau external)
-      if (
-        href &&
-        href.startsWith("/") &&
-        !href.startsWith("/#") &&
-        targetAttr !== "_blank" &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        !event.shiftKey &&
-        !event.altKey
-      ) {
-        try {
-          const currentUrl = new URL(window.location.href);
-          const targetUrl = new URL(anchor.href, window.location.origin);
-
-          // Jika berpindah ke pathname yang berbeda
-          if (targetUrl.pathname !== currentUrl.pathname) {
-            setShouldRender(true);
-            setIsLoading(true);
-          }
-        } catch {
-          // Abaikan jika URL tidak valid
-        }
-      }
-    };
-
-    document.addEventListener("click", handleAnchorClick, { capture: true });
-    return () => {
-      document.removeEventListener("click", handleAnchorClick, { capture: true });
-    };
+  const clearTimers = React.useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
   }, []);
 
-  if (!shouldRender) return null;
+  if (prevRouteKey !== routeKey) {
+    setPrevRouteKey(routeKey);
+    setIsVisible(false);
+  }
+
+  React.useLayoutEffect(() => {
+    routeKeyRef.current = routeKey;
+    return clearTimers;
+  }, [routeKey, clearTimers]);
+
+  React.useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (!isInternalPageNavigation(event)) return;
+
+      clearTimers();
+      const startedAt = routeKeyRef.current;
+      timersRef.current.push(
+        setTimeout(() => {
+          // Halaman sudah berganti → tidak perlu overlay
+          if (routeKeyRef.current !== startedAt) return;
+          setIsMounted(true);
+          setIsVisible(true);
+        }, SHOW_DELAY_MS),
+        setTimeout(() => setIsVisible(false), SAFETY_TIMEOUT_MS),
+      );
+    };
+
+    document.addEventListener("click", handleClick, { capture: true });
+    return () => {
+      document.removeEventListener("click", handleClick, { capture: true });
+      clearTimers();
+    };
+  }, [clearTimers]);
+
+  if (!isMounted) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-[99999] flex items-center justify-center bg-white transition-opacity duration-200 pointer-events-auto ${
-        isLoading ? "opacity-100" : "opacity-0"
-      }`}
-      aria-label="Memuat halaman..."
       role="status"
+      aria-live="polite"
+      onTransitionEnd={() => {
+        if (!isVisible) setIsMounted(false);
+      }}
+      className={cn(
+        "fixed inset-0 z-[99999] flex items-center justify-center bg-white transition-opacity duration-200",
+        isVisible ? "opacity-100" : "pointer-events-none opacity-0",
+      )}
     >
-      <div className="flex flex-col items-center justify-center gap-4">
-        {/* Lingkaran Berputar (Spinner) */}
-        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-[3px] border-[#EAF5FB] border-t-[#3C95C8] animate-spin" />
-        <span className="sr-only">Memuat halaman...</span>
-      </div>
+      <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-brand-soft border-t-brand sm:h-10 sm:w-10" />
+      <span className="sr-only">Memuat halaman…</span>
     </div>
   );
 }

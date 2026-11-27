@@ -1,52 +1,37 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ExternalLink } from "./external-link";
+import {
+  buttonClassName,
+  type ButtonSize,
+  type ButtonVariant,
+} from "./button-styles";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?:
-    | "primary"
-    | "secondary"
-    | "outline"
-    | "ghost"
-    | "gradient"
-    | "destructive"
-    | "dark"
-    | "white";
-  size?: "sm" | "md" | "lg" | "icon";
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   href?: string;
   external?: boolean;
+
+  srHint?: string;
 }
 
-const variantStyles: Record<NonNullable<ButtonProps["variant"]>, string> = {
-  primary:
-    "bg-[#3C95C8] text-white hover:bg-[#337fac] active:bg-[#2c6f96] shadow-sm hover:shadow transition-all duration-200 border border-transparent",
-  secondary:
-    "bg-[#6EB6D6] text-white hover:bg-[#5aa4c4] active:bg-[#4a93b3] shadow-sm hover:shadow transition-all duration-200 border border-transparent",
-  outline:
-    "bg-transparent text-[#3C95C8] border-2 border-[#3C95C8] hover:bg-[#EAF5FB] active:bg-[#d5ecf8] transition-all duration-200",
-  ghost:
-    "bg-transparent text-[#555555] hover:text-[#3C95C8] hover:bg-[#EAF5FB] active:bg-[#d5ecf8] transition-all duration-200 border border-transparent",
-  gradient:
-    "bg-gradient-to-b from-[#6EB6D6] to-[#3C95C8] text-white hover:opacity-95 hover:shadow-md active:opacity-100 transition-all duration-200 border border-transparent",
-  destructive:
-    "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm transition-all duration-200 border border-transparent",
-  dark:
-    "bg-[#2c2c2c] text-white hover:bg-[#1a1a1a] active:bg-[#000000] shadow-sm transition-all duration-200 border border-transparent",
-  white:
-    "bg-white text-[#3C95C8] hover:bg-[#f0f7fb] active:bg-[#e4eff6] shadow-sm hover:shadow transition-all duration-200 border border-slate-100",
-};
-
-const sizeStyles: Record<NonNullable<ButtonProps["size"]>, string> = {
-  sm: "text-xs font-semibold px-3 py-1.5 min-h-[34px] gap-1.5 rounded-full",
-  md: "text-sm font-bold px-5 py-2.5 min-h-[42px] gap-2 rounded-full",
-  lg: "text-base font-bold px-7 py-3.5 min-h-[50px] gap-2.5 rounded-full",
-  icon: "h-10 w-10 p-0 rounded-full justify-center items-center",
-};
+type ButtonOnlyAttributes =
+  | "type"
+  | "form"
+  | "formAction"
+  | "formEncType"
+  | "formMethod"
+  | "formNoValidate"
+  | "formTarget"
+  | "name"
+  | "value";
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -59,50 +44,68 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       href,
       external = false,
+      srHint = "membuka tab baru",
       disabled,
       children,
+      onClick,
+      type = "button",
       ...props
     },
-    ref
+    ref,
   ) => {
-    const baseClasses = cn(
-      "inline-flex items-center justify-center font-['Poppins',sans-serif] text-center select-none cursor-pointer tracking-normal leading-none",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3C95C8] focus-visible:ring-offset-2",
-      "disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
-      variantStyles[variant],
-      sizeStyles[size],
-      className
-    );
+    const isDisabled = Boolean(disabled || isLoading);
+
+    const classes = buttonClassName({ variant, size, className });
 
     const content = (
       <>
         {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+          <Loader2
+            className="h-4 w-4 shrink-0 animate-spin"
+            aria-hidden="true"
+          />
         ) : (
-          leftIcon && <span className="shrink-0 inline-flex">{leftIcon}</span>
+          leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>
         )}
         {children && <span>{children}</span>}
         {!isLoading && rightIcon && (
-          <span className="shrink-0 inline-flex">{rightIcon}</span>
+          <span className="inline-flex shrink-0">{rightIcon}</span>
         )}
       </>
     );
 
     if (href) {
+      const anchorProps = omitButtonOnly(
+        props,
+      ) as React.AnchorHTMLAttributes<HTMLAnchorElement>;
+
+      const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (isDisabled) {
+          event.preventDefault();
+          return;
+        }
+        onClick?.(event as unknown as React.MouseEvent<HTMLButtonElement>);
+      };
+
+      const linkProps = {
+        ...anchorProps,
+        className: classes,
+        onClick: handleLinkClick,
+        "aria-disabled": isDisabled || undefined,
+        "aria-busy": isLoading || undefined,
+        tabIndex: isDisabled ? -1 : anchorProps.tabIndex,
+      };
+
       if (external) {
         return (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={baseClasses}
-          >
+          <ExternalLink href={href} srHint={srHint} {...linkProps}>
             {content}
-          </a>
+          </ExternalLink>
         );
       }
+
       return (
-        <Link href={href} className={baseClasses}>
+        <Link href={href} {...linkProps}>
           {content}
         </Link>
       );
@@ -111,14 +114,34 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        disabled={disabled || isLoading}
-        className={baseClasses}
+        type={type}
+        disabled={isDisabled}
+        aria-busy={isLoading || undefined}
+        onClick={onClick}
+        className={classes}
         {...props}
       >
         {content}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";
+
+function omitButtonOnly<T extends Record<string, unknown>>(props: T) {
+  const result: Record<string, unknown> = { ...props };
+  const buttonOnly: ButtonOnlyAttributes[] = [
+    "type",
+    "form",
+    "formAction",
+    "formEncType",
+    "formMethod",
+    "formNoValidate",
+    "formTarget",
+    "name",
+    "value",
+  ];
+  for (const key of buttonOnly) delete result[key];
+  return result;
+}

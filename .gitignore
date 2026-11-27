@@ -46,3 +46,9 @@ next-env.d.ts
 /TASK.md
 /API.md
 /REFACTOR.md
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

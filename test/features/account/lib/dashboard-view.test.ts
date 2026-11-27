@@ -1,0 +1,274 @@
+import { describe, expect, it } from "vitest";
+import {
+  buildDashboardView,
+  buildPackageView,
+  formatSavingId,
+  toGaugeArcs,
+  getFirstName,
+} from "@/features/dashboard/lib/dashboard-view";
+import { FALLBACK_PACKAGES } from "@/features/packages";
+import { buildJourneyStepsFromStage } from "@/features/savings";
+import type { Saving, SavingLedger } from "@/features/savings";
+
+const member = { name: "Budi Santoso", email: "budi@mail.com" };
+
+function makeSaving(overrides: Partial<Saving> = {}): Saving {
+  return {
+    id: 1,
+    packageId: "standar",
+    packageName: "Standar",
+    programYear: 2027,
+    status: "active",
+    targetAmount: 1_900_000,
+    totalPaid: 550_000,
+    paidThisMonth: 0,
+    remainingAmount: 1_350_000,
+    progressPercent: 28,
+    tenorMonths: 7,
+    startMonth: "2026-10",
+    endMonth: "2027-04",
+    monthlyAmount: 275_000,
+    lastInstallmentAmount: 250_000,
+    nextInstallment: { month: "2026-12", amount: 275_000 },
+    journey: buildJourneyStepsFromStage(2),
+    ...overrides,
+  };
+}
+
+const ledger: SavingLedger = {
+  savingId: 1,
+  targetAmount: 1_900_000,
+  totalPaid: 550_000,
+  installments: [
+    ["2026-10", "paid"],
+    ["2026-11", "paid"],
+    ["2026-12", "next"],
+    ["2027-01", "scheduled"],
+    ["2027-02", "scheduled"],
+    ["2027-03", "scheduled"],
+    ["2027-04", "scheduled"],
+  ].map(([month, status], index) => ({
+    installmentNo: index + 1,
+    month: month as Saving["startMonth"],
+    amount: index === 6 ? 250_000 : 275_000,
+    paidAmount: status === "paid" ? 275_000 : 0,
+    remainingAmount: status === "paid" ? 0 : 275_000,
+    status: status as "paid" | "next" | "scheduled",
+    isFinal: index === 6,
+  })),
+  deposits: [
+    { id: 2, amount: 275_000, paidAt: "2026-11-04", note: null },
+    { id: 1, amount: 275_000, paidAt: "2026-10-03", note: null },
+  ],
+};
+
+describe("helper kecil", () => {
+  it("getFirstName & formatSavingId", () => {
+    expect(getFirstName("  Budi Santoso")).toBe("Budi");
+    expect(getFirstName("")).toBe("Sahabat");
+    expect(formatSavingId(1)).toBe("#0001");
+    expect(formatSavingId(12345)).toBe("#12345");
+  });
+});
+
+describe("buildDashboardView", () => {
+  const view = buildDashboardView(
+    makeSaving(),
+    ledger,
+    member,
+    FALLBACK_PACKAGES,
+  );
+
+  it("salam, chip program, periode & status", () => {
+    expect(view.firstName).toBe("Budi");
+    expect(view.chips.map((chip) => chip.label)).toEqual([
+      "Qurban 1448 H / 2027 M",
+      "Okt 2026 – Apr 2027",
+      "Berjalan",
+    ]);
+    expect(view.subtitle).toContain("Desember 2026");
+  });
+
+  it("tabungan berjalan → CTA konfirmasi setoran via WhatsApp", () => {
+    expect(view.cta).toMatchObject({
+      label: "Konfirmasi Setoran",
+      external: true,
+      icon: "deposit",
+    });
+    expect(view.cta.href).toMatch(/^https:\/\/wa\.me\//);
+  });
+
+  it("kartu paket: target bobot dari katalog, ID, rincian setoran", () => {
+    expect(view.package.weightLabel).toBe("Target bobot 20–25 kg");
+    expect(view.package.idLabel).toBe("#0001");
+    expect(view.package.deposits).toHaveLength(2);
+  });
+
+  it("rencana setoran: 3 batang dan catatan setoran terakhir berbeda", () => {
+    expect(
+      view.plan.bars.map((bar) => [bar.key, bar.amount, bar.label]),
+    ).toEqual([
+      ["paid", 550_000, "Sudah disetor"],
+      ["next", 275_000, "Des 2026"],
+      ["remaining", 1_075_000, "Setelah Des 2026 · 4 bulan"],
+    ]);
+    expect(Math.max(...view.plan.bars.map((bar) => bar.height))).toBe(1);
+    expect(view.plan.note).toContain("Rp250.000");
+  });
+
+  it("gauge: porsi terkumpul + bulan depan + sisa = 1", () => {
+    const total = view.gauge.segments.reduce((sum, s) => sum + s.ratio, 0);
+    expect(total).toBeCloseTo(1);
+    expect(view.gauge.percent).toBe(28);
+  });
+
+  it("setoran terakhir diambil dari tanggal paling baru", () => {
+    expect(view.lastDeposit).toMatchObject({
+      amount: 275_000,
+      paidCount: 2,
+      totalCount: 7,
+    });
+    expect(view.lastDeposit?.dateLabel).toBe("4 November 2026");
+  });
+
+  it("grafik setoran per bulan: satu batang per cicilan", () => {
+    const months = view.lastDeposit?.months ?? [];
+    expect(months).toHaveLength(7);
+    expect(
+      months.map((month) => [month.label, month.fill, month.status]),
+    ).toEqual([
+      ["Okt", 1, "paid"],
+      ["Nov", 1, "paid"],
+      ["Des", 0, "next"],
+      ["Jan", 0, "scheduled"],
+      ["Feb", 0, "scheduled"],
+      ["Mar", 0, "scheduled"],
+      ["Apr", 0, "scheduled"],
+    ]);
+    expect(months[0]?.fullLabel).toBe("Oktober 2026");
+  });
+
+  it("cicilan dibayar sebagian → batang terisi sebagian", () => {
+    const partial = buildDashboardView(
+      makeSaving(),
+      {
+        ...ledger,
+        installments: ledger.installments.map((item, index) =>
+          index === 2
+            ? { ...item, paidAmount: 137_500, remainingAmount: 137_500 }
+            : item,
+        ),
+      },
+      member,
+      FALLBACK_PACKAGES,
+    );
+    expect(partial.lastDeposit?.months[2]?.fill).toBe(0.5);
+  });
+
+  it("perjalanan: 6 tahap, tahap aktif menyebut kekurangan menuju 50%", () => {
+    expect(view.journey.completed).toBe(1);
+    expect(view.journey.total).toBe(6);
+    expect(view.journey.steps.map((s) => s.state)).toEqual([
+      "done",
+      "current",
+      "upcoming",
+      "upcoming",
+      "upcoming",
+      "upcoming",
+    ]);
+    expect(view.journey.steps[1]).toMatchObject({
+      title: "50% terkumpul",
+      note: "Rp400.000 lagi",
+    });
+    expect(view.journey.steps[2]?.note).toBe("Rp1.900.000");
+  });
+
+  it("sudah lewat 50% → kekurangan menuju lunas beserta targetnya", () => {
+    const half = buildDashboardView(
+      makeSaving({
+        totalPaid: 1_100_000,
+        remainingAmount: 800_000,
+        journey: buildJourneyStepsFromStage(3),
+      }),
+      ledger,
+      member,
+      FALLBACK_PACKAGES,
+    );
+    expect(half.journey.steps[1]?.note).toBe("Rp950.000");
+    expect(half.journey.steps[2]).toMatchObject({
+      state: "current",
+      note: "Rp800.000 lagi",
+    });
+  });
+
+  it("lunas → CTA lacak persiapan, tanpa kekurangan", () => {
+    const done = buildDashboardView(
+      makeSaving({
+        status: "completed",
+        totalPaid: 1_900_000,
+        remainingAmount: 0,
+        progressPercent: 100,
+        nextInstallment: null,
+        journey: buildJourneyStepsFromStage(4),
+      }),
+      ledger,
+      member,
+      FALLBACK_PACKAGES,
+    );
+    expect(done.cta).toMatchObject({
+      label: "Lacak Persiapan",
+      href: "/qurban/1",
+    });
+    expect(done.journey.steps[3]).toMatchObject({
+      state: "current",
+      note: "Sedang disiapkan peternak mitra",
+    });
+    expect(done.plan.bars.map((bar) => bar.key)).toEqual(["paid", "remaining"]);
+  });
+
+  it("dibatalkan → CTA chat CS QURMA; tanpa ledger → setoran terakhir null", () => {
+    const cancelled = buildDashboardView(
+      makeSaving({ status: "cancelled" }),
+      null,
+      member,
+      FALLBACK_PACKAGES,
+    );
+    expect(cancelled.cta.label).toBe("Chat CS QURMA");
+    expect(cancelled.lastDeposit).toBeNull();
+  });
+});
+
+describe("toGaugeArcs", () => {
+  it("segmen berurutan, celah di antaranya, segmen kosong dilewati", () => {
+    expect(
+      toGaugeArcs(
+        [
+          { key: "collected", label: "", amount: 0, ratio: 0.3 },
+          { key: "next", label: "", amount: 0, ratio: 0 },
+          { key: "remaining", label: "", amount: 0, ratio: 0.7 },
+        ],
+        2,
+      ),
+    ).toEqual([
+      { key: "collected", start: 0, length: 28 },
+      { key: "remaining", start: 30, length: 70 },
+    ]);
+  });
+});
+
+describe("buildPackageView", () => {
+  it("tanpa rincian setoran (halaman Paket) → deposits null", () => {
+    const view = buildPackageView(makeSaving(), FALLBACK_PACKAGES, null);
+    expect(view.deposits).toBeNull();
+    expect(view.weightLabel).toBe("Target bobot 20–25 kg");
+  });
+
+  it("dengan rincian → tanggal diformat", () => {
+    const view = buildPackageView(makeSaving(), FALLBACK_PACKAGES, [
+      { id: 1, amount: 230_000, paidAt: "2026-11-05", note: null },
+    ]);
+    expect(view.deposits).toEqual([
+      { id: 1, dateLabel: "5 November 2026", amount: 230_000 },
+    ]);
+  });
+});

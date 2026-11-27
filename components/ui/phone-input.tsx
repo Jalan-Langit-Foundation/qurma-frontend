@@ -1,89 +1,93 @@
 "use client";
 
 import * as React from "react";
-import { Phone } from "lucide-react";
+import { toFullPhone, toLocalPhone } from "@/lib/phone";
 import { cn } from "@/lib/utils";
+import { FieldShell, getFieldAriaProps, useFieldIds } from "./field";
 
-export interface PhoneInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
-  label?: string;
+export interface PhoneInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "type" | "value"
+> {
+  label: string;
   error?: string;
   helperText?: string;
+  value?: string;
+
   onChange?: (value: string) => void;
-  onRawChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
   (
     {
       className,
-      label = "Nomor WhatsApp",
+      label,
       error,
-      helperText = "Digunakan untuk konfirmasi setoran dan reminder berkala.",
+      helperText,
       id,
-      disabled,
-      value,
+      value = "",
       onChange,
-      onRawChange,
-      placeholder = "081234567890",
+      placeholder = "812 3456 7890",
+      disabled,
+      "aria-describedby": describedBy,
       ...props
     },
-    ref
+    ref,
   ) => {
-    const generatedId = React.useId();
-    const inputId = id || generatedId;
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      // Hapus karakter non-digit selain '+' jika ada di awal
-      const cleanValue = e.target.value.replace(/[^\d+]/g, "");
-      onChange?.(cleanValue);
-      onRawChange?.(e);
-    };
+    const { fieldId, messageId } = useFieldIds(id);
 
     return (
-      <div className="w-full space-y-1.5 font-['Lato',sans-serif]">
-        {label && (
-          <label
-            htmlFor={inputId}
-            className="block text-sm font-semibold text-[#2C2C2C] font-['Poppins',sans-serif]"
+      <FieldShell
+        fieldId={fieldId}
+        messageId={messageId}
+        label={label}
+        error={error}
+        helperText={helperText}
+      >
+        <div
+          className={cn(
+            "flex h-12 w-full items-stretch overflow-hidden rounded-2xl border bg-white transition-all duration-200",
+            "border-slate-200/80 hover:border-slate-300",
+            "focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20",
+            disabled && "cursor-not-allowed bg-slate-50 opacity-50",
+            error &&
+              "border-rose-500 hover:border-rose-500 focus-within:border-rose-500 focus-within:ring-rose-500/20",
+          )}
+        >
+          <span
+            aria-hidden="true"
+            className="flex items-center border-r border-slate-200/80 bg-surface px-3.5 font-heading text-sm font-medium text-night"
           >
-            {label}
-          </label>
-        )}
-        <div className="relative flex items-center">
-          {/* Ikon Tunggal Phone dengan Warna Solid */}
-          <div className="absolute left-3.5 flex items-center justify-center pointer-events-none text-[#777777]">
-            <Phone className="w-4 h-4 text-[#777777]" />
-          </div>
-
+            +62
+          </span>
           <input
-            id={inputId}
+            ref={ref}
+            id={fieldId}
             type="tel"
             inputMode="numeric"
-            disabled={disabled}
-            ref={ref}
-            value={value}
-            onChange={handleChange}
+            autoComplete="tel-national"
+            maxLength={16}
             placeholder={placeholder}
+            disabled={disabled}
+            value={toLocalPhone(value)}
+            onChange={(event) => onChange?.(toFullPhone(event.target.value))}
             className={cn(
-              "w-full rounded-xl border bg-white pl-11 pr-4 py-2.5 text-xs sm:text-sm font-medium text-[#2C2C2C] placeholder:text-slate-400 placeholder:font-normal transition-all duration-200",
-              "border-slate-200/80 hover:border-slate-300",
-              "focus:border-[#3C95C8] focus:outline-none focus:ring-2 focus:ring-[#3C95C8]/20",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50",
-              error && "border-rose-500 focus:border-rose-500 focus:ring-rose-500/20",
-              className
+              "min-w-0 flex-1 bg-transparent px-4 text-base font-medium text-ink outline-none sm:text-[15px]",
+              "placeholder:font-normal placeholder:text-placeholder disabled:cursor-not-allowed",
+              className,
             )}
+            {...getFieldAriaProps({
+              messageId,
+              error,
+              helperText,
+              describedBy,
+            })}
             {...props}
           />
         </div>
-        {error ? (
-          <p className="text-xs text-rose-600 font-medium">{error}</p>
-        ) : helperText ? (
-          <p className="text-xs text-[#555555]/80">{helperText}</p>
-        ) : null}
-      </div>
+      </FieldShell>
     );
-  }
+  },
 );
 
 PhoneInput.displayName = "PhoneInput";

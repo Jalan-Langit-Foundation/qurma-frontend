@@ -1,65 +1,41 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Lato, Caveat } from "next/font/google";
-import {
-  ScrollToTopOnRefresh,
-  LayoutShell,
-} from "@/components/layout";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import { ScrollToTopOnRefresh } from "@/components/layout";
 import { PageLoader } from "@/components/ui/page-loader";
-import { SITE_CONFIG } from "@/lib/data";
-import "./fonts.css";
+import { SITE_CONFIG } from "@/config/site";
+import { PackagesProvider } from "@/features/packages";
+import { ProgramProvider } from "@/features/program";
+import { getProgram, getSavingRegistration } from "@/features/program/server";
+
 import "./globals.css";
 
-const poppins = Poppins({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-poppins",
+  variable: "--font-jakarta",
   display: "swap",
 });
 
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  variable: "--font-lato",
-  display: "swap",
-});
-
-const caveat = Caveat({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  variable: "--font-caveat",
-  display: "swap",
-});
+const defaultTitle = `${SITE_CONFIG.programFullName} | ${SITE_CONFIG.name}`;
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
   title: {
-    default: `Tabungan Qurban QURMA 2027 | ${SITE_CONFIG.name}`,
+    default: defaultTitle,
     template: `%s | ${SITE_CONFIG.name}`,
   },
   description: SITE_CONFIG.description,
-  keywords: [
-    "Tabungan Qurban",
-    "QURMA 2027",
-    "Jalan Langit Foundation",
-    "Yayasan Jalan Langit",
-    "Langit Box",
-    "Donasi Online",
-    "Qurban Sukabumi",
-    "Simulasi Tabungan Qurban",
-    "Domba Qurban 2027",
-  ],
-  authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.url }],
+  applicationName: SITE_CONFIG.programName,
+  keywords: [...SITE_CONFIG.keywords],
+  authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.foundationUrl }],
   creator: SITE_CONFIG.name,
   publisher: SITE_CONFIG.legalName,
-  alternates: {
-    canonical: "/",
-  },
   formatDetection: {
     telephone: false,
     address: false,
@@ -68,24 +44,23 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: SITE_CONFIG.url,
     siteName: SITE_CONFIG.name,
-    title: `Tabungan Qurban QURMA 2027 | ${SITE_CONFIG.name}`,
+    title: defaultTitle,
     description: SITE_CONFIG.description,
     images: [
       {
-        url: "/images/brand/logo-biru.png",
+        url: SITE_CONFIG.logo.blue,
         width: 800,
         height: 200,
-        alt: `${SITE_CONFIG.name} - QURMA 2027`,
+        alt: `${SITE_CONFIG.name} - ${SITE_CONFIG.programName}`,
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: `Tabungan Qurban QURMA 2027 | ${SITE_CONFIG.name}`,
+    card: "summary",
+    title: defaultTitle,
     description: SITE_CONFIG.description,
-    images: ["/images/brand/logo-biru.png"],
+    images: [SITE_CONFIG.logo.blue],
   },
   robots: {
     index: true,
@@ -100,21 +75,34 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [program, registration] = await Promise.all([
+    getProgram(),
+    getSavingRegistration(),
+  ]);
+
   return (
     <html
       lang="id"
-      className={`scroll-smooth ${poppins.variable} ${lato.variable} ${caveat.variable}`}
+      data-scroll-behavior="smooth"
+      className={jakarta.variable}
       suppressHydrationWarning
     >
-      <body className="flex min-h-screen flex-col font-['Lato',sans-serif] bg-[#FAFCFE] text-[#555555]" suppressHydrationWarning>
+      <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         <PageLoader />
         <ScrollToTopOnRefresh />
-        <LayoutShell>{children}</LayoutShell>
+        <PackagesProvider packages={program.packages}>
+          <ProgramProvider
+            schedule={program.schedule}
+            registration={registration}
+          >
+            {children}
+          </ProgramProvider>
+        </PackagesProvider>
       </body>
     </html>
   );

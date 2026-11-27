@@ -17,17 +17,18 @@ Dokumen ini mengikat semua developer yang berkontribusi ke repository ini.
 
 ## 2. Branch Strategy
 
-| Branch | Fungsi | Boleh Push Langsung? | Target PR Dari Fitur |
-|--------|--------|----------------------|----------------------|
-| `main` | Produksi | ❌ Tidak | Dimerge dari `staging` (Release) |
-| `staging` | Integrasi & Staging Utama | ❌ Tidak (via PR) | **✅ Target PR Wajib** |
-| `feat/*` | Fitur baru | ✅ Ya | Wajib PR ke `staging` |
-| `fix/*` | Perbaikan bug | ✅ Ya | Wajib PR ke `staging` |
-| `chore/*` | Config, dependency, dokumentasi | ✅ Ya | Wajib PR ke `staging` |
+| Branch    | Fungsi                          | Boleh Push Langsung? | Target PR Dari Fitur             |
+| --------- | ------------------------------- | -------------------- | -------------------------------- |
+| `main`    | Produksi                        | ❌ Tidak             | Dimerge dari `staging` (Release) |
+| `staging` | Integrasi & Staging Utama       | ❌ Tidak (via PR)    | **✅ Target PR Wajib**           |
+| `feat/*`  | Fitur baru                      | ✅ Ya                | Wajib PR ke `staging`            |
+| `fix/*`   | Perbaikan bug                   | ✅ Ya                | Wajib PR ke `staging`            |
+| `chore/*` | Config, dependency, dokumentasi | ✅ Ya                | Wajib PR ke `staging`            |
 
 > ⚠️ **PENTING**: Jangan pernah membuka Pull Request dari branch `feat/*`, `fix/*`, atau `chore/*` langsung ke `main`. Selalu pilih **base: `staging`** saat membuat PR di GitHub.
 
 **Format nama branch:**
+
 ```
 [type]/[nomor-issue]-[slug-singkat]
 
@@ -54,59 +55,65 @@ perf(image): optimasi aset hero dengan next/image
 docs(prd): update acceptance criteria section menu
 ```
 
-| Type | Kapan Dipakai |
-|------|---------------|
-| `feat` | Fitur / section baru |
-| `fix` | Perbaikan bug |
-| `style` | Perubahan visual / styling tanpa ubah logika |
-| `refactor` | Rapikan kode, hasil akhir sama |
-| `perf` | Optimasi performa |
-| `docs` | Dokumentasi |
-| `chore` | Dependency, config, CI/CD |
+| Type       | Kapan Dipakai                                |
+| ---------- | -------------------------------------------- |
+| `feat`     | Fitur / section baru                         |
+| `fix`      | Perbaikan bug                                |
+| `style`    | Perubahan visual / styling tanpa ubah logika |
+| `refactor` | Rapikan kode, hasil akhir sama               |
+| `perf`     | Optimasi performa                            |
+| `docs`     | Dokumentasi                                  |
+| `chore`    | Dependency, config, CI/CD                    |
 
 ---
 
 ## 4. Aturan Issue
 
 ### 4.1 Wajib
+
 - Judul deskriptif, bukan generic seperti `perbaiki halaman`.
 - Melampirkan **label**, **acceptance criteria**, dan **referensi section PRD**.
 - Issue yang tidak punya acceptance criteria **tidak boleh dikerjakan**.
 
 ### 4.2 Label Standar
 
-| Label | Arti |
-|-------|------|
-| `type: feature` | Section / fitur baru |
-| `type: bug` | Sesuatu tidak berfungsi |
-| `type: design` | Penyesuaian visual |
-| `type: perf` | Performa / ukuran bundle |
-| `type: a11y` | Aksesibilitas |
-| `type: content` | Copywriting / aset |
-| `priority: P0` | Blocker rilis |
-| `priority: P1` | Penting, tidak blocker |
-| `priority: P2` | Nice to have |
-| `status: blocked` | Menunggu dependensi |
+| Label             | Arti                     |
+| ----------------- | ------------------------ |
+| `type: feature`   | Section / fitur baru     |
+| `type: bug`       | Sesuatu tidak berfungsi  |
+| `type: design`    | Penyesuaian visual       |
+| `type: perf`      | Performa / ukuran bundle |
+| `type: a11y`      | Aksesibilitas            |
+| `type: content`   | Copywriting / aset       |
+| `priority: P0`    | Blocker rilis            |
+| `priority: P1`    | Penting, tidak blocker   |
+| `priority: P2`    | Nice to have             |
+| `status: blocked` | Menunggu dependensi      |
 
 ### 4.3 Template Issue — Feature
 
 ```markdown
 ### Referensi PRD
+
 Section: 3.x — [Nama Section]
 
 ### Deskripsi
+
 [Apa yang harus dibangun]
 
 ### Acceptance Criteria
+
 - [ ] [Kriteria terukur 1]
 - [ ] [Kriteria terukur 2]
 - [ ] Responsif di breakpoint mobile, tablet, desktop
 - [ ] Tidak ada error di console browser
 
 ### Referensi Desain
+
 [Link Figma / screenshot / mockup]
 
 ### Out of Scope
+
 - [Apa yang TIDAK dikerjakan di issue ini]
 ```
 
@@ -114,24 +121,30 @@ Section: 3.x — [Nama Section]
 
 ```markdown
 ### Deskripsi Bug
+
 [Apa yang terjadi]
 
 ### Langkah Reproduksi
+
 1. [Langkah 1]
 2. [Langkah 2]
 
 ### Hasil yang Diharapkan
+
 [Perilaku yang seharusnya]
 
 ### Hasil Aktual
+
 [Perilaku yang salah saat ini]
 
 ### Lingkungan
+
 - Browser: [Chrome / Safari / Firefox]
 - Device / viewport: [contoh: iPhone 13 / 390px]
 - URL / branch: [contoh: feat/12-hero-section]
 
 ### Screenshot
+
 [Lampirkan screenshot jika ada]
 ```
 
@@ -141,27 +154,29 @@ Section: 3.x — [Nama Section]
 
 ### 5.1 Batasan Wajib
 
-| Aturan | Ketentuan |
-|--------|-----------|
-| Target Base Branch | **Wajib `staging`** untuk semua PR fitur (`feat/*`), bugfix (`fix/*`), dan chore (`chore/*`) |
-| Ukuran PR | Maksimal ~400 baris perubahan. Lebih dari itu, pecah menjadi beberapa PR terpisah |
-| Referensi Issue | Wajib — gunakan `Closes #[nomor]` |
-| Status build & lint | Wajib hijau (`npm run lint` & `npm run build`) sebelum request review |
-| Preview deploy | Wajib dilampirkan di deskripsi PR (Vercel Preview / Cloudflare) |
-| Reviewer | Minimal 1 approval |
-| Self-merge | Tidak diperbolehkan tanpa approval |
-| Konflik | Wajib diselesaikan oleh pembuat PR, bukan reviewer |
-| Draft PR | Gunakan status Draft jika pekerjaan belum selesai / belum siap direview |
+| Aturan              | Ketentuan                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------- |
+| Target Base Branch  | **Wajib `staging`** untuk semua PR fitur (`feat/*`), bugfix (`fix/*`), dan chore (`chore/*`) |
+| Ukuran PR           | Maksimal ~400 baris perubahan. Lebih dari itu, pecah menjadi beberapa PR terpisah            |
+| Referensi Issue     | Wajib — gunakan `Closes #[nomor]`                                                            |
+| Status build & lint | Wajib hijau (`npm run lint` & `npm run build`) sebelum request review                        |
+| Preview deploy      | Wajib dilampirkan di deskripsi PR (Vercel Preview / Cloudflare)                              |
+| Reviewer            | Minimal 1 approval                                                                           |
+| Self-merge          | Tidak diperbolehkan tanpa approval                                                           |
+| Konflik             | Wajib diselesaikan oleh pembuat PR, bukan reviewer                                           |
+| Draft PR            | Gunakan status Draft jika pekerjaan belum selesai / belum siap direview                      |
 
 ### 5.2 Template Pull Request
 
 ```markdown
 ## Ringkasan
+
 [Apa yang diubah dan alasannya]
 
 Closes #[nomor issue]
 
 ## Jenis Perubahan
+
 - [ ] Fitur baru
 - [ ] Perbaikan bug
 - [ ] Penyesuaian desain
@@ -169,13 +184,15 @@ Closes #[nomor issue]
 - [ ] Dokumentasi & konfigurasi
 
 ## Bukti Visual
-| Sebelum | Sesudah |
-|---------|---------|
+
+| Sebelum      | Sesudah      |
+| ------------ | ------------ |
 | [gambar/gif] | [gambar/gif] |
 
 Preview URL: [https://...]
 
 ## Checklist Uji Test Developer (wajib dicentang sebelum request review)
+
 - [ ] `npm run lint` lolos tanpa error / warning
 - [ ] `npm run build` berhasil tanpa error
 - [ ] Sudah diuji di viewport mobile (360px - 414px), tablet (768px), dan desktop (1024px+)
@@ -191,9 +208,11 @@ Preview URL: [https://...]
 - [ ] Semua acceptance criteria di Issue sudah terpenuhi
 
 ## Dependency Baru
+
 [Nama package + alasan, atau "Tidak ada"]
 
 ## Catatan untuk Reviewer
+
 [Bagian kode yang perlu perhatian khusus]
 ```
 
@@ -203,17 +222,17 @@ Preview URL: [https://...]
 
 ### 6.1 Yang Wajib Diuji Setiap Developer (sebelum buka PR)
 
-| Kategori | Batasan Minimum |
-|----------|-----------------|
-| **Lint & Type Check** | `npm run lint` lolos tanpa error/warning |
-| **Build & Run** | `npm run build` dan `npm run start` berjalan lancar tanpa error |
-| **Responsif** | Diuji minimal di lebar `360px` (Mobile), `768px` (Tablet), `1440px` (Desktop) |
-| **Browser** | Minimal 2 browser: Chrome + Safari (atau Chrome + Firefox/Edge) |
-| **Console** | Nol error, nol warning baru |
-| **Aksesibilitas** | Alt text lengkap, hierarki heading (`h1`-`h6`) berurutan, focus ring terlihat |
-| **Performa** | Lighthouse Performance ≥ 90, optimasi aset via `next/image` |
-| **Konten** | Tidak ada `lorem ipsum` atau placeholder yang tertinggal |
-| **Link & Navigasi** | Semua route internal & link eksternal berfungsi normal |
+| Kategori              | Batasan Minimum                                                               |
+| --------------------- | ----------------------------------------------------------------------------- |
+| **Lint & Type Check** | `npm run lint` lolos tanpa error/warning                                      |
+| **Build & Run**       | `npm run build` dan `npm run start` berjalan lancar tanpa error               |
+| **Responsif**         | Diuji minimal di lebar `360px` (Mobile), `768px` (Tablet), `1440px` (Desktop) |
+| **Browser**           | Minimal 2 browser: Chrome + Safari (atau Chrome + Firefox/Edge)               |
+| **Console**           | Nol error, nol warning baru                                                   |
+| **Aksesibilitas**     | Alt text lengkap, hierarki heading (`h1`-`h6`) berurutan, focus ring terlihat |
+| **Performa**          | Lighthouse Performance ≥ 90, optimasi aset via `next/image`                   |
+| **Konten**            | Tidak ada `lorem ipsum` atau placeholder yang tertinggal                      |
+| **Link & Navigasi**   | Semua route internal & link eksternal berfungsi normal                        |
 
 ### 6.2 Yang Diuji oleh Reviewer
 

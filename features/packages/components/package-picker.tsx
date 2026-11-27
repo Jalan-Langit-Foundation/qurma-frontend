@@ -1,0 +1,67 @@
+"use client";
+
+import * as React from "react";
+import { formatRupiah } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import type { QurbanPackage } from "../lib/types";
+
+interface PackagePickerProps {
+  packages: readonly QurbanPackage[];
+  selectedPackageId: string;
+  onSelect?: (pkg: QurbanPackage) => void;
+
+  labelledBy: string;
+  disabled?: boolean;
+}
+
+export function PackagePicker({
+  packages,
+  selectedPackageId,
+  onSelect,
+  labelledBy,
+  disabled = false,
+}: PackagePickerProps) {
+  return (
+    <div
+      role="group"
+      aria-labelledby={labelledBy}
+      className="grid grid-cols-3 gap-2 sm:gap-2.5"
+    >
+      {packages.map((pkg) => {
+        const isSelected = pkg.id === selectedPackageId;
+        return (
+          <button
+            key={pkg.id}
+            type="button"
+            aria-pressed={isSelected}
+            disabled={disabled}
+            onClick={() => onSelect?.(pkg)}
+            className={cn(
+              "min-w-0 cursor-pointer rounded-xl border px-2.5 py-3 text-left transition-all focus-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:p-3",
+              isSelected
+                ? "border-brand bg-brand text-white shadow-sm"
+                : "border-slate-200/80 bg-white hover:border-slate-300",
+            )}
+          >
+            <span
+              className={cn(
+                "block font-heading text-xs font-bold sm:text-sm",
+                isSelected ? "text-white" : "text-ink",
+              )}
+            >
+              {pkg.shortName}
+            </span>
+            <span
+              className={cn(
+                "mt-0.5 block font-heading text-[11px] font-semibold sm:text-xs",
+                isSelected ? "text-white" : "text-body",
+              )}
+            >
+              {formatRupiah(pkg.target)}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}

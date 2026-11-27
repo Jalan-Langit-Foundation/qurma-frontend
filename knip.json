@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "app/**/{page,layout,error,not-found,route}.{ts,tsx}",
+    "test/**/*.test.{ts,tsx}",
+    "features/transactions/server.ts"
+  ],
+  "project": ["**/*.{ts,tsx}"],
+  "ignoreDependencies": ["tailwindcss", "@tailwindcss/turbopack"],
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  }
+}
